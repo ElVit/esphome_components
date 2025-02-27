@@ -37,7 +37,7 @@ TYPES = [
   CONF_SAVE_M4,
 ]
 
-MaidsiteDeskButton = maidsite_desk_ns.class_("MaidsiteDeskButton", button.Button)
+MaidsiteDeskButton = maidsite_desk_ns.class_("MaidsiteDeskButton", button.Button, cg.Component)
 
 CONFIG_SCHEMA = cv.Schema(
   {
@@ -87,15 +87,14 @@ CONFIG_SCHEMA = cv.Schema(
       entity_category=ENTITY_CATEGORY_CONFIG,
     ),
   }
-)
+).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
   hub = await cg.get_variable(config[CONF_MAIDSITE_DESK_ID])
-  for key in TYPES:
-    await setup_conf(config, key, hub)
-
-async def setup_conf(parent_config, key, hub):
-  if child_config := parent_config.get(key):
-    var = await button.new_button(child_config)
-    await cg.register_parented(var, parent_config[CONF_MAIDSITE_DESK_ID])
-    cg.add(getattr(hub, f"set_{key}_button")(var))
+  for index, key in enumerate(TYPES):
+    if child_config := config.get(key):
+      var = await button.new_button(child_config)
+      await cg.register_component(var, child_config)
+      await cg.register_parented(var, config[CONF_MAIDSITE_DESK_ID])
+      cg.add(getattr(hub, f"set_{key}_button")(var))
+      cg.add(var.set_id(index))

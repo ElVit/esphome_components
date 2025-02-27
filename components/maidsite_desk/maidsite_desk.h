@@ -15,6 +15,8 @@
 #include <vector>
 #include <string>
 
+#define UART_LOG_CHUNK_SIZE 153
+
 
 namespace esphome
 {
@@ -61,13 +63,14 @@ namespace esphome
 #endif
 
       MaidsiteDeskComponent() = default;
+      // base class functions
       float get_setup_priority() const override { return setup_priority::LATE; }
       void dump_config() override;
       void setup() override;
       void loop() override;
-
+      // option functions
       void set_log_uart_msg(bool enable) { this->log_uart_msg_ = enable; }
-
+      // functions to use in lambdas
       void request_physical_limits();
       void request_limits();
       void request_settings();
@@ -81,23 +84,26 @@ namespace esphome
       void goto_mem_position(int pos);
       void save_mem_position(int pos);
 
+      // variables to use in lambdas
+      std::vector<uint8_t> response_message_;
+
     protected:
+      // uart message functions
       void decode_response(std::vector<uint8_t> message);
       void send_simple_command(unsigned char cmd);
       void send_2byte_command(unsigned char cmd, unsigned char high_byte, unsigned char low_byte);
       float byte2float(int high, int low);
       void log_uart_hex(std::string prefix, std::vector<uint8_t> bytes, uint8_t separator);
 
-    private:
-      bool log_uart_msg_{false};
-
-      std::vector<uint8_t> response_message_;
+      // options variables
+      bool log_uart_msg_ { false };
+      // uart message variables
       std::vector<uint8_t> request_message_;
       uint8_t response_payload_length_;
       uint8_t request_payload_length_;
-      bool response_receiving_{false};
-      bool request_receiving_{false};
-
+      bool response_receiving_ { false };
+      bool request_receiving_ { false };
+      // sensor variables
       float current_height_ = 0;
       float limit_min_ = 0;
       float limit_max_ = 0;

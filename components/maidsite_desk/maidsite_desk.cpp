@@ -10,39 +10,7 @@ namespace esphome
     void MaidsiteDeskComponent::dump_config()
     {
       ESP_LOGCONFIG(TAG, "Maidsite Desk");
-
-#ifdef USE_SENSOR
-      LOG_SENSOR("", "Maidsite Desk Sensor", this->unit_sensor_);
-      LOG_SENSOR("", "Maidsite Desk Sensor", this->height_abs_sensor_);
-      LOG_SENSOR("", "Maidsite Desk Sensor", this->height_pct_sensor_);
-      LOG_SENSOR("", "Maidsite Desk Sensor", this->height_min_sensor_);
-      LOG_SENSOR("", "Maidsite Desk Sensor", this->height_max_sensor_);
-      LOG_SENSOR("", "Maidsite Desk Sensor", this->position_m1_sensor_);
-      LOG_SENSOR("", "Maidsite Desk Sensor", this->position_m2_sensor_);
-      LOG_SENSOR("", "Maidsite Desk Sensor", this->position_m3_sensor_);
-      LOG_SENSOR("", "Maidsite Desk Sensor", this->position_m4_sensor_);
-#endif
-#ifdef USE_BUTTON
-      LOG_BUTTON("", "Maidsite Desk Button", this->unit_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->step_up_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->step_down_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->stop_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->goto_max_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->goto_min_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->goto_m1_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->goto_m2_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->goto_m3_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->goto_m4_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->save_m1_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->save_m2_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->save_m3_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->save_m4_button_);
-      LOG_BUTTON("", "Maidsite Desk Button", this->save_m4_button_);
-#endif
-#ifdef USE_NUMBER
-      LOG_NUMBER("", "Maidsite Desk Number", this->height_abs_number_);
-      LOG_NUMBER("", "Maidsite Desk Number", this->height_pct_number_);
-#endif
+      delay(10);
     }
 
     void MaidsiteDeskComponent::setup()
@@ -115,7 +83,6 @@ namespace esphome
 
       std::string logStr;
       char buffer[5];
-      size_t chunkSize = 90;
 
       for (size_t i = 0; i < bytes.size(); i++)
       {
@@ -123,9 +90,9 @@ namespace esphome
         sprintf(buffer, "%02X", bytes[i]);
         logStr += buffer;
       }
-      for (size_t i = 0; i < logStr.length(); i += chunkSize)
+      for (size_t i = 0; i < logStr.length(); i += UART_LOG_CHUNK_SIZE)
       {
-        ESP_LOGI(TAG, "%s %s", prefix.c_str(), logStr.substr(i, chunkSize).c_str());
+        ESP_LOGI(TAG, "%s %s", prefix.c_str(), logStr.substr(i, UART_LOG_CHUNK_SIZE).c_str());
         delay(10);
       }
     }

@@ -107,7 +107,7 @@ switch:
 All sensors are optional and all default sensor variables can be applied.  
 Here a list of all supported sensors:
 
-```
+```yaml
 sensor:
   - platform: panasonic_heatpump
     top1:
@@ -307,7 +307,7 @@ sensor:
 All binary sensors are optional and all default binary sensor variables can be applied.  
 Here a list of all supported binary sensors:
 
-```
+```yaml
 binary_sensor:
   - platform: panasonic_heatpump
     top0:
@@ -363,7 +363,7 @@ binary_sensor:
 All text sensors are optional and all default text sensor variables can be applied.  
 Here a list of all supported text sensors:
 
-```
+```yaml
 text_sensor:
   - platform: panasonic_heatpump
     top4:
@@ -415,7 +415,7 @@ text_sensor:
 All numbers are optional and all default number variables can be applied.  
 Here a list of all supported numbers:
 
-```
+```yaml
 number:
   - platform: panasonic_heatpump
     set5:
@@ -491,7 +491,7 @@ number:
 All switches are optional and all default switch variables can be applied.  
 Here a list of all supported switches:
 
-```
+```yaml
 switch:
   - platform: panasonic_heatpump
     set1:
@@ -527,7 +527,7 @@ switch:
 All selects are optional and all default select variables can be applied.  
 Here a list of all supported selects:
 
-```
+```yaml
 select:
   - platform: panasonic_heatpump
     set2:
@@ -552,10 +552,14 @@ If you review the [ProtocolByteDecrypt.md](https://github.com/Egyras/HeishaMon/b
 They are usually marked as TOP (without a number).  
 The nice part of ESPHome is that it is so highly customizeable.  
 So if you want some additional TOP or SET entities you can easily create your own.  
-Under the hood the received uart message from the heatpump is stored in a vector.  
-Here are 2 examples how to create a sensor and a text_sensor:
+Under the hood the received uart message from the heatpump is stored in a vector,  
+so you can decode each byte by yourself.  
+Here an example how to create a sensor and a text_sensor:
 
-```
+```yaml
+panasonic_heatpump:
+  id: my_heatpump
+
 sensor:
   - platform: template
     name: "Dry concrete target temperature for actual stage"
@@ -565,6 +569,8 @@ sensor:
     lambda: |-
       // get the requried byte
       int byte = my_heatpump->getResponseByte(46);
+      // a valid byte range is 0x00-0xFF
+      // do not update if the byte is invalid
       if (byte < 0) return {};
       // convert the byte (see HeishaMon/ProtocolByteDecrypt.md)
       // in this case -128
@@ -577,6 +583,8 @@ text_sensor:
     lambda: |-
       // get the requried byte
       int byte = my_heatpump->getResponseByte(9);
+      // a valid byte range is 0x00-0xFF
+      // do not update if the byte is invalid
       if (byte < 0) return {};
       // convert the byte (see HeishaMon/ProtocolByteDecrypt.md)
       // in this case 3rd and 4th bit (--> b0011 0000)
@@ -584,13 +592,18 @@ text_sensor:
       // set text
       if (state == 0) return { "Standard" };
       if (state == 1) return { "DHW" };
-      // if state is unkown do not update text
+      // if state is unkown do not update
       return {};
 ```
 
 ## Known Issues
 
-When the ESP controller is connected initially to the heatpump, the heatpump may not respond to any request messages. If the CZ-TAW1 is also connected to the ESP controller you will probably see some requests like 31 05 10 01 ... These are initial request messages. If the heatpump is not responding, it may help to turn off and on the power of the heatpump (switching the heatpump off is not enough). After a power on the heatpump should respond to the requests.
+When the ESP controller is connected initially to the heatpump (and the heatpump is powered),  
+the heatpump may not respond to any request messages.  
+If the CZ-TAW1 is also connected to the ESP controller you will probably see some requests like 0x31 05 10 01 ...  
+These are initial request messages.  
+If the heatpump is not responding, it may help to turn off and on the power of the heatpump (switching the heatpump off is not enough).  
+After a power on the heatpump should respond to the requests.
 
 ## Sources
 

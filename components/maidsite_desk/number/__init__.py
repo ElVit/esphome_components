@@ -21,7 +21,7 @@ CONF_NUMBERS = [
   [ 0, 100, .1, ],
 ]
 
-MaidsiteDeskNumber = maidsite_desk_ns.class_("MaidsiteDeskNumber", number.Number)
+MaidsiteDeskNumber = maidsite_desk_ns.class_("MaidsiteDeskNumber", number.Number, cg.Component)
 
 CONFIG_SCHEMA = cv.Schema(
   {
@@ -36,15 +36,19 @@ CONFIG_SCHEMA = cv.Schema(
       unit_of_measurement=UNIT_PERCENT,
     ),
   }
-)
+).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
   hub = await cg.get_variable(config[CONF_MAIDSITE_DESK_ID])
   for index, key in enumerate(TYPES):
-    await setup_conf(config, key, index, hub)
-
-async def setup_conf(parent_config, key, index, hub):
-  if child_config := parent_config.get(key):
-    var = await number.new_number(child_config, min_value=CONF_NUMBERS[index][0], max_value=CONF_NUMBERS[index][1], step=CONF_NUMBERS[index][2])
-    await cg.register_parented(var, parent_config[CONF_MAIDSITE_DESK_ID])
-    cg.add(getattr(hub, f"set_{key}_number")(var))
+    if child_config := config.get(key):
+      var = await number.new_number(
+        child_config,
+        min_value=CONF_NUMBERS[index][0],
+        max_value=CONF_NUMBERS[index][1],
+        step=CONF_NUMBERS[index][2]
+      )
+      await cg.register_component(var, child_config)
+      await cg.register_parented(var, config[CONF_MAIDSITE_DESK_ID])
+      cg.add(getattr(hub, f"set_{key}_number")(var))
+      cg.add(var.set_id(index))
