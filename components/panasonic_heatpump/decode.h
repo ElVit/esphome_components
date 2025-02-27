@@ -60,7 +60,8 @@ namespace esphome
       static const constexpr char* const ZonesSensorType[] = { "4", "Water Temperature", "External Thermostat", "Internal Thermostat", "Thermistor" };
       static const constexpr char* const Quietmode[] = { "4", "Off", "Level 1", "Level 2", "Level 3" };
       static const constexpr char* const Powerfulmode[] = { "4", "Off", "30min", "60min", "90min" };
-      static const constexpr char* const OpModeDesc[] = { "11", "Heat only", "Cool only", "Auto", "Auto(heat)", "Auto(cool)", "DHW only", "Heat+DHW", "Cool+DHW", "Auto+DHW", "Auto(heat)+DHW", "Auto(cool)+DHW" };
+      static const constexpr char* const OpModeDesc[] = { "11", "Heat only", "Cool only", "Auto", "Auto(heat)", "Auto(cool)", "DHW only",
+                                                                "Heat+DHW", "Cool+DHW", "Auto+DHW", "Auto(heat)+DHW", "Auto(cool)+DHW" };
       static const constexpr char* const ZonesState[] = { "3", "Zone 1", "Zone 2", "Zone 1 & 2" };
       static const constexpr char* const ExtPadHeaterType[] = { "3", "Disabled", "Type-A", "Type-B" };
       static const constexpr char* const Bivalent[] = { "3", "Alternative", "Parallel", "Advanced Parallel" };
