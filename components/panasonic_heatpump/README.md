@@ -5,15 +5,13 @@
 ### What you need
 
 * ESPHome compatible microcontroller (e.g. ESP8266, ESP32, ESP32-S2, ESP32-C3, ...)
-* Bi-Directional Logic Level Converter (to convert 5V UART signal from the heatpump to 3.3V UART signal of the ESP controller)
+* ADUM1201 Dual Channel Digital Magnetic Isolator  
+  (to convert 5V UART signal from the heatpump to 3.3V UART signal of the ESP controller)
 * CN-CNT cable to Heatpump/CZ-TAW1 (see [Heishamon](https://github.com/Egyras/HeishaMon) github site for more information)
 
 ### Wiring
 
-![wiring.jpeg](../../prototypes/panasonic_heatpump/wiring.jpeg)
-
-You may also connect the +5V pin of the heatpump to the +5V pin of the ESP board.  
-But for me the current (mA) provided by the heatpump was quite unstable so I powered my ESP board through an USB cable.  
+<img src="../../prototypes/panasonic_heatpump/wiring_adum1201.png" alt="wiring_adum1201.png" width="600"/>
 
 ### CN-CNT Pinout (from top to bottom)
 
