@@ -24,23 +24,16 @@
 #endif
 #include "decode.h"
 #include "commands.h"
+#include "helpers.h"
 #include <vector>
 #include <tuple>
 #include <string>
-
-#define UART_LOG_CHUNK_SIZE 153
 
 
 namespace esphome
 {
   namespace panasonic_heatpump
   {
-    enum UartLogDirection
-    {
-      UART_LOG_RX,
-      UART_LOG_TX,
-    };
-
     class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDevice
     {
     public:
@@ -274,23 +267,26 @@ namespace esphome
       uart::UARTComponent* uart_client_ { nullptr };
       bool log_uart_msg_ { false };
       // uart message variables
-      std::vector<uint8_t> temp_message_;
+      std::vector<uint8_t> heatpump_message_;
       std::vector<uint8_t> response_message_;
       std::vector<uint8_t> request_message_;
       std::vector<uint8_t> command_message_;
       uint8_t response_payload_length_;
       uint8_t request_payload_length_;
       uint8_t byte_;
+      uint8_t current_response_count_ { 0 };
+      uint8_t last_response_count_ { 0 };
       bool response_receiving_ { false };
       bool request_receiving_ { false };
       bool trigger_request_ { false };
       uint8_t next_request_ { 0 };  // 0 = initial, 1 = polling, 2 = command
+      uint8_t loop_state_ { 0 };
 
       // uart message functions
       void read_response();
       void send_request();
       void read_request();
-      void decode_response(const std::vector<uint8_t>& data);
+      bool check_response(const std::vector<uint8_t>& data);
       void set_command_byte(const uint8_t value, const uint8_t index);
       void set_command_bytes(const std::vector<std::tuple<uint8_t, uint8_t>>& data);
       // sensor and control publish functions
@@ -300,9 +296,6 @@ namespace esphome
       void publish_number(const std::vector<uint8_t>& data);
       void publish_select(const std::vector<uint8_t>& data);
       void publish_switch(const std::vector<uint8_t>& data);
-      // helper functions
-      void log_uart_hex(UartLogDirection direction, const std::vector<uint8_t>& data, const char separator);
-      void log_uart_hex(UartLogDirection direction, const uint8_t* data, const size_t length, const char separator);
     };
   }  // namespace panasonic_heatpump
 }  // namespace esphome

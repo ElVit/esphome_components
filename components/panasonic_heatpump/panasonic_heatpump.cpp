@@ -38,13 +38,63 @@ namespace esphome
 
     void PanasonicHeatpumpComponent::loop()
     {
-      this->read_response();
-      this->send_request();
-      this->read_request();
-
-      // Next request will be polling
-      this->next_request_ = 1;
-      this->trigger_request_ = false;
+      if (loop_state_ == 0)
+      {
+        this->read_response();
+        this->loop_state_ = 1;
+      }
+      else if (loop_state_ == 1)
+      {
+        bool result = this->check_response(this->heatpump_message_);
+        this->loop_state_ = result ? 2 : 8;
+      }
+      else if (loop_state_ == 2)
+      {
+        this->publish_sensor(this->heatpump_message_);
+        this->loop_state_ = 3;
+      }
+      else if (loop_state_ == 3)
+      {
+        this->publish_binary_sensor(this->heatpump_message_);
+        this->loop_state_ = 4;
+      }
+      else if (loop_state_ == 4)
+      {
+        this->publish_text_sensor(this->heatpump_message_);
+        this->loop_state_ = 5;
+      }
+      else if (loop_state_ == 5)
+      {
+        this->publish_number(this->heatpump_message_);
+        this->loop_state_ = 6;
+      }
+      else if (loop_state_ == 6)
+      {
+        this->publish_select(this->heatpump_message_);
+        this->loop_state_ = 7;
+      }
+      else if (loop_state_ == 7)
+      {
+        this->publish_switch(this->heatpump_message_);
+        this->loop_state_ = 8;
+      }
+      else if (loop_state_ == 8)
+      {
+        this->send_request();
+        this->loop_state_ = 9;
+      }
+      else if (loop_state_ == 9)
+      {
+        this->read_request();
+        this->loop_state_ = 10;
+      }
+      else
+      {
+        // Next request will be polling
+        this->next_request_ = 1;
+        this->trigger_request_ = false;
+        this->loop_state_ = 0;
+      }
     }
 
     void PanasonicHeatpumpComponent::read_response()
@@ -89,10 +139,10 @@ namespace esphome
         if (this->response_message_.size() > 2 &&
             this->response_message_.size() == this->response_payload_length_ + 3)
         {
-          this->temp_message_ = this->response_message_;
+          this->heatpump_message_ = this->response_message_;
           this->response_receiving_ = false;
-          this->log_uart_hex(UART_LOG_RX, this->response_message_, ',');
-          this->decode_response(this->response_message_);;
+          this->current_response_count_++;
+          if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_RX, this->response_message_, ',');
         }
       }
     }
@@ -103,7 +153,7 @@ namespace esphome
 
       if (this->next_request_ == 2) // command
       {
-        this->log_uart_hex(UART_LOG_TX, this->command_message_, ',');
+        if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, this->command_message_, ',');
         this->write_array(this->command_message_);
         this->flush();
         return;
@@ -114,13 +164,13 @@ namespace esphome
       if (this->next_request_ == 0) // initial
       {
         // Probably not necessary but CZ-TAW1 sends this query on boot
-        this->log_uart_hex(UART_LOG_TX, PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE, ',');
+        if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE, ',');
         this->write_array(PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE);
         this->flush();
       }
       else if (this->next_request_ == 1) // polling
       {
-        this->log_uart_hex(UART_LOG_TX, PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE, ',');
+        if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE, ',');
         this->write_array(PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE);
         this->flush();
       }
@@ -168,73 +218,32 @@ namespace esphome
             this->request_message_.size() == this->request_payload_length_ + 3)
         {
           this->request_receiving_ = false;
-          this->log_uart_hex(UART_LOG_TX, this->request_message_, ',');
+          if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, this->request_message_, ',');
         }
       }
     }
 
     int PanasonicHeatpumpComponent::getResponseByte(const int index)
     {
+      if (this->heatpump_message_.size() > index) return this->heatpump_message_[index];
       if (this->response_message_.size() > index) return this->response_message_[index];
-      if (this->temp_message_.size() > index) return this->temp_message_[index];
       return -1;
     }
 
-    void PanasonicHeatpumpComponent::log_uart_hex(UartLogDirection direction, const std::vector<uint8_t>& data, const char separator)
-    {
-      this->log_uart_hex(direction, &data[0], data.size(), separator);
-    }
-    void PanasonicHeatpumpComponent::log_uart_hex(UartLogDirection direction, const uint8_t* data, const size_t length, const char separator)
-    {
-      if (this->log_uart_msg_ == false) return;
-
-      std::string logStr = "";
-      std::string msgDir = direction == UART_LOG_TX ? ">>>" : "<<<";
-      std::string msgType = direction == UART_LOG_TX ? "request" : "response";
-      switch(data[0])
-      {
-        case 0x31:
-          msgType = "initial_" + msgType;
-          break;
-        case 0x71:
-          msgType = "polling_" + msgType;
-          break;
-        case 0xF1:
-          msgType = "command_" + msgType;
-          break;
-      };
-
-      ESP_LOGI(TAG, "%s %s[%i]", msgDir.c_str(), msgType.c_str(), length);
-      delay(10);
-
-      char buffer[5];
-      for (size_t i = 0; i < length; i++)
-      {
-        if (i > 0) logStr += separator;
-        sprintf(buffer, "%02X", data[i]);
-        logStr += buffer;
-      }
-
-      for (size_t i = 0; i < logStr.length(); i += UART_LOG_CHUNK_SIZE)
-      {
-        ESP_LOGI(TAG, "%s %s", msgDir.c_str(), logStr.substr(i, UART_LOG_CHUNK_SIZE).c_str());
-        delay(10);
-      }
-    }
-
-    void PanasonicHeatpumpComponent::decode_response(const std::vector<uint8_t>& data)
+    bool PanasonicHeatpumpComponent::check_response(const std::vector<uint8_t>& data)
     {
       // Read response message:
       // format:          0x71 [payload_length] 0x01 0x10 [[TOP0 - TOP114] ...] 0x00 [checksum]
       // payload_length:  payload_length + 3 = packet_length
       // checksum:        if (sum(all bytes) & 0xFF == 0) ==> valid packet
 
-      if (data[0] != 0x71) return;
+      if (data.empty()) return false;
+      if (data[0] != 0x71) return false;
       if (data.size() != RESPONSE_MSG_SIZE)
       {
         ESP_LOGW(TAG, "Invalid response message length: recieved %d - expected %d", data.size(), RESPONSE_MSG_SIZE);
         delay(10);
-        return;
+        return false;
       }
 
       uint8_t checksum = 0;
@@ -247,15 +256,12 @@ namespace esphome
       {
         ESP_LOGW(TAG, "Invalid response message: checksum = 0x%02X, last_byte = 0x%02X", checksum, data[202]);
         delay(10);
-        return;
+        return false;
       }
 
-      this->publish_sensor(data);
-      this->publish_binary_sensor(data);
-      this->publish_text_sensor(data);
-      this->publish_number(data);
-      this->publish_select(data);
-      this->publish_switch(data);
+      if (this->last_response_count_ == this->current_response_count_) return false;
+      this->last_response_count_ = this->current_response_count_;
+      return true;
     }
 
     void PanasonicHeatpumpComponent::set_command_byte(const uint8_t value, const uint8_t index)
@@ -453,6 +459,30 @@ namespace esphome
       if (this->top125_text_sensor_) this->top125_text_sensor_->publish_state(PanasonicDecode::getTextState(PanasonicDecode::Valve2, PanasonicDecode::getBit5and6(data[116])));
       if (this->top126_text_sensor_) this->top126_text_sensor_->publish_state(PanasonicDecode::getTextState(PanasonicDecode::Valve, PanasonicDecode::getBit7and8(data[116])));
       if (this->top130_text_sensor_) this->top130_text_sensor_->publish_state(PanasonicDecode::getTextState(PanasonicDecode::Bivalent, PanasonicDecode::getBit5and6(data[26])));
+
+      // ToDo: Check if state of text_sensor has changed. If yes change min/max values of number entities
+
+      // if (this->top76_text_sensor_->get_state() == "Direct")
+      //    this->set5_number_->traits.set_max_value(20);
+      //    this->set5_number_->traits.set_max_value(0);
+      //    this->set6_number_->traits.set_max_value(20);
+      //    this->set6_number_->traits.set_max_value(0);
+      // else
+      //    this->set5_number_->traits.set_max_value(5);
+      //    this->set5_number_->traits.set_max_value(-5);
+      //    this->set6_number_->traits.set_max_value(5);
+      //    this->set6_number_->traits.set_max_value(-5);
+
+      // if (this->top81_text_sensor_->get_state() == "Direct")
+      //    this->set7_number_->traits.set_max_value(20);
+      //    this->set7_number_->traits.set_max_value(0);
+      //    this->set8_number_->traits.set_max_value(20);
+      //    this->set8_number_->traits.set_max_value(0);
+      // else
+      //    this->set7_number_->traits.set_max_value(5);
+      //    this->set7_number_->traits.set_max_value(-5);
+      //    this->set8_number_->traits.set_max_value(5);
+      //    this->set8_number_->traits.set_max_value(-5);
 #endif
     }
 
