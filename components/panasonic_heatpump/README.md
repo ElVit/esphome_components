@@ -7,7 +7,9 @@
 * ESPHome compatible microcontroller (e.g. ESP8266, ESP32, ESP32-S2, ESP32-C3, ...)
 * ADUM1201 Dual Channel Digital Magnetic Isolator  
   (to convert 5V UART signal from the heatpump to 3.3V UART signal of the ESP controller)
-* CN-CNT cable to Heatpump/CZ-TAW1 (see [Heishamon](https://github.com/Egyras/HeishaMon) github site for more information)
+* CN-CNT cable/connectirs to Heatpump/CZ-TAW1 (see [Heishamon](https://github.com/Egyras/HeishaMon) github site for more information)
+  * For example: [S05B-XASK-1 JST Connector](https://a.aliexpress.com/_EvkmGVo)
+  * For example: [XAP-05V-1 5Pin Cable with Female to Female Connector](https://a.aliexpress.com/_ExPT82E)
 
 ### Wiring
 
