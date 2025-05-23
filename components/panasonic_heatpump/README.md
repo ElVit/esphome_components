@@ -27,10 +27,10 @@ pin | function
 
 ```yaml
 substitutions:
-  pin_rx_hp: GPIO4  # heatpump reads data (RX) on this pin
-  pin_tx_hp: GPIO3  # heatpump sends data (TX) on this pin
-  pin_tx_wm: GPIO1  # WiFi module sends data (TX) on this pin
-  pin_rx_wm: GPIO0  # WiFi module reads data (RX) on this pin
+  pin_rx_hp: GPIO4  # heatpump reads data (RX) on this pin    (yellow)
+  pin_tx_hp: GPIO3  # heatpump sends data (TX) on this pin    (green)
+  pin_tx_wm: GPIO1  # WiFi module sends data (TX) on this pin (white)
+  pin_rx_wm: GPIO0  # WiFi module reads data (RX) on this pin (blue)
 
 external_components:
   - source:
@@ -58,8 +58,8 @@ panasonic_heatpump:
   id: my_heatpump
   uart_id: uart_heatpump
   uart_client_id: uart_cz_taw1
-  log_uart_msg: false
-  update_interval: 3s
+  log_uart_msg: true
+  update_interval: 5s
 
 sensor:
   - platform: panasonic_heatpump
