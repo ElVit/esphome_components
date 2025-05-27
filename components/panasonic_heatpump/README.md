@@ -13,7 +13,7 @@
 
 ### Wiring
 
-<img src="../../prototypes/panasonic_heatpump/wiring_adum1201.png" alt="wiring_adum1201.png" width="600"/>
+<img src="../../prototypes/panasonic_heatpump/wiring_adum1201.png" alt="wiring_adum1201.png" width="500"/>
 
 ### CN-CNT Pinout (from top to bottom)
 
