@@ -22,7 +22,7 @@ pin | function
 1   | +5V (250mA)
 2   | 0-5V TX (from heatpump)
 3   | 0-5V RX (to heatpump)
-4   | +12V (250mA)
+4   | NC (not connected)
 5   | GND
 
 ## ESPHome example yaml code
