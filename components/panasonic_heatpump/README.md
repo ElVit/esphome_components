@@ -13,7 +13,7 @@
 
 ### Wiring
 
-<img src="../../prototypes/panasonic_heatpump/wiring_adum1201.png" alt="wiring_adum1201.png" width="500"/>
+![wiring_adum1201.png](../../prototypes/panasonic_heatpump/wiring_adum1201.png)
 
 ### CN-CNT Pinout (from top to bottom)
 
@@ -29,10 +29,10 @@ pin | function
 
 ```yaml
 substitutions:
-  pin_rx_hp: GPIO4  # heatpump reads data (RX) on this pin    (yellow)
-  pin_tx_hp: GPIO3  # heatpump sends data (TX) on this pin    (green)
-  pin_tx_wm: GPIO1  # WiFi module sends data (TX) on this pin (white)
-  pin_rx_wm: GPIO0  # WiFi module reads data (RX) on this pin (blue)
+  pin_rx_hp: GPIO37  # heatpump reads data (RX) on this pin    (yellow)
+  pin_tx_hp: GPIO39  # heatpump sends data (TX) on this pin    (green)
+  pin_tx_wm: GPIO18  # WiFi module sends data (TX) on this pin (white)
+  pin_rx_wm: GPIO16  # WiFi module reads data (RX) on this pin (blue)
 
 external_components:
   - source:
