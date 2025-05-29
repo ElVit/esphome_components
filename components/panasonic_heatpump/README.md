@@ -5,15 +5,15 @@
 ### What you need
 
 * ESPHome compatible microcontroller (e.g. ESP8266, ESP32, ESP32-S2, ESP32-C3, ...)
-* Bi-Directional Logic Level Converter (to convert 5V UART signal from the heatpump to 3.3V UART signal of the ESP controller)
-* CN-CNT cable to Heatpump/CZ-TAW1 (see [Heishamon](https://github.com/Egyras/HeishaMon) github site for more information)
+* ADUM1201 Dual Channel Digital Magnetic Isolator  
+  (to convert 5V UART signal from the heatpump to 3.3V UART signal of the ESP controller)
+* CN-CNT cable/connectors to Heatpump/CZ-TAW1 (see [Heishamon](https://github.com/Egyras/HeishaMon) github site for more information)
+  * For example: [S05B-XASK-1 JST Connector](https://a.aliexpress.com/_EvkmGVo)
+  * For example: [XAP-05V-1 5Pin Cable with Female to Female Connector](https://a.aliexpress.com/_ExPT82E)
 
 ### Wiring
 
-![wiring.jpeg](../../prototypes/panasonic_heatpump/wiring.jpeg)
-
-You may also connect the +5V pin of the heatpump to the +5V pin of the ESP board.  
-But for me the current (mA) provided by the heatpump was quite unstable so I powered my ESP board through an USB cable.  
+![wiring_adum1201.png](../../prototypes/panasonic_heatpump/wiring_adum1201.png)
 
 ### CN-CNT Pinout (from top to bottom)
 
@@ -22,17 +22,17 @@ pin | function
 1   | +5V (250mA)
 2   | 0-5V TX (from heatpump)
 3   | 0-5V RX (to heatpump)
-4   | +12V (250mA)
+4   | NC (not connected)
 5   | GND
 
 ## ESPHome example yaml code
 
 ```yaml
 substitutions:
-  pin_rx_hp: GPIO4  # heatpump reads data (RX) on this pin
-  pin_tx_hp: GPIO3  # heatpump sends data (TX) on this pin
-  pin_tx_wm: GPIO1  # WiFi module sends data (TX) on this pin
-  pin_rx_wm: GPIO0  # WiFi module reads data (RX) on this pin
+  pin_rx_hp: GPIO37  # heatpump reads data (RX) on this pin    (yellow)
+  pin_tx_hp: GPIO39  # heatpump sends data (TX) on this pin    (green)
+  pin_tx_wm: GPIO18  # WiFi module sends data (TX) on this pin (white)
+  pin_rx_wm: GPIO16  # WiFi module reads data (RX) on this pin (blue)
 
 external_components:
   - source:
@@ -60,8 +60,8 @@ panasonic_heatpump:
   id: my_heatpump
   uart_id: uart_heatpump
   uart_client_id: uart_cz_taw1
-  log_uart_msg: false
-  update_interval: 3s
+  log_uart_msg: true
+  update_interval: 5s
 
 sensor:
   - platform: panasonic_heatpump
