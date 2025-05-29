@@ -271,8 +271,7 @@ namespace esphome
       std::vector<uint8_t> response_message_;
       std::vector<uint8_t> request_message_;
       std::vector<uint8_t> command_message_;
-      uint8_t response_payload_length_;
-      uint8_t request_payload_length_;
+      uint8_t payload_length_;
       uint8_t byte_;
       uint8_t current_response_count_ { 0 };
       uint8_t last_response_count_ { 0 };
@@ -290,6 +289,7 @@ namespace esphome
       void set_command_byte(const uint8_t value, const uint8_t index);
       void set_command_bytes(const std::vector<std::tuple<uint8_t, uint8_t>>& data);
       // sensor and control publish functions
+      void set_min_max_number(const std::vector<uint8_t>& data);
       void publish_sensor(const std::vector<uint8_t>& data);
       void publish_binary_sensor(const std::vector<uint8_t>& data);
       void publish_text_sensor(const std::vector<uint8_t>& data);
