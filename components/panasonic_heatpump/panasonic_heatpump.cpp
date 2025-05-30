@@ -38,13 +38,83 @@ namespace esphome
 
     void PanasonicHeatpumpComponent::loop()
     {
-      this->read_response();
-      this->send_request();
-      this->read_request();
-
-      // Next request will be polling
-      this->next_request_ = 1;
-      this->trigger_request_ = false;
+      switch (this->loop_state_)
+      {
+        case 0:
+        {
+          this->read_response();
+          this->loop_state_ = 1;
+          break;
+        }
+        case 1:
+        {
+          bool result = this->check_response(this->heatpump_message_);
+          this->loop_state_ = result ? 10 : 90;
+          break;
+        }
+        case 10:
+        {
+          this->set_min_max_number(this->heatpump_message_);
+          this->loop_state_ = 20;
+          break;
+        }
+        case 20:
+        {
+          this->publish_sensor(this->heatpump_message_);
+          this->loop_state_ = 21;
+          break;
+        }
+        case 21:
+        {
+          this->publish_binary_sensor(this->heatpump_message_);
+          this->loop_state_ = 22;
+          break;
+        }
+        case 22:
+        {
+          this->publish_text_sensor(this->heatpump_message_);
+          this->loop_state_ = 23;
+          break;
+        }
+        case 23:
+        {
+          this->publish_number(this->heatpump_message_);
+          this->loop_state_ = 24;
+          break;
+        }
+        case 24:
+        {
+          this->publish_select(this->heatpump_message_);
+          this->loop_state_ = 25;
+          break;
+        }
+        case 25:
+        {
+          this->publish_switch(this->heatpump_message_);
+          this->loop_state_ = 90;
+          break;
+        }
+        case 90:
+        {
+          this->send_request();
+          this->loop_state_ = 91;
+          break;
+        }
+        case 91:
+        {
+          this->read_request();
+          this->loop_state_ = 92;
+          break;
+        }
+        default:
+        {
+          // Next request will be polling
+          this->next_request_ = 1;
+          this->trigger_request_ = false;
+          this->loop_state_ = 0;
+          break;
+        }
+      };
     }
 
     void PanasonicHeatpumpComponent::read_response()
@@ -71,7 +141,7 @@ namespace esphome
         // 2. byte contains the payload size
         if (this->response_message_.size() == 2)
         {
-          this->response_payload_length_ = byte_;
+          this->payload_length_ = byte_;
         }
         // Discard message if format is wrong
         if ((this->response_message_.size() == 3 ||
@@ -87,12 +157,12 @@ namespace esphome
 
         // Check if message is complete
         if (this->response_message_.size() > 2 &&
-            this->response_message_.size() == this->response_payload_length_ + 3)
+            this->response_message_.size() == this->payload_length_ + 3)
         {
-          this->temp_message_ = this->response_message_;
+          this->heatpump_message_ = this->response_message_;
           this->response_receiving_ = false;
-          this->log_uart_hex(UART_LOG_RX, this->response_message_, ',');
-          this->decode_response(this->response_message_);;
+          this->current_response_count_++;
+          if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_RX, this->response_message_, ',');
         }
       }
     }
@@ -103,7 +173,7 @@ namespace esphome
 
       if (this->next_request_ == 2) // command
       {
-        this->log_uart_hex(UART_LOG_TX, this->command_message_, ',');
+        if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, this->command_message_, ',');
         this->write_array(this->command_message_);
         this->flush();
         return;
@@ -114,13 +184,13 @@ namespace esphome
       if (this->next_request_ == 0) // initial
       {
         // Probably not necessary but CZ-TAW1 sends this query on boot
-        this->log_uart_hex(UART_LOG_TX, PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE, ',');
+        if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE, ',');
         this->write_array(PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE);
         this->flush();
       }
       else if (this->next_request_ == 1) // polling
       {
-        this->log_uart_hex(UART_LOG_TX, PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE, ',');
+        if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE, ',');
         this->write_array(PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE);
         this->flush();
       }
@@ -149,7 +219,7 @@ namespace esphome
         // 2. byte contains the payload size
         if (this->request_message_.size() == 2)
         {
-          this->request_payload_length_ = byte_;
+          this->payload_length_ = byte_;
         }
         // Discard message if format is wrong
         if ((this->request_message_.size() == 3 ||
@@ -165,76 +235,35 @@ namespace esphome
 
         // Check if message is complete
         if (this->request_message_.size() > 2 &&
-            this->request_message_.size() == this->request_payload_length_ + 3)
+            this->request_message_.size() == this->payload_length_ + 3)
         {
           this->request_receiving_ = false;
-          this->log_uart_hex(UART_LOG_TX, this->request_message_, ',');
+          if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, this->request_message_, ',');
         }
       }
     }
 
     int PanasonicHeatpumpComponent::getResponseByte(const int index)
     {
+      if (this->heatpump_message_.size() > index) return this->heatpump_message_[index];
       if (this->response_message_.size() > index) return this->response_message_[index];
-      if (this->temp_message_.size() > index) return this->temp_message_[index];
       return -1;
     }
 
-    void PanasonicHeatpumpComponent::log_uart_hex(UartLogDirection direction, const std::vector<uint8_t>& data, const char separator)
-    {
-      this->log_uart_hex(direction, &data[0], data.size(), separator);
-    }
-    void PanasonicHeatpumpComponent::log_uart_hex(UartLogDirection direction, const uint8_t* data, const size_t length, const char separator)
-    {
-      if (this->log_uart_msg_ == false) return;
-
-      std::string logStr = "";
-      std::string msgDir = direction == UART_LOG_TX ? ">>>" : "<<<";
-      std::string msgType = direction == UART_LOG_TX ? "request" : "response";
-      switch(data[0])
-      {
-        case 0x31:
-          msgType = "initial_" + msgType;
-          break;
-        case 0x71:
-          msgType = "polling_" + msgType;
-          break;
-        case 0xF1:
-          msgType = "command_" + msgType;
-          break;
-      };
-
-      ESP_LOGI(TAG, "%s %s[%i]", msgDir.c_str(), msgType.c_str(), length);
-      delay(10);
-
-      char buffer[5];
-      for (size_t i = 0; i < length; i++)
-      {
-        if (i > 0) logStr += separator;
-        sprintf(buffer, "%02X", data[i]);
-        logStr += buffer;
-      }
-
-      for (size_t i = 0; i < logStr.length(); i += UART_LOG_CHUNK_SIZE)
-      {
-        ESP_LOGI(TAG, "%s %s", msgDir.c_str(), logStr.substr(i, UART_LOG_CHUNK_SIZE).c_str());
-        delay(10);
-      }
-    }
-
-    void PanasonicHeatpumpComponent::decode_response(const std::vector<uint8_t>& data)
+    bool PanasonicHeatpumpComponent::check_response(const std::vector<uint8_t>& data)
     {
       // Read response message:
       // format:          0x71 [payload_length] 0x01 0x10 [[TOP0 - TOP114] ...] 0x00 [checksum]
       // payload_length:  payload_length + 3 = packet_length
       // checksum:        if (sum(all bytes) & 0xFF == 0) ==> valid packet
 
-      if (data[0] != 0x71) return;
+      if (data.empty()) return false;
+      if (data[0] != 0x71) return false;
       if (data.size() != RESPONSE_MSG_SIZE)
       {
         ESP_LOGW(TAG, "Invalid response message length: recieved %d - expected %d", data.size(), RESPONSE_MSG_SIZE);
         delay(10);
-        return;
+        return false;
       }
 
       uint8_t checksum = 0;
@@ -247,15 +276,12 @@ namespace esphome
       {
         ESP_LOGW(TAG, "Invalid response message: checksum = 0x%02X, last_byte = 0x%02X", checksum, data[202]);
         delay(10);
-        return;
+        return false;
       }
 
-      this->publish_sensor(data);
-      this->publish_binary_sensor(data);
-      this->publish_text_sensor(data);
-      this->publish_number(data);
-      this->publish_select(data);
-      this->publish_switch(data);
+      if (this->last_response_count_ == this->current_response_count_) return false;
+      this->last_response_count_ = this->current_response_count_;
+      return true;
     }
 
     void PanasonicHeatpumpComponent::set_command_byte(const uint8_t value, const uint8_t index)
@@ -299,8 +325,55 @@ namespace esphome
       this->trigger_request_ = true;
     }
 
+    void PanasonicHeatpumpComponent::set_min_max_number(const std::vector<uint8_t>& data)
+    {
+      if (data.empty()) return;
+#ifdef USE_TEXT_SENSOR
+#ifdef USE_NUMBER
+      auto newStateTop76 = PanasonicDecode::getTextState(PanasonicDecode::HeatCoolModeDesc, PanasonicDecode::getBit7and8(data[28]));
+      if (this->top76_text_sensor_->get_state() != newStateTop76)
+      {
+        if (this->top76_text_sensor_->get_state() == PanasonicDecode::HeatCoolModeDesc[2])
+        {
+          this->set5_number_->traits.set_max_value(20);
+          this->set5_number_->traits.set_max_value(60);
+          this->set6_number_->traits.set_max_value(20);
+          this->set6_number_->traits.set_max_value(60);
+        }
+        else
+        {
+          this->set5_number_->traits.set_max_value(5);
+          this->set5_number_->traits.set_max_value(-5);
+          this->set6_number_->traits.set_max_value(5);
+          this->set6_number_->traits.set_max_value(-5);
+        }
+      }
+
+      auto newStateTop81 = PanasonicDecode::getTextState(PanasonicDecode::HeatCoolModeDesc, PanasonicDecode::getBit5and6(data[28]));
+      if (this->top81_text_sensor_->get_state() != newStateTop81)
+      {
+        if (this->top81_text_sensor_->get_state() == PanasonicDecode::HeatCoolModeDesc[2])
+        {
+          this->set7_number_->traits.set_max_value(20);
+          this->set7_number_->traits.set_max_value(60);
+          this->set8_number_->traits.set_max_value(20);
+          this->set8_number_->traits.set_max_value(60);
+        }
+        else
+        {
+          this->set7_number_->traits.set_max_value(5);
+          this->set7_number_->traits.set_max_value(-5);
+          this->set8_number_->traits.set_max_value(5);
+          this->set8_number_->traits.set_max_value(-5);
+        }
+      }
+#endif
+#endif
+    }
+
     void PanasonicHeatpumpComponent::publish_sensor(const std::vector<uint8_t>& data)
     {
+      if (data.empty()) return;
 #ifdef USE_SENSOR
       if (this->top1_sensor_) this->top1_sensor_->publish_state(PanasonicDecode::getPumpFlow(data[169], data[170]));
       if (this->top5_sensor_) this->top5_sensor_->publish_state(PanasonicDecode::getByteMinus128(data[143]) + PanasonicDecode::getFractional(data[118], 0));
@@ -402,6 +475,7 @@ namespace esphome
 
     void PanasonicHeatpumpComponent::publish_binary_sensor(const std::vector<uint8_t>& data)
     {
+      if (data.empty()) return;
 #ifdef USE_BINARY_SENSOR
       if (this->top0_binary_sensor_) this->top0_binary_sensor_->publish_state(PanasonicDecode::getBinaryState(PanasonicDecode::getBit7and8(data[4])));
       if (this->top2_binary_sensor_) this->top2_binary_sensor_->publish_state(PanasonicDecode::getBinaryState(PanasonicDecode::getBit1and2(data[4])));
@@ -431,6 +505,7 @@ namespace esphome
 
     void PanasonicHeatpumpComponent::publish_text_sensor(const std::vector<uint8_t>& data)
     {
+      if (data.empty()) return;
 #ifdef USE_TEXT_SENSOR
       if (this->top4_text_sensor_) this->top4_text_sensor_->publish_state(PanasonicDecode::getTextState(PanasonicDecode::OpModeDesc, PanasonicDecode::getOpMode(data[6])));
       if (this->top17_text_sensor_) this->top17_text_sensor_->publish_state(PanasonicDecode::getTextState(PanasonicDecode::Powerfulmode, PanasonicDecode::getBit6and7and8(data[7])));
@@ -458,6 +533,7 @@ namespace esphome
 
     void PanasonicHeatpumpComponent::publish_number(const std::vector<uint8_t>& data)
     {
+      if (data.empty()) return;
 #ifdef USE_NUMBER
       if (this->set11_number_) this->set11_number_->publish_state(PanasonicDecode::getByteMinus128(data[42]));
       if (this->set20_number_) this->set20_number_->publish_state(PanasonicDecode::getByteMinus128(data[99]));
@@ -497,6 +573,7 @@ namespace esphome
 
     void PanasonicHeatpumpComponent::publish_select(const std::vector<uint8_t>& data)
     {
+      if (data.empty()) return;
 #ifdef USE_SELECT
       if (this->set9_select_) this->set9_select_->publish_state(PanasonicDecode::getTextState(PanasonicDecode::OpModeDesc, PanasonicDecode::getOpMode(data[6])));
       if (this->set4_select_) this->set4_select_->publish_state(PanasonicDecode::getTextState(PanasonicDecode::Powerfulmode, PanasonicDecode::getBit6and7and8(data[7])));
@@ -510,6 +587,7 @@ namespace esphome
 
     void PanasonicHeatpumpComponent::publish_switch(const std::vector<uint8_t>& data)
     {
+      if (data.empty()) return;
 #ifdef USE_SWITCH
       if (this->set1_switch_) this->set1_switch_->publish_state(PanasonicDecode::getBinaryState(PanasonicDecode::getBit7and8(data[4])));
       if (this->set10_switch_) this->set10_switch_->publish_state(PanasonicDecode::getBinaryState(PanasonicDecode::getBit1and2(data[4])));

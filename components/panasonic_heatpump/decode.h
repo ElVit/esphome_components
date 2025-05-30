@@ -4,7 +4,7 @@
 #include <vector>
 
 #define RESPONSE_MSG_SIZE 203
-#define NUMBER_OF_MODELS 53
+#define NUMBER_OF_MODELS 55
 
 
 namespace esphome
@@ -60,13 +60,14 @@ namespace esphome
       static const constexpr char* const ZonesSensorType[] = { "4", "Water Temperature", "External Thermostat", "Internal Thermostat", "Thermistor" };
       static const constexpr char* const Quietmode[] = { "4", "Off", "Level 1", "Level 2", "Level 3" };
       static const constexpr char* const Powerfulmode[] = { "4", "Off", "30min", "60min", "90min" };
-      static const constexpr char* const OpModeDesc[] = { "11", "Heat only", "Cool only", "Auto", "Auto(heat)", "Auto(cool)", "DHW only", "Heat+DHW", "Cool+DHW", "Auto+DHW", "Auto(heat)+DHW", "Auto(cool)+DHW" };
+      static const constexpr char* const OpModeDesc[] = { "11", "Heat only", "Cool only", "Auto", "Auto(heat)", "Auto(cool)", "DHW only",
+                                                                "Heat+DHW", "Cool+DHW", "Auto+DHW", "Auto(heat)+DHW", "Auto(cool)+DHW" };
       static const constexpr char* const ZonesState[] = { "3", "Zone 1", "Zone 2", "Zone 1 & 2" };
       static const constexpr char* const ExtPadHeaterType[] = { "3", "Disabled", "Type-A", "Type-B" };
       static const constexpr char* const Bivalent[] = { "3", "Alternative", "Parallel", "Advanced Parallel" };
       static const constexpr char* const ModelNames[] =
       {
-        "53", //string representation of number of known models (last model number + 1)
+        "55", // string representation of number of known models (last model number + 1)
         "WH-MDC05H3E5", // 0
         "WH-MDC07H3E5", // 1
         "IDU:WH-SXC09H3E5, ODU:WH-UX09HE5", // 2
@@ -117,8 +118,11 @@ namespace esphome
         "IDU:WH-ADC0916H9E8, ODU:WH-UX12HE8", // 47
         "IDU:WH-SDC0509L3E5, ODU:WH-WDG07LE5", // 48
         "IDU:WH-SXC09H3E5, ODU:WH-UX09HE5", // 49
+        "WH-MXC12H9E8", // 50
         "IDU:WH-ADC0509L3E5AN, ODU:WH-WDG05LE5", // 51
         "IDU:WH-SDC0509L3E5, ODU:WH-WDG05LE5", // 52
+        "IDU:WH-ADC0309J3E5C, ODU:WH-UD03JE5", // 53
+        "IDU:WH-ADC0916H9E8, ODU:WH-UX09HE8", // 54
       };
     };
 
