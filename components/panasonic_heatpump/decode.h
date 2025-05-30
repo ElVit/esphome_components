@@ -4,7 +4,7 @@
 #include <vector>
 
 #define RESPONSE_MSG_SIZE 203
-#define NUMBER_OF_MODELS 53
+#define NUMBER_OF_MODELS 55
 
 
 namespace esphome
@@ -67,7 +67,7 @@ namespace esphome
       static const constexpr char* const Bivalent[] = { "3", "Alternative", "Parallel", "Advanced Parallel" };
       static const constexpr char* const ModelNames[] =
       {
-        "53", //string representation of number of known models (last model number + 1)
+        "55", // string representation of number of known models (last model number + 1)
         "WH-MDC05H3E5", // 0
         "WH-MDC07H3E5", // 1
         "IDU:WH-SXC09H3E5, ODU:WH-UX09HE5", // 2
