@@ -54,7 +54,7 @@ namespace esphome
         }
         case 10:
         {
-          this->set_min_max_number(this->heatpump_message_);
+          this->set_number_min_max_value(this->heatpump_message_);
           this->loop_state_ = 20;
           break;
         }
@@ -325,47 +325,59 @@ namespace esphome
       this->trigger_request_ = true;
     }
 
-    void PanasonicHeatpumpComponent::set_min_max_number(const std::vector<uint8_t>& data)
+    void PanasonicHeatpumpComponent::set_number_min_max_value(const std::vector<uint8_t>& data)
     {
       if (data.empty()) return;
 #ifdef USE_TEXT_SENSOR
 #ifdef USE_NUMBER
-      auto newStateTop76 = PanasonicDecode::getTextState(PanasonicDecode::HeatCoolModeDesc, PanasonicDecode::getBit7and8(data[28]));
-      if (this->top76_text_sensor_->get_state() != newStateTop76)
+      if (this->set5_number_->traits.get_min_value() > 0.0 &&               // Z1 Heat Request Temperature
+          this->top76_text_sensor_->get_state() == PanasonicDecode::HeatCoolModeDesc[1])  // Heating Mode
       {
-        if (this->top76_text_sensor_->get_state() == PanasonicDecode::HeatCoolModeDesc[2])
-        {
-          this->set5_number_->traits.set_max_value(20);
-          this->set5_number_->traits.set_max_value(60);
-          this->set6_number_->traits.set_max_value(20);
-          this->set6_number_->traits.set_max_value(60);
-        }
-        else
-        {
-          this->set5_number_->traits.set_max_value(5);
-          this->set5_number_->traits.set_max_value(-5);
-          this->set6_number_->traits.set_max_value(5);
-          this->set6_number_->traits.set_max_value(-5);
-        }
+        this->set5_number_->traits.set_min_value(-5.0);
+        this->set5_number_->traits.set_max_value(5.0);
+      }
+      if (this->set6_number_->traits.get_min_value() > 0.0 &&               // Z1 Cool Request Temperature
+          this->top81_text_sensor_->get_state() == PanasonicDecode::HeatCoolModeDesc[1])  // Cooling Mode
+      {
+        this->set6_number_->traits.set_min_value(-5.0);
+        this->set6_number_->traits.set_max_value(5.0);
+      }
+      if (this->set7_number_->traits.get_min_value() > 0.0 &&               // Z2 Heat Request Temperature
+          this->top76_text_sensor_->get_state() == PanasonicDecode::HeatCoolModeDesc[1])   // Heating Mode
+      {
+        this->set7_number_->traits.set_min_value(-5.0);
+        this->set7_number_->traits.set_max_value(5.0);
+      }
+      if (this->set8_number_->traits.get_min_value() > 0.0 &&               // Z2 Cool Request Temperature
+          this->top81_text_sensor_->get_state() == PanasonicDecode::HeatCoolModeDesc[1])  // Cooling Mode
+      {
+        this->set8_number_->traits.set_min_value(-5.0);
+        this->set8_number_->traits.set_max_value(5.0);
       }
 
-      auto newStateTop81 = PanasonicDecode::getTextState(PanasonicDecode::HeatCoolModeDesc, PanasonicDecode::getBit5and6(data[28]));
-      if (this->top81_text_sensor_->get_state() != newStateTop81)
+      if (this->set5_number_->traits.get_min_value() < 0.0 &&               // Z1 Heat Request Temperature
+          this->top76_text_sensor_->get_state() == PanasonicDecode::HeatCoolModeDesc[2])  // Heating Mode
       {
-        if (this->top81_text_sensor_->get_state() == PanasonicDecode::HeatCoolModeDesc[2])
-        {
-          this->set7_number_->traits.set_max_value(20);
-          this->set7_number_->traits.set_max_value(60);
-          this->set8_number_->traits.set_max_value(20);
-          this->set8_number_->traits.set_max_value(60);
-        }
-        else
-        {
-          this->set7_number_->traits.set_max_value(5);
-          this->set7_number_->traits.set_max_value(-5);
-          this->set8_number_->traits.set_max_value(5);
-          this->set8_number_->traits.set_max_value(-5);
-        }
+        this->set5_number_->traits.set_min_value(20.0);
+        this->set5_number_->traits.set_max_value(60.0);
+      }
+      if (this->set6_number_->traits.get_min_value() < 0.0 &&               // Z1 Cool Request Temperature
+          this->top81_text_sensor_->get_state() == PanasonicDecode::HeatCoolModeDesc[2])  // Cooling Mode
+      {
+        this->set6_number_->traits.set_min_value(20.0);
+        this->set6_number_->traits.set_max_value(60.0);
+      }
+      if (this->set7_number_->traits.get_min_value() < 0.0 &&               // Z2 Heat Request Temperature
+          this->top76_text_sensor_->get_state() == PanasonicDecode::HeatCoolModeDesc[2])  // Heating Mode
+      {
+        this->set7_number_->traits.set_min_value(20.0);
+        this->set7_number_->traits.set_max_value(60.0);
+      }
+      if (this->set8_number_->traits.get_min_value() < 0.0 &&               // Z2 Cool Request Temperature
+          this->top81_text_sensor_->get_state() == PanasonicDecode::HeatCoolModeDesc[2])  // Cooling Mode
+      {
+        this->set8_number_->traits.set_min_value(20.0);
+        this->set8_number_->traits.set_max_value(60.0);
       }
 #endif
 #endif

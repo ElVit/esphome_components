@@ -289,7 +289,7 @@ namespace esphome
       void set_command_byte(const uint8_t value, const uint8_t index);
       void set_command_bytes(const std::vector<std::tuple<uint8_t, uint8_t>>& data);
       // sensor and control publish functions
-      void set_min_max_number(const std::vector<uint8_t>& data);
+      void set_number_min_max_value(const std::vector<uint8_t>& data);
       void publish_sensor(const std::vector<uint8_t>& data);
       void publish_binary_sensor(const std::vector<uint8_t>& data);
       void publish_text_sensor(const std::vector<uint8_t>& data);
