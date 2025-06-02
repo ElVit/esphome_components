@@ -11,6 +11,7 @@ CONF_SET2 = "set2"  # Set Holiday Mode
 CONF_SET3 = "set3"  # Set Quiet Mode
 CONF_SET4 = "set4"  # Set Powerful Mode
 CONF_SET9 = "set9"  # Set Operation Mode
+# ToDo: Split up set9 into set9_1 (Heating Mode) and set9_2 (DHW Mode)
 CONF_SET17 = "set17"  # Set Zones
 CONF_SET26 = "set26"  # Set External PadHeater
 CONF_SET35 = "set35"  # Set Bivalent Mode
