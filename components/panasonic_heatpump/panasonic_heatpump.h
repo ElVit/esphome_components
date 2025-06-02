@@ -34,6 +34,29 @@ namespace esphome
 {
   namespace panasonic_heatpump
   {
+    enum LoopState
+    {
+      READ_RESPONSE,
+      CHECK_RESPONSE,
+      SET_NUMBER_TRAITS,
+      PUBLISH_SENSOR,
+      PUBLISH_BINARY_SENSOR,
+      PUBLISH_TEXT_SENSOR,
+      PUBLISH_NUMBER,
+      PUBLISH_SELECT,
+      PUBLISH_SWITCH,
+      SEND_REQUEST,
+      READ_REQUEST,
+      RESTART_LOOP
+    };
+
+    enum RequestType
+    {
+      INITIAL,
+      POLLING,
+      COMMAND
+    };
+
     class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDevice
     {
     public:
@@ -277,9 +300,11 @@ namespace esphome
       uint8_t last_response_count_ { 0 };
       bool response_receiving_ { false };
       bool request_receiving_ { false };
-      bool trigger_request_ { false };
-      uint8_t next_request_ { 0 };  // 0 = initial, 1 = polling, 2 = command
-      uint8_t loop_state_ { 0 };
+      bool trigger_request_ { true };
+      RequestType next_request_ { RequestType::INITIAL };
+      LoopState loop_state_ { LoopState::RESTART_LOOP };
+      bool setup_completed_ { false };
+      bool reboot_ { false };
 
       // uart message functions
       void read_response();
@@ -289,7 +314,7 @@ namespace esphome
       void set_command_byte(const uint8_t value, const uint8_t index);
       void set_command_bytes(const std::vector<std::tuple<uint8_t, uint8_t>>& data);
       // sensor and control publish functions
-      void set_number_min_max_value(const std::vector<uint8_t>& data);
+      void set_number_traits(const std::vector<uint8_t>& data);
       void publish_sensor(const std::vector<uint8_t>& data);
       void publish_binary_sensor(const std::vector<uint8_t>& data);
       void publish_text_sensor(const std::vector<uint8_t>& data);
