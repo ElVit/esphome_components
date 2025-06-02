@@ -54,7 +54,8 @@ namespace esphome
     {
       INITIAL,
       POLLING,
-      COMMAND
+      COMMAND,
+      NONE
     };
 
     class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDevice
@@ -274,7 +275,7 @@ namespace esphome
 
       PanasonicHeatpumpComponent() = default;
       // base class functions
-      float get_setup_priority() const override { return setup_priority::LATE; }
+      float get_setup_priority() const override { return setup_priority::DATA; }
       void dump_config() override;
       void setup() override;
       void update() override;
@@ -300,15 +301,13 @@ namespace esphome
       uint8_t last_response_count_ { 0 };
       bool response_receiving_ { false };
       bool request_receiving_ { false };
-      bool trigger_request_ { true };
       RequestType next_request_ { RequestType::INITIAL };
       LoopState loop_state_ { LoopState::RESTART_LOOP };
-      bool setup_completed_ { false };
-      bool reboot_ { false };
+      uint16_t trait_update_counter_ { 0 };
 
       // uart message functions
       void read_response();
-      void send_request();
+      void send_request(RequestType requestType);
       void read_request();
       bool check_response(const std::vector<uint8_t>& data);
       void set_command_byte(const uint8_t value, const uint8_t index);

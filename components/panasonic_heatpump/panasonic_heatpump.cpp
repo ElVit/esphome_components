@@ -19,24 +19,13 @@ namespace esphome
       ESP_LOGCONFIG(TAG, "Setting up Panasonic Heatpump ...");
       delay(10);  // NOLINT
       this->check_uart_settings(9600, 1, uart::UART_CONFIG_PARITY_EVEN, 8);
-
-      // traits (e.g. min/max values) shall be set in setup,
-      // else the changes will not be visible in home assistant.
-      this->next_request_ = RequestType::POLLING;
-      this->trigger_request_ = true;
-      this->send_request();
-      this->read_response();
-      bool result = this->check_response(this->heatpump_message_);
-      if (result) this->set_number_traits(this->heatpump_message_);
-
-      this->setup_completed_ = true;
-      this->loop_state_ = LoopState::RESTART_LOOP;
+      this->update();
     }
 
     void PanasonicHeatpumpComponent::update()
     {
       if (this->uart_client_ == nullptr)
-        this->trigger_request_ = true;
+        this->next_request_ = RequestType::POLLING;
     }
 
     void PanasonicHeatpumpComponent::loop()
@@ -100,7 +89,7 @@ namespace esphome
         }
         case LoopState::SEND_REQUEST:
         {
-          this->send_request();
+          this->send_request(this->next_request_);
           this->loop_state_ = LoopState::READ_REQUEST;
           break;
         }
@@ -112,18 +101,16 @@ namespace esphome
         }
         default:
         {
-          // perform reboot only if a change (e.g. min/max value of a number entity) was detected
-          if (this->reboot_)
+          // Perform reboot only if a traits (e.g. min/max value of a number entity) was changed the second time.
+          // The first traits change should happen before controller is connected to home assistant,
+          // because the default min/max value is 0.
+          if (this->trait_update_counter_ > 1)
           {
-            this->reboot_ = false;
-            ESP_LOGW(TAG, "Limits have changed. Rebooting so Home Assistant reconfigures the number component.");
+            ESP_LOGW(TAG, "Min/max values have changed. Rebooting so Home Assistant reconfigures the number component.");
             delay(100);   // NOLINT
-            //App.safe_reboot();
+            App.safe_reboot();
           }
 
-          // Next request will be polling
-          this->trigger_request_ = false;
-          this->next_request_ = RequestType::POLLING;
           this->loop_state_ = LoopState::READ_RESPONSE;
           break;
         }
@@ -180,33 +167,35 @@ namespace esphome
       }
     }
 
-    void PanasonicHeatpumpComponent::send_request()
+    void PanasonicHeatpumpComponent::send_request(RequestType requestType)
     {
-      if (this->trigger_request_ == false) return;
-
-      if (this->next_request_ == RequestType::COMMAND)
+      switch (requestType)
       {
-        if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, this->command_message_, ',');
-        this->write_array(this->command_message_);
-        this->flush();
-        return;
-      }
+        case RequestType::COMMAND:
+        {
+          if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, this->command_message_, ',');
+          this->write_array(this->command_message_);
+          this->flush();
+          break;
+        }
+        case RequestType::INITIAL:
+        {
+          // Probably not necessary but CZ-TAW1 sends this query on boot
+          if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE, ',');
+          this->write_array(PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE);
+          this->flush();
+          break;
+        }
+        case RequestType::POLLING:
+        {
+          if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE, ',');
+          this->write_array(PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE);
+          this->flush();
+          break;
+        }
+      };
 
-      if (this->uart_client_ != nullptr) return;
-
-      if (this->next_request_ == RequestType::INITIAL)
-      {
-        // Probably not necessary but CZ-TAW1 sends this query on boot
-        if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE, ',');
-        this->write_array(PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE);
-        this->flush();
-      }
-      else if (this->next_request_ == RequestType::POLLING)
-      {
-        if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE, ',');
-        this->write_array(PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE);
-        this->flush();
-      }
+      this->next_request_ = RequestType::NONE;
     }
 
     void PanasonicHeatpumpComponent::read_request()
@@ -299,7 +288,7 @@ namespace esphome
 
     void PanasonicHeatpumpComponent::set_command_byte(const uint8_t value, const uint8_t index)
     {
-      if (this->next_request_ == RequestType::POLLING)
+      if (this->next_request_ != RequestType::COMMAND)
       {
         // initialize the command
         command_message_.assign(std::begin(PanasonicCommand::CommandMessage),
@@ -312,12 +301,11 @@ namespace esphome
 
       // command will be send on next loop
       this->next_request_ = RequestType::COMMAND;
-      this->trigger_request_ = true;
     }
 
     void PanasonicHeatpumpComponent::set_command_bytes(const std::vector<std::tuple<uint8_t, uint8_t>>& data)
     {
-      if (this->next_request_ == RequestType::POLLING)
+      if (this->next_request_ != RequestType::COMMAND)
       {
         // initialize the command
         command_message_.assign(std::begin(PanasonicCommand::CommandMessage),
@@ -335,7 +323,6 @@ namespace esphome
 
       // command will be send on next loop
       this->next_request_ = RequestType::COMMAND;
-      this->trigger_request_ = true;
     }
 
     void PanasonicHeatpumpComponent::set_number_traits(const std::vector<uint8_t>& data)
@@ -344,9 +331,9 @@ namespace esphome
 #ifdef USE_NUMBER
       if (data.empty()) return;
 
-      // traits can be changed anytime, but home assistant will only update the entities,
-      // if the trait was called in setup(). If now a trait must be changed after setup,
-      // a reboot of the esp controller is required to see the changes in home assistant.
+      // traits can be changed anytime, but entities will only be updated in home assistant,
+      // if the traits was set before connecting to home assistant. If now a traits must be changed later,
+      // a reboot of the ESP controller is required to see the changes in home assistant.
 
       bool change_detected = false;
       std::string top76 = PanasonicDecode::getTextState(
@@ -383,25 +370,25 @@ namespace esphome
         change_detected = true;
       }
 
-      if (set5_min < 0.0 && top76 == PanasonicDecode::HeatCoolModeDesc[2])
+      if (set5_min <= 0.0 && top76 == PanasonicDecode::HeatCoolModeDesc[2])
       {
         this->set5_number_->traits.set_min_value(20.0);
         this->set5_number_->traits.set_max_value(60.0);
         change_detected = true;
       }
-      if (set6_min < 0.0 && top81 == PanasonicDecode::HeatCoolModeDesc[2])
+      if (set6_min <= 0.0 && top81 == PanasonicDecode::HeatCoolModeDesc[2])
       {
         this->set6_number_->traits.set_min_value(20.0);
         this->set6_number_->traits.set_max_value(60.0);
         change_detected = true;
       }
-      if (set7_min < 0.0 && top76 == PanasonicDecode::HeatCoolModeDesc[2])
+      if (set7_min <= 0.0 && top76 == PanasonicDecode::HeatCoolModeDesc[2])
       {
         this->set7_number_->traits.set_min_value(20.0);
         this->set7_number_->traits.set_max_value(60.0);
         change_detected = true;
       }
-      if (set8_min < 0.0 && top81 == PanasonicDecode::HeatCoolModeDesc[2])
+      if (set8_min <= 0.0 && top81 == PanasonicDecode::HeatCoolModeDesc[2])
       {
         this->set8_number_->traits.set_min_value(20.0);
         this->set8_number_->traits.set_max_value(60.0);
@@ -410,10 +397,7 @@ namespace esphome
 
       if (change_detected)
       {
-        if (this->setup_completed_)
-        {
-          this->reboot_ = true;
-        }
+        this->trait_update_counter_++;
       }
 #endif
 #endif
