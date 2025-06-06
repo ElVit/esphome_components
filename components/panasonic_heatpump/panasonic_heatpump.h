@@ -45,6 +45,7 @@ namespace esphome
       PUBLISH_NUMBER,
       PUBLISH_SELECT,
       PUBLISH_SWITCH,
+      STORE_RESPONSE,
       SEND_REQUEST,
       READ_REQUEST,
       RESTART_LOOP
@@ -214,15 +215,15 @@ namespace esphome
       SUB_NUMBER(set8);
       SUB_NUMBER(set11);
       SUB_NUMBER(set15);
-      SUB_NUMBER(set16_1);
-      SUB_NUMBER(set16_2);
-      SUB_NUMBER(set16_3);
-      SUB_NUMBER(set16_4);
-      SUB_NUMBER(set16_5);
-      SUB_NUMBER(set16_6);
-      SUB_NUMBER(set16_7);
-      SUB_NUMBER(set16_8);
-      SUB_NUMBER(set16_9);
+      SUB_NUMBER(set16_01);
+      SUB_NUMBER(set16_02);
+      SUB_NUMBER(set16_03);
+      SUB_NUMBER(set16_04);
+      SUB_NUMBER(set16_05);
+      SUB_NUMBER(set16_06);
+      SUB_NUMBER(set16_07);
+      SUB_NUMBER(set16_08);
+      SUB_NUMBER(set16_09);
       SUB_NUMBER(set16_10);
       SUB_NUMBER(set16_11);
       SUB_NUMBER(set16_12);
@@ -292,6 +293,7 @@ namespace esphome
       bool log_uart_msg_ { false };
       // uart message variables
       std::vector<uint8_t> heatpump_message_;
+      std::vector<uint8_t> last_message_;
       std::vector<uint8_t> response_message_;
       std::vector<uint8_t> request_message_;
       std::vector<uint8_t> command_message_;
@@ -310,16 +312,18 @@ namespace esphome
       void send_request(RequestType requestType);
       void read_request();
       bool check_response(const std::vector<uint8_t>& data);
+      void set_command_high_nibble(const uint8_t value, const uint8_t index);
+      void set_command_low_nibble(const uint8_t value, const uint8_t index);
       void set_command_byte(const uint8_t value, const uint8_t index);
       void set_command_bytes(const std::vector<std::tuple<uint8_t, uint8_t>>& data);
       // sensor and control publish functions
       void set_number_traits(const std::vector<uint8_t>& data);
-      void publish_sensor(const std::vector<uint8_t>& data);
-      void publish_binary_sensor(const std::vector<uint8_t>& data);
-      void publish_text_sensor(const std::vector<uint8_t>& data);
-      void publish_number(const std::vector<uint8_t>& data);
-      void publish_select(const std::vector<uint8_t>& data);
-      void publish_switch(const std::vector<uint8_t>& data);
+      void publish_sensor(const std::vector<uint8_t>& data, const std::vector<uint8_t>& last);
+      void publish_binary_sensor(const std::vector<uint8_t>& data, const std::vector<uint8_t>& last);
+      void publish_text_sensor(const std::vector<uint8_t>& data, const std::vector<uint8_t>& last);
+      void publish_number(const std::vector<uint8_t>& data, const std::vector<uint8_t>& last);
+      void publish_select(const std::vector<uint8_t>& data, const std::vector<uint8_t>& last);
+      void publish_switch(const std::vector<uint8_t>& data, const std::vector<uint8_t>& last);
     };
   }  // namespace panasonic_heatpump
 }  // namespace esphome

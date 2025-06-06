@@ -30,7 +30,7 @@ CONF_SELECTS = [
   [ "Off", "Scheduled", "Active", ],
   [ "Off", "Level 1", "Level 2", "Level 3", ],
   [ "Off", "30min", "60min", "90min", ],
-  [ "Heat only", "Cool only", "Auto", "Auto(heat)", "Auto(cool)", "DHW only", "Heat+DHW", "Cool+DHW", "Auto+DHW", "Auto(heat)+DHW", "Auto(cool)+DHW", ],
+  [ "HEAT", "COOL", "AUTO", "AUTO(HEAT)", "AUTO(COOL)", "TANK", "HEAT+TANK", "COOL+TANK", "AUTO+TANK", "AUTO(HEAT)+TANK", "AUTO(COOL)+TANK", ],
   [ "Zone 1", "Zone 2", "Zone 1 & 2", ],
   [ "Disabled", "Type-A", "Type-B" ],
   [ "Alternative", "Parallel", "Advanced Parallel" ],

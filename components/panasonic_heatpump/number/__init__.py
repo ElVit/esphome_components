@@ -16,15 +16,15 @@ CONF_SET7 = "set7"  # Set Z2 Heat Request Temperature
 CONF_SET8 = "set8"  # Set Z2 Cool Request Temperature
 CONF_SET11 = "set11"  # Set DHW Temp
 CONF_SET15 = "set15"  # Set Max Pump Duty
-CONF_SET16_1 = "set16_1"  # Set Zone1 Heat Target High
-CONF_SET16_2 = "set16_2"  # Set Zone1 Heat Target Low
-CONF_SET16_3 = "set16_3"  # Set Zone1 Heat Outside Low
-CONF_SET16_4 = "set16_4"  # Set Zone1 Heat Outside High
-CONF_SET16_5 = "set16_5"  # Set Zone2 Heat Target High
-CONF_SET16_6 = "set16_6"  # Set Zone2 Heat Target Low
-CONF_SET16_7 = "set16_7"  # Set Zone2 Heat Outside Low
-CONF_SET16_8 = "set16_8"  # Set Zone2 Heat Outside High
-CONF_SET16_9 = "set16_9"  # Set Zone1 Cool Target High
+CONF_SET16_01 = "set16_01"  # Set Zone1 Heat Target High
+CONF_SET16_02 = "set16_02"  # Set Zone1 Heat Target Low
+CONF_SET16_03 = "set16_03"  # Set Zone1 Heat Outside Low
+CONF_SET16_04 = "set16_04"  # Set Zone1 Heat Outside High
+CONF_SET16_05 = "set16_05"  # Set Zone2 Heat Target High
+CONF_SET16_06 = "set16_06"  # Set Zone2 Heat Target Low
+CONF_SET16_07 = "set16_07"  # Set Zone2 Heat Outside Low
+CONF_SET16_08 = "set16_08"  # Set Zone2 Heat Outside High
+CONF_SET16_09 = "set16_09"  # Set Zone1 Cool Target High
 CONF_SET16_10 = "set16_10"  # Set Zone1 Cool Target Low
 CONF_SET16_11 = "set16_11"  # Set Zone1 Cool Outside Low
 CONF_SET16_12 = "set16_12"  # Set Zone1 Cool Outside High
@@ -51,15 +51,15 @@ TYPES = [
   CONF_SET8,
   CONF_SET11,
   CONF_SET15,
-  CONF_SET16_1,
-  CONF_SET16_2,
-  CONF_SET16_3,
-  CONF_SET16_4,
-  CONF_SET16_5,
-  CONF_SET16_6,
-  CONF_SET16_7,
-  CONF_SET16_8,
-  CONF_SET16_9,
+  CONF_SET16_01,
+  CONF_SET16_02,
+  CONF_SET16_03,
+  CONF_SET16_04,
+  CONF_SET16_05,
+  CONF_SET16_06,
+  CONF_SET16_07,
+  CONF_SET16_08,
+  CONF_SET16_09,
   CONF_SET16_10,
   CONF_SET16_11,
   CONF_SET16_12,
@@ -146,47 +146,47 @@ CONFIG_SCHEMA = cv.Schema(
     cv.Optional(CONF_SET15): number.number_schema(
       PanasonicHeatpumpNumber,
     ),
-    cv.Optional(CONF_SET16_1): number.number_schema(
+    cv.Optional(CONF_SET16_01): number.number_schema(
       PanasonicHeatpumpNumber,
       unit_of_measurement=UNIT_CELSIUS,
       entity_category=ENTITY_CATEGORY_CONFIG,
     ),
-    cv.Optional(CONF_SET16_2): number.number_schema(
+    cv.Optional(CONF_SET16_02): number.number_schema(
       PanasonicHeatpumpNumber,
       unit_of_measurement=UNIT_CELSIUS,
       entity_category=ENTITY_CATEGORY_CONFIG,
     ),
-    cv.Optional(CONF_SET16_3): number.number_schema(
+    cv.Optional(CONF_SET16_03): number.number_schema(
       PanasonicHeatpumpNumber,
       unit_of_measurement=UNIT_CELSIUS,
       entity_category=ENTITY_CATEGORY_CONFIG,
     ),
-    cv.Optional(CONF_SET16_4): number.number_schema(
+    cv.Optional(CONF_SET16_04): number.number_schema(
       PanasonicHeatpumpNumber,
       unit_of_measurement=UNIT_CELSIUS,
       entity_category=ENTITY_CATEGORY_CONFIG,
     ),
-    cv.Optional(CONF_SET16_5): number.number_schema(
+    cv.Optional(CONF_SET16_05): number.number_schema(
       PanasonicHeatpumpNumber,
       unit_of_measurement=UNIT_CELSIUS,
       entity_category=ENTITY_CATEGORY_CONFIG,
     ),
-    cv.Optional(CONF_SET16_6): number.number_schema(
+    cv.Optional(CONF_SET16_06): number.number_schema(
       PanasonicHeatpumpNumber,
       unit_of_measurement=UNIT_CELSIUS,
       entity_category=ENTITY_CATEGORY_CONFIG,
     ),
-    cv.Optional(CONF_SET16_7): number.number_schema(
+    cv.Optional(CONF_SET16_07): number.number_schema(
       PanasonicHeatpumpNumber,
       unit_of_measurement=UNIT_CELSIUS,
       entity_category=ENTITY_CATEGORY_CONFIG,
     ),
-    cv.Optional(CONF_SET16_8): number.number_schema(
+    cv.Optional(CONF_SET16_08): number.number_schema(
       PanasonicHeatpumpNumber,
       unit_of_measurement=UNIT_CELSIUS,
       entity_category=ENTITY_CATEGORY_CONFIG,
     ),
-    cv.Optional(CONF_SET16_9): number.number_schema(
+    cv.Optional(CONF_SET16_09): number.number_schema(
       PanasonicHeatpumpNumber,
       unit_of_measurement=UNIT_CELSIUS,
       entity_category=ENTITY_CATEGORY_CONFIG,

@@ -11,19 +11,19 @@ namespace esphome
     constexpr const char* const PanasonicDecode::InactiveActive[];
     constexpr const char* const PanasonicDecode::PumpFlowRateMode[];
     constexpr const char* const PanasonicDecode::HolidayState[];
-    constexpr const char* const PanasonicDecode::OpModeDesc[];
-    constexpr const char* const PanasonicDecode::Powerfulmode[];
-    constexpr const char* const PanasonicDecode::Quietmode[];
-    constexpr const char* const PanasonicDecode::Valve[];
-    constexpr const char* const PanasonicDecode::Valve2[];
+    constexpr const char* const PanasonicDecode::OperationMode[];
+    constexpr const char* const PanasonicDecode::PowerfulMode[];
+    constexpr const char* const PanasonicDecode::QuietMode[];
+    constexpr const char* const PanasonicDecode::ThreeWayValve[];
+    constexpr const char* const PanasonicDecode::TwoWayValve[];
     constexpr const char* const PanasonicDecode::MixingValve[];
-    constexpr const char* const PanasonicDecode::ZonesState[];
-    constexpr const char* const PanasonicDecode::HeatCoolModeDesc[];
-    constexpr const char* const PanasonicDecode::SolarModeDesc[];
-    constexpr const char* const PanasonicDecode::ZonesSensorType[];
+    constexpr const char* const PanasonicDecode::ZoneState[];
+    constexpr const char* const PanasonicDecode::WaterTempControl[];
+    constexpr const char* const PanasonicDecode::SolarMode[];
+    constexpr const char* const PanasonicDecode::ZoneSensorType[];
     constexpr const char* const PanasonicDecode::LiquidType[];
     constexpr const char* const PanasonicDecode::ExtPadHeaterType[];
-    constexpr const char* const PanasonicDecode::Bivalent[];
+    constexpr const char* const PanasonicDecode::BivalentMode[];
     constexpr const char* const PanasonicDecode::ModelNames[];
 
     constexpr const uint8_t KnownModels[NUMBER_OF_MODELS][10] =
@@ -170,32 +170,32 @@ namespace esphome
       return (input & 0b1111) - 1;
     }
 
-    int PanasonicDecode::getWordMinus1(uint8_t low, uint8_t hi)
+    int PanasonicDecode::getWordMinus1(const std::vector<uint8_t>& data, uint8_t index)
     {
-      return ((hi << 8) + low) - 1;
+      return ((data[index + 1] << 8) + data[index]) - 1;
     }
 
-    int PanasonicDecode::getUintt16(uint8_t input1, uint8_t input2)
+    int PanasonicDecode::getUintt16(const std::vector<uint8_t>& data, uint8_t index)
     {
-      return (static_cast<uint16_t>((input2 << 8) | input1)) - 1;
+      return (static_cast<uint16_t>((data[index + 1] << 8) | data[index])) - 1;
     }
 
     // TOP4 //
-    int PanasonicDecode::getOpMode(uint8_t input)
+    int PanasonicDecode::getOperationMode(uint8_t input)
     {
       switch ((int)(input & 0b111111))
       {
-        case 18: return 0;  // heat-only
-        case 19: return 1;  // cool-only
+        case 18: return 0;  // heat
+        case 19: return 1;  // cool
         case 24: return 2;  // auto
         case 25: return 3;  // auto-heat
         case 26: return 4;  // auto-cool
-        case 33: return 5;  // dhw-only
-        case 34: return 6;  // heat+dhw
-        case 35: return 7;  // cool+dhw
-        case 40: return 8;  // auto-dhw
-        case 41: return 9;  // auto-heat+dhw
-        case 42: return 10; // auto-cool+dhw
+        case 33: return 5;  // tank
+        case 34: return 6;  // heat+tank
+        case 35: return 7;  // cool+tank
+        case 40: return 8;  // auto-tank
+        case 41: return 9;  // auto-heat+tank
+        case 42: return 10; // auto-cool+tank
         default: return -1; // unknown
       }
     }
@@ -222,9 +222,9 @@ namespace esphome
     // TOP1 //
     // input1 = data[169]
     // input2 = data[170]
-    float PanasonicDecode::getPumpFlow(uint8_t input1, uint8_t input2)
+    float PanasonicDecode::getPumpFlow(const std::vector<uint8_t>& data, uint8_t index)
     {
-      return (((float)input1 - 1) / 256) + ((int)input2);
+      return (((float)data[index] - 1) / 256) + ((int)data[index + 1]);
     }
 
     // TOP5, TOP6 //
