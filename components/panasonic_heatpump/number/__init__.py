@@ -113,8 +113,8 @@ CONF_NUMBERS = [
   [ 0, 10, 1, ],
   [ 5, 35, 1, ],
   [ -15, 35, 1, ],
-  [ -15, 35, 1, ],
-  [ -15, 35, 1, ],
+  [ -10, 0, 1, ],
+  [ -10, 0, 1, ],
 ]
 
 PanasonicHeatpumpNumber = panasonic_heatpump_ns.class_("PanasonicHeatpumpNumber", number.Number, cg.Component)
