@@ -48,32 +48,32 @@ namespace esphome
 
     uint8_t PanasonicCommand::setMultiply2(size_t input)
     {
-      return input * 2;
+      return input * 0b10;
     }
 
     uint8_t PanasonicCommand::setMultiply4(size_t input)
     {
-      return input * 4;
+      return input * 0b100;
     }
 
     uint8_t PanasonicCommand::setPlus1Multiply4(size_t input)
     {
-      return (input + 1) * 4;
+      return (input + 1) * 0b100;
     }
 
     uint8_t PanasonicCommand::setPlus1Multiply8(size_t input)
     {
-      return (input + 1) * 8;
+      return (input + 1) * 0b1000;
     }
 
     uint8_t PanasonicCommand::setPlus1Multiply16(size_t input)
     {
-      return (input + 1) * 16;
+      return (input + 1) * 0b10000;
     }
 
     uint8_t PanasonicCommand::setPlus1Multiply64(size_t input)
     {
-      return (input + 1) * 64;
+      return (input + 1) * 0b1000000;
     }
 
     uint8_t PanasonicCommand::setPlus1(size_t input)
@@ -81,14 +81,9 @@ namespace esphome
       return input + 1;
     }
 
-    uint8_t PanasonicCommand::setPlus73(size_t input)
-    {
-      return input + 73;
-    }
-
     uint8_t PanasonicCommand::setPlus128(size_t input)
     {
-      return input + 128;
+      return input + 0b10000000;
     }
 
     uint8_t PanasonicCommand::setOperationMode(size_t input)

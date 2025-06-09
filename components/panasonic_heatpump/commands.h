@@ -25,7 +25,6 @@ namespace esphome
       static uint8_t setPlus1Multiply16(size_t input);
       static uint8_t setPlus1Multiply64(size_t input);
       static uint8_t setPlus1(size_t input);
-      static uint8_t setPlus73(size_t input);
       static uint8_t setPlus128(size_t input);
       static uint8_t setOperationMode(size_t input);
       static uint8_t temp2hex(float temp);

@@ -749,7 +749,7 @@ namespace esphome
     {
       if (object == this->set2_select_) this->set_command_byte(PanasonicCommand::setPlus1Multiply16(value), 5);
       else if (object == this->set3_select_) this->set_command_byte(PanasonicCommand::setPlus1Multiply8(value), 7);
-      else if (object == this->set4_select_) this->set_command_byte(PanasonicCommand::setPlus73(value), 7);
+      else if (object == this->set4_select_) this->set_command_byte(PanasonicCommand::setPlus1(value), 7);
       else if (object == this->set9_select_) this->set_command_byte(PanasonicCommand::setOperationMode(value), 6);
       else if (object == this->set17_select_) this->set_command_byte(PanasonicCommand::setPlus1Multiply64(value), 6);
       else if (object == this->set26_select_) this->set_command_byte(PanasonicCommand::setPlus1Multiply16(value), 25);
