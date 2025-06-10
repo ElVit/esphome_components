@@ -185,17 +185,17 @@ namespace esphome
     {
       switch ((int)(input & 0b111111))
       {
-        case 18: return 0;  // heat
-        case 19: return 1;  // cool
-        case 24: return 2;  // auto
-        case 25: return 3;  // auto-heat
-        case 26: return 4;  // auto-cool
-        case 33: return 5;  // tank
-        case 34: return 6;  // heat+tank
-        case 35: return 7;  // cool+tank
-        case 40: return 8;  // auto-tank
-        case 41: return 9;  // auto-heat+tank
-        case 42: return 10; // auto-cool+tank
+        case 0b010010: return 0;  // 0x12 = heat
+        case 0b100001: return 1;  // 0x21 = tank
+        case 0b100010: return 2;  // 0x22 = heat+tank
+        case 0b010011: return 3;  // 0x13 = cool
+        case 0b100011: return 4;  // 0x23 = cool+tank
+        case 0b011000: return 5;  // 0x18 = auto
+        case 0b011001: return 6;  // 0x19 = auto-heat
+        case 0b101000: return 7;  // 0x28 = auto-tank
+        case 0b011010: return 8;  // 0x1A = auto-cool
+        case 0b101001: return 9;  // 0x29 = auto-heat+tank
+        case 0b101010: return 10; // 0x2A = auto-cool+tank
         default: return -1; // unknown
       }
     }

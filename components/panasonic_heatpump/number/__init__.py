@@ -274,7 +274,7 @@ CONFIG_SCHEMA = cv.Schema(
 ).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
-  hub = await cg.get_variable(config[CONF_PANASONIC_HEATPUMP_ID])
+  parent = await cg.get_variable(config[CONF_PANASONIC_HEATPUMP_ID])
   for index, key in enumerate(TYPES):
     if child_config := config.get(key):
       var = await number.new_number(
@@ -284,6 +284,6 @@ async def to_code(config):
         step=CONF_NUMBERS[index][2]
       )
       await cg.register_component(var, child_config)
-      await cg.register_parented(var, config[CONF_PANASONIC_HEATPUMP_ID])
-      cg.add(getattr(hub, f"set_{key}_number")(var))
+      cg.add(var.set_parent(parent))
       cg.add(var.set_id(index))
+      cg.add(parent.add_number(var))

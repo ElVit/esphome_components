@@ -30,7 +30,7 @@ CONF_SELECTS = [
   [ "Off", "Scheduled", "Active", ],
   [ "Off", "Level 1", "Level 2", "Level 3", ],
   [ "Off", "30min", "60min", "90min", ],
-  [ "HEAT", "COOL", "AUTO", "AUTO(HEAT)", "AUTO(COOL)", "TANK", "HEAT+TANK", "COOL+TANK", "AUTO+TANK", "AUTO(HEAT)+TANK", "AUTO(COOL)+TANK", ],
+  [ ],
   [ "Zone 1", "Zone 2", "Zone 1 & 2", ],
   [ "Disabled", "Type-A", "Type-B" ],
   [ "Alternative", "Parallel", "Advanced Parallel" ],
@@ -67,11 +67,11 @@ CONFIG_SCHEMA = cv.Schema(
 ).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
-  hub = await cg.get_variable(config[CONF_PANASONIC_HEATPUMP_ID])
+  parent = await cg.get_variable(config[CONF_PANASONIC_HEATPUMP_ID])
   for index, key in enumerate(TYPES):
     if child_config := config.get(key):
       var = await select.new_select(child_config, options=CONF_SELECTS[index])
       await cg.register_component(var, child_config)
-      await cg.register_parented(var, config[CONF_PANASONIC_HEATPUMP_ID])
-      cg.add(getattr(hub, f"set_{key}_select")(var))
+      cg.add(var.set_parent(parent))
       cg.add(var.set_id(index))
+      cg.add(parent.add_select(var))
