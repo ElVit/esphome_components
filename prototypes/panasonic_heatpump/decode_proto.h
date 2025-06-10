@@ -5,11 +5,11 @@
 #include <string>
 #include <vector>
 
-#define NUMBER_OF_MODELS 51
-#define NUMBER_OF_TOPICS 127
-#define NUMBER_OF_TOPICS_EXTRA 6
-#define NUMBER_OF_OPT_TOPICS 7
-#define MAX_TOPIC_LEN 42
+#define NUMBER_OF_MODELS_PROTO 51
+#define NUMBER_OF_TOPICS_PROTO 127
+#define NUMBER_OF_TOPICS_EXTRA_PROTO 6
+#define NUMBER_OF_OPT_TOPICS_PROTO 7
+#define MAX_TOPIC_LEN_PROTO 42
 
 int getBit1(uint8_t input);
 int getBit1and2(uint8_t input);
@@ -117,7 +117,7 @@ static const char *ModelNames[] =
 };
 
 // stores the bytes #129 to #138 of known models in the same order as the ModelNames above
-static const uint8_t KnownModels[NUMBER_OF_MODELS][10] =
+static const uint8_t KnownModels[NUMBER_OF_MODELS_PROTO][10] =
 {
   0xE2, 0xCF, 0x0B, 0x13, 0x33, 0x32, 0xD1, 0x0C, 0x16, 0x33, //0
   0xE2, 0xCF, 0x0B, 0x14, 0x33, 0x42, 0xD1, 0x0B, 0x17, 0x33, //1
