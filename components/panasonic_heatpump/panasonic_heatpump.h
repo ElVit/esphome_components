@@ -24,21 +24,38 @@
 #endif
 #include "decode.h"
 #include "commands.h"
+#include "helpers.h"
 #include <vector>
 #include <tuple>
 #include <string>
-
-#define UART_LOG_CHUNK_SIZE 153
 
 
 namespace esphome
 {
   namespace panasonic_heatpump
   {
-    enum UartLogDirection
+    enum LoopState
     {
-      UART_LOG_RX,
-      UART_LOG_TX,
+      READ_RESPONSE,
+      CHECK_RESPONSE,
+      SET_NUMBER_TRAITS,
+      PUBLISH_SENSOR,
+      PUBLISH_BINARY_SENSOR,
+      PUBLISH_TEXT_SENSOR,
+      PUBLISH_NUMBER,
+      PUBLISH_SELECT,
+      PUBLISH_SWITCH,
+      SEND_REQUEST,
+      READ_REQUEST,
+      RESTART_LOOP
+    };
+
+    enum RequestType
+    {
+      INITIAL,
+      POLLING,
+      COMMAND,
+      NONE
     };
 
     class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDevice
@@ -258,7 +275,7 @@ namespace esphome
 
       PanasonicHeatpumpComponent() = default;
       // base class functions
-      float get_setup_priority() const override { return setup_priority::LATE; }
+      float get_setup_priority() const override { return setup_priority::DATA; }
       void dump_config() override;
       void setup() override;
       void update() override;
@@ -274,35 +291,35 @@ namespace esphome
       uart::UARTComponent* uart_client_ { nullptr };
       bool log_uart_msg_ { false };
       // uart message variables
-      std::vector<uint8_t> temp_message_;
+      std::vector<uint8_t> heatpump_message_;
       std::vector<uint8_t> response_message_;
       std::vector<uint8_t> request_message_;
       std::vector<uint8_t> command_message_;
-      uint8_t response_payload_length_;
-      uint8_t request_payload_length_;
+      uint8_t payload_length_;
       uint8_t byte_;
+      uint8_t current_response_count_ { 0 };
+      uint8_t last_response_count_ { 0 };
       bool response_receiving_ { false };
       bool request_receiving_ { false };
-      bool trigger_request_ { false };
-      uint8_t next_request_ { 0 };  // 0 = initial, 1 = polling, 2 = command
+      RequestType next_request_ { RequestType::INITIAL };
+      LoopState loop_state_ { LoopState::RESTART_LOOP };
+      uint16_t trait_update_counter_ { 0 };
 
       // uart message functions
       void read_response();
-      void send_request();
+      void send_request(RequestType requestType);
       void read_request();
-      void decode_response(const std::vector<uint8_t>& data);
+      bool check_response(const std::vector<uint8_t>& data);
       void set_command_byte(const uint8_t value, const uint8_t index);
       void set_command_bytes(const std::vector<std::tuple<uint8_t, uint8_t>>& data);
       // sensor and control publish functions
+      void set_number_traits(const std::vector<uint8_t>& data);
       void publish_sensor(const std::vector<uint8_t>& data);
       void publish_binary_sensor(const std::vector<uint8_t>& data);
       void publish_text_sensor(const std::vector<uint8_t>& data);
       void publish_number(const std::vector<uint8_t>& data);
       void publish_select(const std::vector<uint8_t>& data);
       void publish_switch(const std::vector<uint8_t>& data);
-      // helper functions
-      void log_uart_hex(UartLogDirection direction, const std::vector<uint8_t>& data, const char separator);
-      void log_uart_hex(UartLogDirection direction, const uint8_t* data, const size_t length, const char separator);
     };
   }  // namespace panasonic_heatpump
 }  // namespace esphome
