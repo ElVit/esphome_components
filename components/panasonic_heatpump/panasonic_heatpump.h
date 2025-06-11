@@ -55,7 +55,7 @@ namespace esphome
     class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDevice
     {
     public:
-      bool set_traits_loop_ { false };
+      bool traits_changed_ { false };
 
       PanasonicHeatpumpComponent() = default;
       // base class functions
@@ -99,7 +99,7 @@ namespace esphome
       bool request_receiving_ { false };
       RequestType next_request_ { RequestType::INITIAL };
       LoopState loop_state_ { LoopState::RESTART_LOOP };
-      uint8_t set_traits_total_ { 0 };
+      uint8_t traits_update_counter_ { 0 };
       // entity vectors
       std::vector<PanasonicHeatpumpEntity *> binary_sensors_;
       std::vector<PanasonicHeatpumpEntity *> numbers_;
@@ -114,12 +114,6 @@ namespace esphome
       void read_request();
       bool check_response(const std::vector<uint8_t>& data);
       // entity functions
-      void publish_binary_sensor(const std::vector<uint8_t>& data);
-      void publish_number(const std::vector<uint8_t>& data);
-      void publish_select(const std::vector<uint8_t>& data);
-      void publish_sensor(const std::vector<uint8_t>& data);
-      void publish_switch(const std::vector<uint8_t>& data);
-      void publish_text_sensor(const std::vector<uint8_t>& data);
       void set_number_traits(const std::vector<uint8_t>& data);
       void set_select_traits(const std::vector<uint8_t>& data);
     };

@@ -15,6 +15,8 @@ namespace esphome
 
     void PanasonicHeatpumpBinarySensor::publish_new_state(const std::vector<uint8_t>& data)
     {
+      if (data.empty()) return;
+
       bool new_state;
       switch (this->id_)
       {
@@ -158,6 +160,7 @@ namespace esphome
         }
         default: return;
       };
+
       this->publish_state(new_state);
     }
   } // namespace panasonic_heatpump

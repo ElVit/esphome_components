@@ -69,6 +69,7 @@ namespace esphome
         this->keep_state_--;
         return;
       }
+      if (data.empty()) return;
 
       std::string new_state;
       switch (this->id_)
@@ -117,13 +118,15 @@ namespace esphome
         }
         default: return;
       };
-      Select::publish_state(new_state);
+
+      this->publish_state(new_state);
     }
 
     bool PanasonicHeatpumpSelect::set_traits(const std::vector<uint8_t>& data)
     {
-      bool top120 = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[23]));  // Heat Cool Control
+      if (data.empty()) return false;
 
+      bool top120 = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[23]));  // Heat Cool Control
       switch (this->id_)
       {
         case SelectIds::CONF_SET9:

@@ -15,6 +15,8 @@ namespace esphome
 
     void PanasonicHeatpumpTextSensor::publish_new_state(const std::vector<uint8_t>& data)
     {
+      if (data.empty()) return;
+
       std::string new_state;
       switch (this->id_)
       {
@@ -146,6 +148,7 @@ namespace esphome
         }
         default: return;
       };
+
       this->publish_state(new_state);
     }
   } // namespace panasonic_heatpump

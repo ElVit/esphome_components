@@ -16,6 +16,7 @@ namespace esphome
     void PanasonicHeatpumpSwitch::write_state(bool state)
     {
       size_t value = state ? 1 : 0;
+
       switch (this->id_)
       {
         case SwitchIds::CONF_SET1:
@@ -96,6 +97,7 @@ namespace esphome
         this->keep_state_--;
         return;
       }
+      if (data.empty()) return;
 
       bool new_state;
       switch (this->id_)
@@ -174,6 +176,7 @@ namespace esphome
         }
         default: return;
       };
+
       this->publish_state(new_state);
     }
   } // namespace panasonic_heatpump

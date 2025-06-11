@@ -60,37 +60,55 @@ namespace esphome
         }
         case LoopState::PUBLISH_SENSOR:
         {
-          this->publish_sensor(this->heatpump_message_);
+          for (auto *entity : this->sensors_)
+          {
+            entity->publish_new_state(this->heatpump_message_);
+          }
           this->loop_state_ = LoopState::PUBLISH_BINARY_SENSOR;
           break;
         }
         case LoopState::PUBLISH_BINARY_SENSOR:
         {
-          this->publish_binary_sensor(this->heatpump_message_);
+          for (auto *entity : this->binary_sensors_)
+          {
+            entity->publish_new_state(this->heatpump_message_);
+          }
           this->loop_state_ = LoopState::PUBLISH_TEXT_SENSOR;
           break;
         }
         case LoopState::PUBLISH_TEXT_SENSOR:
         {
-          this->publish_text_sensor(this->heatpump_message_);
+          for (auto *entity : this->text_sensors_)
+          {
+            entity->publish_new_state(this->heatpump_message_);
+          }
           this->loop_state_ = LoopState::PUBLISH_NUMBER;
           break;
         }
         case LoopState::PUBLISH_NUMBER:
         {
-          this->publish_number(this->heatpump_message_);
+          for (auto *entity : this->numbers_)
+          {
+            entity->publish_new_state(this->heatpump_message_);
+          }
           this->loop_state_ = LoopState::PUBLISH_SELECT;
           break;
         }
         case LoopState::PUBLISH_SELECT:
         {
-          this->publish_select(this->heatpump_message_);
+          for (auto *entity : this->selects_)
+          {
+            entity->publish_new_state(this->heatpump_message_);
+          }
           this->loop_state_ = LoopState::PUBLISH_SWITCH;
           break;
         }
         case LoopState::PUBLISH_SWITCH:
         {
-          this->publish_switch(this->heatpump_message_);
+          for (auto *entity : this->switches_)
+          {
+            entity->publish_new_state(this->heatpump_message_);
+          }
           this->loop_state_ = LoopState::SEND_REQUEST;
           break;
         }
@@ -108,19 +126,19 @@ namespace esphome
         }
         default:
         {
-          if (this->set_traits_loop_) this->set_traits_total_++;
+          if (this->traits_changed_) this->traits_update_counter_++;
 
           // Perform reboot only if a traits (e.g. min/max value of a number entity) was changed the second time.
           // The first traits change should happen before controller is connected to home assistant,
-          // because the default min/max value is 0.
-          if (this->set_traits_total_ > 1)
+          // because the initial traits value is 0 or an empty vector.
+          if (this->traits_update_counter_ > 1)
           {
-            ESP_LOGW(TAG, "Min/max values have changed. Rebooting so Home Assistant reconfigures the number component.");
+            ESP_LOGW(TAG, "Limit values have changed. Rebooting so Home Assistant can reconfigures the entity limits.");
             delay(100);   // NOLINT
             App.safe_reboot();
           }
 
-          this->set_traits_loop_ = false;
+          this->traits_changed_ = false;
           this->loop_state_ = LoopState::READ_RESPONSE;
           break;
         }
@@ -396,23 +414,9 @@ namespace esphome
       this->next_request_ = RequestType::COMMAND;
     }
 
-    void PanasonicHeatpumpComponent::publish_binary_sensor(const std::vector<uint8_t>& data)
-    {
-      if (data.empty()) return;
-      for (auto *entity : this->binary_sensors_)
-      {
-        entity->publish_new_state(data);
-      }
-    }
-
-    void PanasonicHeatpumpComponent::publish_number(const std::vector<uint8_t>& data)
-    {
-      if (data.empty()) return;
-      for (auto *entity : this->numbers_)
-      {
-        entity->publish_new_state(data);
-      }
-    }
+    // traits can be changed anytime, but entities will only be updated in home assistant,
+    // if the traits was set before connecting to home assistant. If now a traits must be changed later,
+    // a reboot of the ESP controller is required to see the changes in home assistant.
 
     void PanasonicHeatpumpComponent::set_number_traits(const std::vector<uint8_t>& data)
     {
@@ -423,27 +427,9 @@ namespace esphome
         PanasonicDecode::WaterTempControl, PanasonicDecode::getBit5and6(data[28]));   // Cooling Mode
       // ToDo: Convert top76 and top81 into int and pass them to set_traits();
 
-      // traits can be changed anytime, but entities will only be updated in home assistant,
-      // if the traits was set before connecting to home assistant. If now a traits must be changed later,
-      // a reboot of the ESP controller is required to see the changes in home assistant.
-
-      bool change_detected = false;
       for (auto *entity : this->numbers_)
       {
-        change_detected = entity->set_traits(data) ? true : change_detected;
-      }
-      if (change_detected)
-      {
-        this->set_traits_loop_ = true;
-      }
-    }
-
-    void PanasonicHeatpumpComponent::publish_select(const std::vector<uint8_t>& data)
-    {
-      if (data.empty()) return;
-      for (auto *entity : this->selects_)
-      {
-        entity->publish_new_state(data);
+        this->traits_changed_ = entity->set_traits(data) ? true : this->traits_changed_;
       }
     }
 
@@ -452,41 +438,9 @@ namespace esphome
       if (data.empty()) return;
       bool top120 = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[23]));  // Heat Cool Control
 
-      bool change_detected = false;
       for (auto *entity : this->selects_)
       {
-        change_detected = entity->set_traits(data) ? true : change_detected;
-      }
-      if (change_detected)
-      {
-        this->set_traits_loop_ = true;
-      }
-    }
-
-    void PanasonicHeatpumpComponent::publish_sensor(const std::vector<uint8_t>& data)
-    {
-      if (data.empty()) return;
-      for (auto *entity : this->sensors_)
-      {
-        entity->publish_new_state(data);
-      }
-    }
-
-    void PanasonicHeatpumpComponent::publish_switch(const std::vector<uint8_t>& data)
-    {
-      if (data.empty()) return;
-      for (auto *entity : this->switches_)
-      {
-        entity->publish_new_state(data);
-      }
-    }
-
-    void PanasonicHeatpumpComponent::publish_text_sensor(const std::vector<uint8_t>& data)
-    {
-      if (data.empty()) return;
-      for (auto *entity : this->text_sensors_)
-      {
-        entity->publish_new_state(data);
+        this->traits_changed_ = entity->set_traits(data) ? true : this->traits_changed_ ;
       }
     }
   }  // namespace panasonic_heatpump

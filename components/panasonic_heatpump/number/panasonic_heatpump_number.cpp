@@ -195,6 +195,7 @@ namespace esphome
         this->keep_state_--;
         return;
       }
+      if (data.empty()) return;
 
       float new_state;
       switch (this->id_)
@@ -399,16 +400,18 @@ namespace esphome
         }
         default: return;
       };
+
       this->publish_state(new_state);
     }
 
     bool PanasonicHeatpumpNumber::set_traits(const std::vector<uint8_t>& data)
     {
+      if (data.empty()) return false;
+
       std::string top76 = PanasonicDecode::getTextState(
         PanasonicDecode::WaterTempControl, PanasonicDecode::getBit7and8(data[28]));   // Heating Mode
       std::string top81 = PanasonicDecode::getTextState(
         PanasonicDecode::WaterTempControl, PanasonicDecode::getBit5and6(data[28]));   // Cooling Mode
-
       switch (this->id_)
       {
         case NumberIds::CONF_SET5:
