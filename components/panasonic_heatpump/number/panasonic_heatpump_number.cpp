@@ -203,199 +203,199 @@ namespace esphome
         case NumberIds::CONF_SET11:
         {
           new_state = PanasonicDecode::getByteMinus128(data[42]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET20:
         {
           new_state = PanasonicDecode::getByteMinus128(data[99]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET18:
         {
           new_state = PanasonicDecode::getByteMinus128(data[84]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET19:
         {
           new_state = PanasonicDecode::getByteMinus128(data[94]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET5:
         {
           new_state = PanasonicDecode::getByteMinus128(data[38]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET6:
         {
           new_state = PanasonicDecode::getByteMinus128(data[39]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_01:
         {
           new_state = PanasonicDecode::getByteMinus128(data[75]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_02:
         {
           new_state = PanasonicDecode::getByteMinus128(data[76]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_04:
         {
           new_state = PanasonicDecode::getByteMinus128(data[78]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_03:
         {
           new_state = PanasonicDecode::getByteMinus128(data[77]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET7:
         {
           new_state = PanasonicDecode::getByteMinus128(data[40]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET8:
         {
           new_state = PanasonicDecode::getByteMinus128(data[41]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_09:
         {
           new_state = PanasonicDecode::getByteMinus128(data[86]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_10:
         {
           new_state = PanasonicDecode::getByteMinus128(data[87]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_12:
         {
           new_state = PanasonicDecode::getByteMinus128(data[89]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_11:
         {
           new_state = PanasonicDecode::getByteMinus128(data[88]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET29:
         {
           new_state = PanasonicDecode::getByteMinus128(data[83]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_05:
         {
           new_state = PanasonicDecode::getByteMinus128(data[79]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_06:
         {
           new_state = PanasonicDecode::getByteMinus128(data[80]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_08:
         {
           new_state = PanasonicDecode::getByteMinus128(data[82]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_07:
         {
           new_state = PanasonicDecode::getByteMinus128(data[81]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_13:
         {
           new_state = PanasonicDecode::getByteMinus128(data[90]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_14:
         {
           new_state = PanasonicDecode::getByteMinus128(data[91]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_16:
         {
           new_state = PanasonicDecode::getByteMinus128(data[93]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET16_15:
         {
           new_state = PanasonicDecode::getByteMinus128(data[92]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET15:
         {
           new_state = PanasonicDecode::getByteMinus1(data[45]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET21:
         {
           new_state = PanasonicDecode::getByteMinus1(data[104]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET22:
         {
           new_state = PanasonicDecode::getByteMinus128(data[105]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET23:
         {
           new_state = PanasonicDecode::getByteMinus128(data[106]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET27:
         {
           new_state = PanasonicDecode::getByteMinus128(data[59]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET36:
         {
           new_state = PanasonicDecode::getByteMinus128(data[65]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET37:
         {
           new_state = PanasonicDecode::getByteMinus128(data[66]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case NumberIds::CONF_SET38:
         {
           new_state = PanasonicDecode::getByteMinus128(data[68]);
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         default: return;
@@ -404,25 +404,21 @@ namespace esphome
       this->publish_state(new_state);
     }
 
-    bool PanasonicHeatpumpNumber::set_traits(const std::vector<uint8_t>& data)
+    bool PanasonicHeatpumpNumber::set_traits(std::map<std::string, int>& raw_topics)
     {
-      if (data.empty()) return false;
+      if (raw_topics.empty()) return false;
 
-      std::string top76 = PanasonicDecode::getTextState(
-        PanasonicDecode::WaterTempControl, PanasonicDecode::getBit7and8(data[28]));   // Heating Mode
-      std::string top81 = PanasonicDecode::getTextState(
-        PanasonicDecode::WaterTempControl, PanasonicDecode::getBit5and6(data[28]));   // Cooling Mode
       switch (this->id_)
       {
         case NumberIds::CONF_SET5:
         {
-          if (this->traits.get_min_value() != -5.0 && top76 == PanasonicDecode::WaterTempControl[1])
+          if (this->traits.get_min_value() != -5.0 && raw_topics["top76"] == 0)
           {
             this->traits.set_min_value(-5.0);
             this->traits.set_max_value(5.0);
             return true;
           }
-          if (this->traits.get_min_value() != 20.0 && top76 == PanasonicDecode::WaterTempControl[2])
+          if (this->traits.get_min_value() != 20.0 && raw_topics["top76"] == 1)
           {
             this->traits.set_min_value(20.0);
             this->traits.set_max_value(60.0);
@@ -432,13 +428,13 @@ namespace esphome
         }
         case NumberIds::CONF_SET6:
         {
-          if (this->traits.get_min_value() != -5.0 && top81 == PanasonicDecode::WaterTempControl[1])
+          if (this->traits.get_min_value() != -5.0 && raw_topics["top81"] == 0)
           {
             this->traits.set_min_value(-5.0);
             this->traits.set_max_value(5.0);
             return true;
           }
-          if (this->traits.get_min_value() != 20.0 && top81 == PanasonicDecode::WaterTempControl[2])
+          if (this->traits.get_min_value() != 20.0 && raw_topics["top81"] == 1)
           {
             this->traits.set_min_value(20.0);
             this->traits.set_max_value(60.0);
@@ -448,13 +444,13 @@ namespace esphome
         }
         case NumberIds::CONF_SET7:
         {
-          if (this->traits.get_min_value() != -5.0 && top76 == PanasonicDecode::WaterTempControl[1])
+          if (this->traits.get_min_value() != -5.0 && raw_topics["top76"] == 0)
           {
             this->traits.set_min_value(-5.0);
             this->traits.set_max_value(5.0);
             return true;
           }
-          if (this->traits.get_min_value() != 20.0 && top76 == PanasonicDecode::WaterTempControl[2])
+          if (this->traits.get_min_value() != 20.0 && raw_topics["top76"] == 1)
           {
             this->traits.set_min_value(20.0);
             this->traits.set_max_value(60.0);
@@ -464,13 +460,13 @@ namespace esphome
         }
         case NumberIds::CONF_SET8:
         {
-          if (this->traits.get_min_value() != -5.0 && top81 == PanasonicDecode::WaterTempControl[1])
+          if (this->traits.get_min_value() != -5.0 && raw_topics["top81"] == 0)
           {
             this->traits.set_min_value(-5.0);
             this->traits.set_max_value(5.0);
             return true;
           }
-          if (this->traits.get_min_value() != 20.0 && top81 == PanasonicDecode::WaterTempControl[2])
+          if (this->traits.get_min_value() != 20.0 && raw_topics["top81"] == 1)
           {
             this->traits.set_min_value(20.0);
             this->traits.set_max_value(60.0);
@@ -479,6 +475,7 @@ namespace esphome
           break;
         }
       };
+
       return false;
     }
   } // namespace panasonic_heatpump

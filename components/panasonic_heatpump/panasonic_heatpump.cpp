@@ -46,15 +46,24 @@ namespace esphome
             LoopState::SET_NUMBER_TRAITS : LoopState::SEND_REQUEST;
           break;
         }
+        // traits can be changed anytime, but entities will only be updated in home assistant,
+        // if the traits was set before connecting to home assistant. If now a traits must be changed later,
+        // a reboot of the ESP controller is required to see the changes in home assistant.
         case LoopState::SET_NUMBER_TRAITS:
         {
-          this->set_number_traits(this->heatpump_message_);
+          for (auto *entity : this->numbers_)
+          {
+            this->traits_changed_ = entity->set_traits(this->raw_topics_) ? true : this->traits_changed_;
+          }
           this->loop_state_ = LoopState::SET_SELECT_TRAITS;
           break;
         }
         case LoopState::SET_SELECT_TRAITS:
         {
-          this->set_select_traits(this->heatpump_message_);
+          for (auto *entity : this->selects_)
+          {
+            this->traits_changed_ = entity->set_traits(this->raw_topics_) ? true : this->traits_changed_;
+          }
           this->loop_state_ = LoopState::PUBLISH_SENSOR;
           break;
         }
@@ -309,8 +318,15 @@ namespace esphome
         return false;
       }
 
+      // Check if the current response is a new response
       if (this->last_response_count_ == this->current_response_count_) return false;
       this->last_response_count_ = this->current_response_count_;
+
+      // Save some topic values that are needed for setting traits
+      raw_topics_["top76"] = PanasonicDecode::getBit7and8(data[28]);   // Heating Mode
+      raw_topics_["top81"] = PanasonicDecode::getBit5and6(data[28]);   // Cooling Mode
+      raw_topics_["top120"] = PanasonicDecode::getBit5and6(data[23]);  // Heat Cool Control
+
       return true;
     }
 
@@ -412,36 +428,6 @@ namespace esphome
 
       // command will be send on next loop
       this->next_request_ = RequestType::COMMAND;
-    }
-
-    // traits can be changed anytime, but entities will only be updated in home assistant,
-    // if the traits was set before connecting to home assistant. If now a traits must be changed later,
-    // a reboot of the ESP controller is required to see the changes in home assistant.
-
-    void PanasonicHeatpumpComponent::set_number_traits(const std::vector<uint8_t>& data)
-    {
-      if (data.empty()) return;
-      std::string top76_str = PanasonicDecode::getTextState(
-        PanasonicDecode::WaterTempControl, PanasonicDecode::getBit7and8(data[28]));   // Heating Mode
-      std::string top81_str = PanasonicDecode::getTextState(
-        PanasonicDecode::WaterTempControl, PanasonicDecode::getBit5and6(data[28]));   // Cooling Mode
-      // ToDo: Convert top76 and top81 into int and pass them to set_traits();
-
-      for (auto *entity : this->numbers_)
-      {
-        this->traits_changed_ = entity->set_traits(data) ? true : this->traits_changed_;
-      }
-    }
-
-    void PanasonicHeatpumpComponent::set_select_traits(const std::vector<uint8_t>& data)
-    {
-      if (data.empty()) return;
-      bool top120 = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[23]));  // Heat Cool Control
-
-      for (auto *entity : this->selects_)
-      {
-        this->traits_changed_ = entity->set_traits(data) ? true : this->traits_changed_ ;
-      }
     }
   }  // namespace panasonic_heatpump
 }  // namespace esphome

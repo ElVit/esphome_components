@@ -27,7 +27,7 @@ namespace esphome
       PanasonicHeatpumpSelect() = default;
       void dump_config() override;
       void publish_new_state(const std::vector<uint8_t>& data) override;
-      bool set_traits(const std::vector<uint8_t>& data) override;
+      bool set_traits(std::map<std::string, int>& raw_topics) override;
 
     protected:
       void control(const std::string &value) override;

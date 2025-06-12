@@ -77,43 +77,43 @@ namespace esphome
         case SelectIds::CONF_SET9:
         {
           new_state = PanasonicDecode::getTextState(PanasonicDecode::OperationMode, PanasonicDecode::getOperationMode(data[6]));
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case SelectIds::CONF_SET4:
         {
           new_state = PanasonicDecode::getTextState(PanasonicDecode::PowerfulMode, PanasonicDecode::getBit6and7and8(data[7]));
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case SelectIds::CONF_SET3:
         {
           new_state = PanasonicDecode::getTextState(PanasonicDecode::QuietMode, PanasonicDecode::getBit3and4and5(data[7]));
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case SelectIds::CONF_SET2:
         {
           new_state = PanasonicDecode::getTextState(PanasonicDecode::HolidayState, PanasonicDecode::getBit3and4(data[5]));
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case SelectIds::CONF_SET17:
         {
           new_state = PanasonicDecode::getTextState(PanasonicDecode::ZoneState, PanasonicDecode::getBit1and2(data[6]));
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case SelectIds::CONF_SET26:
         {
           new_state = PanasonicDecode::getTextState(PanasonicDecode::ExtPadHeaterType, PanasonicDecode::getBit3and4(data[25]));
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         case SelectIds::CONF_SET35:
         {
           new_state = PanasonicDecode::getTextState(PanasonicDecode::BivalentMode, PanasonicDecode::getBit5and6(data[26]));
-          if (this->state == new_state) return;
+          if (this->has_state() && this->state == new_state) return;
           break;
         }
         default: return;
@@ -122,22 +122,21 @@ namespace esphome
       this->publish_state(new_state);
     }
 
-    bool PanasonicHeatpumpSelect::set_traits(const std::vector<uint8_t>& data)
+    bool PanasonicHeatpumpSelect::set_traits(std::map<std::string, int>& raw_topics)
     {
-      if (data.empty()) return false;
+      if (raw_topics.empty()) return false;
 
-      bool top120 = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[23]));  // Heat Cool Control
       switch (this->id_)
       {
         case SelectIds::CONF_SET9:
         {
-          if (this->traits.get_options().size() != 3 && !top120)
+          if (this->traits.get_options().size() != 3 && raw_topics["top120"] == 0)
           {
             auto options = std::vector<std::string>(PanasonicDecode::OperationMode + 1, PanasonicDecode::OperationMode + 4);
             this->traits.set_options(options);
             return true;
           }
-          if (this->traits.get_options().size() != 10 && top120)
+          if (this->traits.get_options().size() != 10 && raw_topics["top120"] != 0)
           {
             auto options = std::vector<std::string>(PanasonicDecode::OperationMode + 1, std::end(PanasonicDecode::OperationMode));
             this->traits.set_options(options);
@@ -146,6 +145,7 @@ namespace esphome
           break;
         }
       };
+
       return false;
     }
   } // namespace panasonic_heatpump
