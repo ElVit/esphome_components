@@ -1,21 +1,21 @@
-#include "maidsite_desk.h"
+#include "maidesite_desk.h"
 
 
 namespace esphome
 {
-  namespace maidsite_desk
+  namespace maidesite_desk
   {
-    static const char *const TAG = "maidsite_desk";
+    static const char *const TAG = "maidesite_desk";
 
-    void MaidsiteDeskComponent::dump_config()
+    void MaidesiteDeskComponent::dump_config()
     {
-      ESP_LOGCONFIG(TAG, "Maidsite Desk");
+      ESP_LOGCONFIG(TAG, "Maidesite Desk");
       delay(10);
     }
 
-    void MaidsiteDeskComponent::setup()
+    void MaidesiteDeskComponent::setup()
     {
-      ESP_LOGCONFIG(TAG, "Setting up Maidsite Desk ...");
+      ESP_LOGCONFIG(TAG, "Setting up Maidesite Desk ...");
       delay(10);
       this->check_uart_settings(9600);
       this->request_physical_limits();
@@ -23,7 +23,7 @@ namespace esphome
       this->request_settings();
     }
 
-    void MaidsiteDeskComponent::loop()
+    void MaidesiteDeskComponent::loop()
     {
       // This is a very simple method of receiving messages from the desk.
       // It will fail on messages that contain the value 0x7E in their payload.
@@ -77,7 +77,7 @@ namespace esphome
       }
     }
 
-    void MaidsiteDeskComponent::log_uart_hex(std::string prefix, std::vector<uint8_t> bytes, uint8_t separator)
+    void MaidesiteDeskComponent::log_uart_hex(std::string prefix, std::vector<uint8_t> bytes, uint8_t separator)
     {
       if (this->log_uart_msg_ == false) return;
 
@@ -97,7 +97,7 @@ namespace esphome
       }
     }
 
-    void MaidsiteDeskComponent::decode_response(std::vector<uint8_t> message)
+    void MaidesiteDeskComponent::decode_response(std::vector<uint8_t> message)
     {
       // ToDo: Add checksum check
 
@@ -219,7 +219,7 @@ namespace esphome
       }
     }
 
-    float MaidsiteDeskComponent::byte2float(int high, int low)
+    float MaidesiteDeskComponent::byte2float(int high, int low)
     {
       return static_cast<float>((high << 8) + low) / 10;
     }
@@ -227,7 +227,7 @@ namespace esphome
     // Write message:
     // format: 0xF1 0xF1 [command] [param_count] [[param] ...] [checksum] 0x7E
     // checksum: sum of [command], [param_count] and all [param]s
-    void MaidsiteDeskComponent::send_simple_command(unsigned char cmd)
+    void MaidesiteDeskComponent::send_simple_command(unsigned char cmd)
     {
       this->request_message_.clear();
       this->request_message_.insert(this->request_message_.end(), { 0xF1, 0xF1, cmd, 0x00, cmd, 0x7E });
@@ -236,7 +236,7 @@ namespace esphome
       delay(100);  // NOLINT
     }
 
-    void MaidsiteDeskComponent::send_2byte_command(unsigned char cmd, unsigned char high_byte, unsigned char low_byte)
+    void MaidesiteDeskComponent::send_2byte_command(unsigned char cmd, unsigned char high_byte, unsigned char low_byte)
     {
       // ToDo: make one function of send_simple_command and send_2byte_command
 
@@ -248,22 +248,22 @@ namespace esphome
       delay(100);  // NOLINT
     }
 
-    void MaidsiteDeskComponent::step_up()
+    void MaidesiteDeskComponent::step_up()
     {
       this->send_simple_command(0x01);
     }
 
-    void MaidsiteDeskComponent::step_down()
+    void MaidesiteDeskComponent::step_down()
     {
       this->send_simple_command(0x02);
     }
 
-    void MaidsiteDeskComponent::stop()
+    void MaidesiteDeskComponent::stop()
     {
       this->send_simple_command(0x2B);
     }
 
-    void MaidsiteDeskComponent::goto_mem_position(int pos)
+    void MaidesiteDeskComponent::goto_mem_position(int pos)
     {
       switch (pos)
       {
@@ -282,7 +282,7 @@ namespace esphome
       }
     }
 
-    void MaidsiteDeskComponent::save_mem_position(int pos)
+    void MaidesiteDeskComponent::save_mem_position(int pos)
     {
       switch (pos)
       {
@@ -301,37 +301,37 @@ namespace esphome
       }
     }
 
-    void MaidsiteDeskComponent::request_physical_limits()
+    void MaidesiteDeskComponent::request_physical_limits()
     {
       this->send_simple_command(0x0C);
     }
 
-    void MaidsiteDeskComponent::request_limits()
+    void MaidesiteDeskComponent::request_limits()
     {
       this->send_simple_command(0x20);
     }
 
-    void MaidsiteDeskComponent::request_settings()
+    void MaidesiteDeskComponent::request_settings()
     {
       this->send_simple_command(0x07);
     }
 
-    void MaidsiteDeskComponent::request_move_to()
+    void MaidesiteDeskComponent::request_move_to()
     {
       this->send_simple_command(0x1B);
     }
 
-    void MaidsiteDeskComponent::goto_max_position()
+    void MaidesiteDeskComponent::goto_max_position()
     {
       this->goto_height(limit_max_);
     }
 
-    void MaidsiteDeskComponent::goto_min_position()
+    void MaidesiteDeskComponent::goto_min_position()
     {
       this->goto_height(limit_min_);
     }
 
-    void MaidsiteDeskComponent::goto_height(float height)
+    void MaidesiteDeskComponent::goto_height(float height)
     {
       unsigned char high_byte = ((int)height * 10) >> 8;
       unsigned char low_byte = ((int)height * 10) & 0xFF;
@@ -341,7 +341,7 @@ namespace esphome
     }
 
 #ifdef USE_BUTTON
-    void MaidsiteDeskComponent::button_press_action(button::Button* object)
+    void MaidesiteDeskComponent::button_press_action(button::Button* object)
     {
       if (object == step_up_button_)
         this->step_up();
@@ -384,7 +384,7 @@ namespace esphome
     }
 #endif
 #ifdef USE_NUMBER
-    void MaidsiteDeskComponent::number_control(number::Number* object, float value)
+    void MaidesiteDeskComponent::number_control(number::Number* object, float value)
     {
       if (object == height_abs_number_)
         this->goto_height(value);
@@ -393,5 +393,5 @@ namespace esphome
           this->goto_height((limit_max_ - limit_min_) * value / 100 + limit_min_);
     }
 #endif
-  } // namespace maidsite_desk
+  } // namespace maidesite_desk
 } // namespace esphome

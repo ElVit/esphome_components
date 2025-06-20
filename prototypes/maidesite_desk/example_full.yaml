@@ -1,6 +1,6 @@
 esphome:
-  name: maidsite-desk-controller
-  friendly_name: Maidsite Desk Controller
+  name: maidesite-desk-controller
+  friendly_name: Maidesite Desk Controller
 
 external_components:
   - source:
@@ -8,7 +8,7 @@ external_components:
       path: esphome_components/components/
       # type: git
       # url: https://github.com/ElVit/esphome_components/
-    components: [ maidsite_desk ]
+    components: [ maidesite_desk ]
 
 uart:
   - id: uart_bus
@@ -16,12 +16,12 @@ uart:
     rx_pin: $pin_rx
     baud_rate: 9600
 
-maidsite_desk_controller:
+maidesite_desk_controller:
   id: my_desk
   uart_id: uart_bus
 
 sensor:
-  - platform: maidsite_desk
+  - platform: maidesite_desk
     height_abs:
       name: "Height absolut"
     height_pct:
@@ -40,7 +40,7 @@ sensor:
       name: "Position M4"
 
 button:
-  - platform: maidsite_desk
+  - platform: maidesite_desk
     stop:
       name: "Stop"
     step_up:
@@ -69,7 +69,7 @@ button:
       name: "Save M4"
 
 number:
-  - platform: maidsite_desk
+  - platform: maidesite_desk
     height_abs:
       name: "Height absolut"
       mode: SLIDER

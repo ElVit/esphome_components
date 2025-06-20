@@ -1,17 +1,17 @@
 #pragma once
 #include "esphome/components/number/number.h"
 #include "esphome/core/component.h"
-#include "../maidsite_desk.h"
+#include "../maidesite_desk.h"
 
 
 namespace esphome
 {
-  namespace maidsite_desk
+  namespace maidesite_desk
   {
-    class MaidsiteDeskNumber : public number::Number, public Component, public Parented<MaidsiteDeskComponent>
+    class MaidesiteDeskNumber : public number::Number, public Component, public Parented<MaidesiteDeskComponent>
     {
     public:
-      MaidsiteDeskNumber() = default;
+      MaidesiteDeskNumber() = default;
       void dump_config() override;
       void set_id(int id) { this->id_ = id; }
 
@@ -19,5 +19,5 @@ namespace esphome
       void control(float value) override;
       int id_;
     };
-  } // namespace maidsite_desk
+  } // namespace maidesite_desk
 } // namespace esphome

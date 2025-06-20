@@ -20,10 +20,10 @@
 
 namespace esphome
 {
-  namespace maidsite_desk
+  namespace maidesite_desk
   {
 
-    class MaidsiteDeskComponent : public Component, public uart::UARTDevice
+    class MaidesiteDeskComponent : public Component, public uart::UARTDevice
     {
     public:
 #ifdef USE_SENSOR
@@ -62,7 +62,7 @@ namespace esphome
       void number_control(number::Number* object, float value);
 #endif
 
-      MaidsiteDeskComponent() = default;
+      MaidesiteDeskComponent() = default;
       // base class functions
       float get_setup_priority() const override { return setup_priority::LATE; }
       void dump_config() override;
@@ -110,5 +110,5 @@ namespace esphome
       float physical_min_ = 0;
       float physical_max_ = 0;
     };
-  } // namespace maidsite_desk
+  } // namespace maidesite_desk
 } // namespace esphome
