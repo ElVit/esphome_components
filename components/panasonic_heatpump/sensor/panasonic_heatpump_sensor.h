@@ -9,7 +9,7 @@ namespace esphome
 {
   namespace panasonic_heatpump
   {
-    enum SensorIds : int
+    enum SensorIds : uint8_t
     {
       CONF_TOP1,
       CONF_TOP5,
@@ -108,7 +108,8 @@ namespace esphome
       CONF_TOP138,
     };
 
-    class PanasonicHeatpumpSensor : public sensor::Sensor, public Component, public Parented<PanasonicHeatpumpComponent>, public PanasonicHeatpumpEntity
+    class PanasonicHeatpumpSensor : public sensor::Sensor, public Component,
+          public Parented<PanasonicHeatpumpComponent>, public PanasonicHeatpumpEntity
     {
     public:
       PanasonicHeatpumpSensor() = default;

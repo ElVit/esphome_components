@@ -10,7 +10,7 @@ namespace esphome
 {
   namespace panasonic_heatpump
   {
-    enum SelectIds : int
+    enum SelectIds : uint8_t
     {
       CONF_SET2,
       CONF_SET3,
@@ -21,7 +21,8 @@ namespace esphome
       CONF_SET35,
     };
 
-    class PanasonicHeatpumpSelect : public select::Select, public Component, public Parented<PanasonicHeatpumpComponent>, public PanasonicHeatpumpEntity
+    class PanasonicHeatpumpSelect : public select::Select, public Component,
+          public Parented<PanasonicHeatpumpComponent>, public PanasonicHeatpumpEntity
     {
     public:
       PanasonicHeatpumpSelect() = default;

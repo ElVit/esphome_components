@@ -14,7 +14,7 @@ namespace esphome
 {
   namespace panasonic_heatpump
   {
-    enum UartLogDirection
+    enum UartLogDirection : uint8_t
     {
       UART_LOG_RX,
       UART_LOG_TX,

@@ -10,7 +10,7 @@ namespace esphome
 {
   namespace panasonic_heatpump
   {
-    enum NumberIds : int
+    enum NumberIds : uint8_t
     {
       CONF_SET5,
       CONF_SET6,
@@ -47,7 +47,8 @@ namespace esphome
       CONF_SET38,
     };
 
-    class PanasonicHeatpumpNumber : public number::Number, public Component, public Parented<PanasonicHeatpumpComponent>, public PanasonicHeatpumpEntity
+    class PanasonicHeatpumpNumber : public number::Number, public Component,
+          public Parented<PanasonicHeatpumpComponent>, public PanasonicHeatpumpEntity
     {
     public:
       PanasonicHeatpumpNumber() = default;

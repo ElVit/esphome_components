@@ -16,7 +16,7 @@ namespace esphome
 {
   namespace panasonic_heatpump
   {
-    enum LoopState
+    enum LoopState : uint8_t
     {
       READ_RESPONSE,
       CHECK_RESPONSE,
@@ -33,7 +33,7 @@ namespace esphome
       RESTART_LOOP
     };
 
-    enum RequestType
+    enum RequestType : uint8_t
     {
       INITIAL,
       POLLING,
