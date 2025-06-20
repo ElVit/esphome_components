@@ -66,8 +66,8 @@ namespace esphome
       static const constexpr char* const PowerfulMode[] = { "4", "Off", "30min", "60min", "90min" };
       static const constexpr char* const OperationMode[] =
       {
-        "11", "HEAT", "TANK", "HEAT+TANK", "COOL", "COOL+TANK", "AUTO",
-        "AUTO(HEAT)", "AUTO(TANK)", "AUTO(COOL)", "AUTO(HEAT)+TANK", "AUTO(COOL)+TANK"
+        "11", "TANK", "HEAT", "HEAT+TANK", "COOL", "COOL+TANK", "AUTO", "AUTO+TANK",
+        "AUTO(HEAT)", "AUTO(HEAT)+TANK", "AUTO(COOL)", "AUTO(COOL)+TANK"
       };
       static const constexpr char* const ZoneState[] = { "3", "Zone 1", "Zone 2", "Zone 1 & 2" };
       static const constexpr char* const ExtPadHeaterType[] = { "3", "Disabled", "Type-A", "Type-B" };

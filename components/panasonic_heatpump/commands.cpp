@@ -90,16 +90,16 @@ namespace esphome
     {
       switch (input)
       {
-        case 0:  return 0b010010; // 0x12 = heat
-        case 1:  return 0b100001; // 0x21 = tank
+        case 0:  return 0b100001; // 0x21 = tank
+        case 1:  return 0b010010; // 0x12 = heat
         case 2:  return 0b100010; // 0x22 = heat+tank
         case 3:  return 0b010011; // 0x13 = cool
         case 4:  return 0b100011; // 0x23 = cool+tank
         case 5:  return 0b011000; // 0x18 = auto
-        case 6:  return 0b011001; // 0x19 = auto-heat
-        case 7:  return 0b101000; // 0x28 = auto-tank
-        case 8:  return 0b011010; // 0x1A = auto-cool
-        case 9:  return 0b101001; // 0x29 = auto-heat+tank
+        case 6:  return 0b101000; // 0x28 = auto+tank
+        case 7:  return 0b011001; // 0x19 = auto-heat
+        case 8:  return 0b101001; // 0x29 = auto-heat+tank
+        case 9:  return 0b011010; // 0x1A = auto-cool
         case 10: return 0b101010; // 0x2A = auto-cool+tank
         default: return 0;  // do nothing
       }
