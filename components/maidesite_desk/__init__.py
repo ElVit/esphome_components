@@ -8,16 +8,16 @@ CODEOWNERS = ['@elvit']
 MULTICONF = True
 DEPENDENCIES = ['uart']
 
-CONF_MAIDSITE_DESK_ID = "maidsite_desk"
+CONF_MAIDESITE_DESK_ID = "maidesite_desk"
 CONF_LOG_UART_MSG = "log_uart_msg"
 
-maidsite_desk_ns = cg.esphome_ns.namespace('maidsite_desk')
-MaidsiteDeskComponent = maidsite_desk_ns.class_('MaidsiteDeskComponent', cg.Component, uart.UARTDevice)
+maidesite_desk_ns = cg.esphome_ns.namespace('maidesite_desk')
+MaidesiteDeskComponent = maidesite_desk_ns.class_('MaidesiteDeskComponent', cg.Component, uart.UARTDevice)
 
 CONFIG_SCHEMA = (
   cv.Schema(
     {
-      cv.GenerateID(): cv.declare_id(MaidsiteDeskComponent),
+      cv.GenerateID(): cv.declare_id(MaidesiteDeskComponent),
 
       cv.Optional(CONF_LOG_UART_MSG, default=False): cv.boolean,
     }

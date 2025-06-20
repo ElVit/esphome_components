@@ -1,6 +1,6 @@
-# ESPHome Maidsite Desk Component
+# ESPHome Maidesite Desk Component
 
-[ESPHome](https://esphome.io/) component for controlling Maidsite desk controllers via their serial protocol.
+[ESPHome](https://esphome.io/) component for controlling Maidesite desk controllers via their serial protocol.
 
 ## Usage
 
@@ -44,7 +44,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/ElVit/esphome_components/
-    components: [ maidsite_desk ]
+    components: [ maidesite_desk ]
 
 uart:
   - id: uart_bus
@@ -52,22 +52,22 @@ uart:
     rx_pin: GPIO4
     baud_rate: 9600
 
-maidsite_desk:
+maidesite_desk:
   id: my_desk
 
 sensor:
-  - platform: maidsite_desk
+  - platform: maidesite_desk
     height_abs:
       name: "Height"
 
 number:
-  - platform: maidsite_desk
+  - platform: maidesite_desk
     height_abs:
       name: "Height"
       mode: SLIDER
 
 button:
-  - platform: maidsite_desk
+  - platform: maidesite_desk
     stop:
       name: "Stop"
     step_up:

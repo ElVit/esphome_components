@@ -1,17 +1,17 @@
 #pragma once
 #include "esphome/components/button/button.h"
 #include "esphome/core/component.h"
-#include "../maidsite_desk.h"
+#include "../maidesite_desk.h"
 
 
 namespace esphome
 {
-  namespace maidsite_desk
+  namespace maidesite_desk
   {
-    class MaidsiteDeskButton : public button::Button, public Component, public Parented<MaidsiteDeskComponent>
+    class MaidesiteDeskButton : public button::Button, public Component, public Parented<MaidesiteDeskComponent>
     {
     public:
-      MaidsiteDeskButton() = default;
+      MaidesiteDeskButton() = default;
       void dump_config() override;
       void set_id(int id) { this->id_ = id; }
 
@@ -19,5 +19,5 @@ namespace esphome
       void press_action() override;
       int id_;
     };
-  } // namespace maidsite_desk
+  } // namespace maidesite_desk
 } // namespace esphome

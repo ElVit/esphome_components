@@ -4,7 +4,7 @@ from esphome.components import button
 from esphome.const import (
   ENTITY_CATEGORY_CONFIG,
 )
-from .. import CONF_MAIDSITE_DESK_ID, MaidsiteDeskComponent, maidsite_desk_ns
+from .. import CONF_MAIDESITE_DESK_ID, MaidesiteDeskComponent, maidesite_desk_ns
 
 
 CONF_STEP_UP = "step_up"
@@ -37,64 +37,64 @@ TYPES = [
   CONF_SAVE_M4,
 ]
 
-MaidsiteDeskButton = maidsite_desk_ns.class_("MaidsiteDeskButton", button.Button, cg.Component)
+MaidesiteDeskButton = maidesite_desk_ns.class_("MaidesiteDeskButton", button.Button, cg.Component)
 
 CONFIG_SCHEMA = cv.Schema(
   {
-    cv.GenerateID(CONF_MAIDSITE_DESK_ID): cv.use_id(MaidsiteDeskComponent),
+    cv.GenerateID(CONF_MAIDESITE_DESK_ID): cv.use_id(MaidesiteDeskComponent),
 
     cv.Optional(CONF_STEP_UP): button.button_schema(
-      MaidsiteDeskButton,
+      MaidesiteDeskButton,
     ),
     cv.Optional(CONF_STEP_DOWN): button.button_schema(
-      MaidsiteDeskButton,
+      MaidesiteDeskButton,
     ),
     cv.Optional(CONF_STOP): button.button_schema(
-      MaidsiteDeskButton,
+      MaidesiteDeskButton,
     ),
     cv.Optional(CONF_GOTO_MAX): button.button_schema(
-      MaidsiteDeskButton,
+      MaidesiteDeskButton,
     ),
     cv.Optional(CONF_GOTO_MIN): button.button_schema(
-      MaidsiteDeskButton,
+      MaidesiteDeskButton,
     ),
     cv.Optional(CONF_GOTO_M1): button.button_schema(
-      MaidsiteDeskButton,
+      MaidesiteDeskButton,
     ),
     cv.Optional(CONF_GOTO_M2): button.button_schema(
-      MaidsiteDeskButton,
+      MaidesiteDeskButton,
     ),
     cv.Optional(CONF_GOTO_M3): button.button_schema(
-      MaidsiteDeskButton,
+      MaidesiteDeskButton,
     ),
     cv.Optional(CONF_GOTO_M4): button.button_schema(
-      MaidsiteDeskButton,
+      MaidesiteDeskButton,
     ),
     cv.Optional(CONF_SAVE_M1): button.button_schema(
-      MaidsiteDeskButton,
+      MaidesiteDeskButton,
       entity_category=ENTITY_CATEGORY_CONFIG,
     ),
     cv.Optional(CONF_SAVE_M2): button.button_schema(
-      MaidsiteDeskButton,
+      MaidesiteDeskButton,
       entity_category=ENTITY_CATEGORY_CONFIG,
     ),
     cv.Optional(CONF_SAVE_M3): button.button_schema(
-      MaidsiteDeskButton,
+      MaidesiteDeskButton,
       entity_category=ENTITY_CATEGORY_CONFIG,
     ),
     cv.Optional(CONF_SAVE_M4): button.button_schema(
-      MaidsiteDeskButton,
+      MaidesiteDeskButton,
       entity_category=ENTITY_CATEGORY_CONFIG,
     ),
   }
 ).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
-  hub = await cg.get_variable(config[CONF_MAIDSITE_DESK_ID])
+  hub = await cg.get_variable(config[CONF_MAIDESITE_DESK_ID])
   for index, key in enumerate(TYPES):
     if child_config := config.get(key):
       var = await button.new_button(child_config)
       await cg.register_component(var, child_config)
-      await cg.register_parented(var, config[CONF_MAIDSITE_DESK_ID])
+      await cg.register_parented(var, config[CONF_MAIDESITE_DESK_ID])
       cg.add(getattr(hub, f"set_{key}_button")(var))
       cg.add(var.set_id(index))

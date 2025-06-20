@@ -5,7 +5,7 @@ from esphome.const import (
   UNIT_CENTIMETER,
   UNIT_PERCENT,
 )
-from .. import CONF_MAIDSITE_DESK_ID, MaidsiteDeskComponent, maidsite_desk_ns
+from .. import CONF_MAIDESITE_DESK_ID, MaidesiteDeskComponent, maidesite_desk_ns
 
 CONF_UNIT = "unit"
 CONF_HEIGHT_ABS = "height_abs"
@@ -29,51 +29,51 @@ TYPES = [
   CONF_POSITION_M4,
 ]
 
-MaidsiteDeskSensor = maidsite_desk_ns.class_("MaidsiteDeskSensor", sensor.Sensor, cg.Component)
+MaidesiteDeskSensor = maidesite_desk_ns.class_("MaidesiteDeskSensor", sensor.Sensor, cg.Component)
 
 CONFIG_SCHEMA = cv.Schema(
   {
-    cv.GenerateID(CONF_MAIDSITE_DESK_ID): cv.use_id(MaidsiteDeskComponent),
+    cv.GenerateID(CONF_MAIDESITE_DESK_ID): cv.use_id(MaidesiteDeskComponent),
 
     cv.Optional(CONF_UNIT): sensor.sensor_schema(),
 
     cv.Optional(CONF_HEIGHT_ABS): sensor.sensor_schema(
-      MaidsiteDeskSensor,
+      MaidesiteDeskSensor,
       accuracy_decimals=2,
       unit_of_measurement=UNIT_CENTIMETER,
     ),
     cv.Optional(CONF_HEIGHT_PCT): sensor.sensor_schema(
-      MaidsiteDeskSensor,
+      MaidesiteDeskSensor,
       accuracy_decimals=2,
       unit_of_measurement=UNIT_PERCENT,
     ),
     cv.Optional(CONF_HEIGHT_MIN): sensor.sensor_schema(
-      MaidsiteDeskSensor,
+      MaidesiteDeskSensor,
       accuracy_decimals=2,
       unit_of_measurement=UNIT_CENTIMETER,
     ),
     cv.Optional(CONF_HEIGHT_MAX): sensor.sensor_schema(
-      MaidsiteDeskSensor,
+      MaidesiteDeskSensor,
       accuracy_decimals=2,
       unit_of_measurement=UNIT_CENTIMETER,
     ),
     cv.Optional(CONF_POSITION_M1): sensor.sensor_schema(
-      MaidsiteDeskSensor,
+      MaidesiteDeskSensor,
       accuracy_decimals=2,
       unit_of_measurement=UNIT_CENTIMETER,
     ),
     cv.Optional(CONF_POSITION_M2): sensor.sensor_schema(
-      MaidsiteDeskSensor,
+      MaidesiteDeskSensor,
       accuracy_decimals=2,
       unit_of_measurement=UNIT_CENTIMETER,
     ),
     cv.Optional(CONF_POSITION_M3): sensor.sensor_schema(
-      MaidsiteDeskSensor,
+      MaidesiteDeskSensor,
       accuracy_decimals=2,
       unit_of_measurement=UNIT_CENTIMETER,
     ),
     cv.Optional(CONF_POSITION_M4): sensor.sensor_schema(
-      MaidsiteDeskSensor,
+      MaidesiteDeskSensor,
       accuracy_decimals=2,
       unit_of_measurement=UNIT_CENTIMETER,
     ),
@@ -81,10 +81,10 @@ CONFIG_SCHEMA = cv.Schema(
 ).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
-  hub = await cg.get_variable(config[CONF_MAIDSITE_DESK_ID])
+  hub = await cg.get_variable(config[CONF_MAIDESITE_DESK_ID])
   for key in TYPES:
     if child_config := config.get(key):
       var = await sensor.new_sensor(child_config)
       await cg.register_component(var, child_config)
-      await cg.register_parented(var, config[CONF_MAIDSITE_DESK_ID])
+      await cg.register_parented(var, config[CONF_MAIDESITE_DESK_ID])
       cg.add(getattr(hub, f"set_{key}_sensor")(var))
