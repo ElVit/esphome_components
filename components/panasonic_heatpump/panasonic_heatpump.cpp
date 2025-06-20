@@ -53,7 +53,7 @@ namespace esphome
         {
           for (auto *entity : this->numbers_)
           {
-            this->traits_changed_ = entity->set_traits(this->raw_topics_) ? true : this->traits_changed_;
+            this->traits_changed_ = entity->set_traits(this->traits_settings_) ? true : this->traits_changed_;
           }
           this->loop_state_ = LoopState::SET_SELECT_TRAITS;
           break;
@@ -62,7 +62,7 @@ namespace esphome
         {
           for (auto *entity : this->selects_)
           {
-            this->traits_changed_ = entity->set_traits(this->raw_topics_) ? true : this->traits_changed_;
+            this->traits_changed_ = entity->set_traits(this->traits_settings_) ? true : this->traits_changed_;
           }
           this->loop_state_ = LoopState::PUBLISH_SENSOR;
           break;
@@ -115,6 +115,15 @@ namespace esphome
         case LoopState::PUBLISH_SWITCH:
         {
           for (auto *entity : this->switches_)
+          {
+            entity->publish_new_state(this->heatpump_message_);
+          }
+          this->loop_state_ = LoopState::PUBLISH_CLIMATE;
+          break;
+        }
+        case LoopState::PUBLISH_CLIMATE:
+        {
+          for (auto *entity : this->climates_)
           {
             entity->publish_new_state(this->heatpump_message_);
           }
@@ -323,9 +332,9 @@ namespace esphome
       this->last_response_count_ = this->current_response_count_;
 
       // Save some topic values that are needed for setting traits
-      raw_topics_["top76"] = PanasonicDecode::getBit7and8(data[28]);   // Heating Mode
-      raw_topics_["top81"] = PanasonicDecode::getBit5and6(data[28]);   // Cooling Mode
-      raw_topics_["top120"] = PanasonicDecode::getBit5and6(data[23]);  // Heat Cool Control
+      traits_settings_["heating_mode"] = PanasonicDecode::getBit7and8(data[28]);   // top76
+      traits_settings_["cooling_mode"] = PanasonicDecode::getBit5and6(data[28]);   // top81
+      traits_settings_["cool_mode_configured"] = this->cool_mode_;
 
       return true;
     }

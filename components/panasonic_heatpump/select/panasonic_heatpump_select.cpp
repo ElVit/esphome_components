@@ -122,23 +122,23 @@ namespace esphome
       this->publish_state(new_state);
     }
 
-    bool PanasonicHeatpumpSelect::set_traits(std::map<std::string, int>& raw_topics)
+    bool PanasonicHeatpumpSelect::set_traits(std::map<std::string, int>& traits_settings)
     {
-      if (raw_topics.empty()) return false;
+      if (traits_settings.empty()) return false;
 
       switch (this->id_)
       {
         case SelectIds::CONF_SET9:
         {
-          if (this->traits.get_options().size() != 3 && raw_topics["top120"] == 0)
+          if (this->traits.get_options().size() != 3 && traits_settings["cool_mode_configured"] == 0)
           {
             auto options = std::vector<std::string>(PanasonicDecode::OperationMode + 1, PanasonicDecode::OperationMode + 4);
             this->traits.set_options(options);
             return true;
           }
-          if (this->traits.get_options().size() != 10 && raw_topics["top120"] != 0)
+          if (this->traits.get_options().size() != 7 && traits_settings["cool_mode_configured"] == 1)
           {
-            auto options = std::vector<std::string>(PanasonicDecode::OperationMode + 1, std::end(PanasonicDecode::OperationMode));
+            auto options = std::vector<std::string>(PanasonicDecode::OperationMode + 1, PanasonicDecode::OperationMode + 8);
             this->traits.set_options(options);
             return true;
           }
