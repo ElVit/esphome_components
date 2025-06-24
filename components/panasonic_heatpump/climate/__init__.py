@@ -28,30 +28,37 @@ TYPES = [
   CONF_CLIMATE_ZONE2,
 ]
 
+def climate_options(min_temp, max_temp, temp_step) -> cv.Schema:
+  schema = cv.Schema({
+    cv.Optional(CONF_MIN_TEMPERATURE, default=min_temp): cv.float_,
+    cv.Optional(CONF_MAX_TEMPERATURE, default=max_temp): cv.float_,
+    cv.Optional(CONF_TEMPERATURE_STEP, default=temp_step): cv.float_,
+  })
+  return schema
+
 PanasonicHeatpumpClimate = panasonic_heatpump_ns.class_("PanasonicHeatpumpClimate", climate.Climate, cg.Component)
 
 CONFIG_SCHEMA = cv.Schema(
   {
-    cv.GenerateID(CONF_PANASONIC_HEATPUMP_ID): cv.use_id(PanasonicHeatpumpComponent),
+    cv.GenerateID(CONF_PANASONIC_HEATPUMP_ID): cv.use_id(
+      PanasonicHeatpumpComponent
+    ),
     cv.Optional(CONF_COOL_MODE, default=False): cv.boolean,
 
-    cv.Optional(CONF_CLIMATE_TANK): climate.climate_schema(PanasonicHeatpumpClimate)
-      .extend({
-        cv.Optional(CONF_MIN_TEMPERATURE, default=20.0): cv.float_range(min=-5.0, max=20.0),
-        cv.Optional(CONF_MAX_TEMPERATURE, default=65.0): cv.float_range(min=5.0, max=75.0),
-      }
+    cv.Optional(CONF_CLIMATE_TANK): climate.climate_schema(
+      PanasonicHeatpumpClimate
+    ).extend(
+      climate_options(20.0, 65.0, 0.5)
     ),
-    cv.Optional(CONF_CLIMATE_ZONE1): climate.climate_schema(PanasonicHeatpumpClimate)
-      .extend({
-        cv.Optional(CONF_MIN_TEMPERATURE, default=-5.0): cv.float_range(min=-5.0, max=20.0),
-        cv.Optional(CONF_MAX_TEMPERATURE, default=5.0): cv.float_range(min=5.0, max=75.0),
-      }
+    cv.Optional(CONF_CLIMATE_ZONE1): climate.climate_schema(
+      PanasonicHeatpumpClimate
+    ).extend(
+      climate_options(-5.0, 5.0, 0.5)
     ),
-    cv.Optional(CONF_CLIMATE_ZONE2): climate.climate_schema(PanasonicHeatpumpClimate)
-      .extend({
-        cv.Optional(CONF_MIN_TEMPERATURE, default=-5.0): cv.float_range(min=-5.0, max=20.0),
-        cv.Optional(CONF_MAX_TEMPERATURE, default=5.0): cv.float_range(min=5.0, max=75.0),
-      }
+    cv.Optional(CONF_CLIMATE_ZONE2): climate.climate_schema(
+      PanasonicHeatpumpClimate
+    ).extend(
+      climate_options(-5.0, 5.0, 0.5)
     ),
   }
 ).extend(cv.COMPONENT_SCHEMA)
@@ -66,5 +73,6 @@ async def to_code(config):
       cg.add(var.set_id(index))
       cg.add(var.set_min_temperature(child_config[CONF_MIN_TEMPERATURE]))
       cg.add(var.set_max_temperature(child_config[CONF_MAX_TEMPERATURE]))
+      cg.add(var.set_temperature_step(child_config[CONF_TEMPERATURE_STEP]))
       cg.add(var.set_cool_mode(config[CONF_COOL_MODE]))
       cg.add(parent.add_climate(var))

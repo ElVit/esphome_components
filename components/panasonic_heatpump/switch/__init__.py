@@ -40,7 +40,9 @@ PanasonicHeatpumpSwitch = panasonic_heatpump_ns.class_("PanasonicHeatpumpSwitch"
 
 CONFIG_SCHEMA = cv.Schema(
   {
-    cv.GenerateID(CONF_PANASONIC_HEATPUMP_ID): cv.use_id(PanasonicHeatpumpComponent),
+    cv.GenerateID(CONF_PANASONIC_HEATPUMP_ID): cv.use_id(
+      PanasonicHeatpumpComponent
+    ),
 
     cv.Optional(CONF_SET1): switch.switch_schema(
       PanasonicHeatpumpSwitch,

@@ -230,7 +230,9 @@ PanasonicHeatpumpSensor = panasonic_heatpump_ns.class_("PanasonicHeatpumpSensor"
 
 CONFIG_SCHEMA = cv.Schema(
   {
-    cv.GenerateID(CONF_PANASONIC_HEATPUMP_ID): cv.use_id(PanasonicHeatpumpComponent),
+    cv.GenerateID(CONF_PANASONIC_HEATPUMP_ID): cv.use_id(
+      PanasonicHeatpumpComponent
+    ),
 
     cv.Optional(CONF_TOP1): sensor.sensor_schema(
       PanasonicHeatpumpSensor,

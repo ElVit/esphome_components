@@ -75,7 +75,9 @@ PanasonicHeatpumpTextSensor = panasonic_heatpump_ns.class_("PanasonicHeatpumpTex
 
 CONFIG_SCHEMA = cv.Schema(
   {
-    cv.GenerateID(CONF_PANASONIC_HEATPUMP_ID): cv.use_id(PanasonicHeatpumpComponent),
+    cv.GenerateID(CONF_PANASONIC_HEATPUMP_ID): cv.use_id(
+      PanasonicHeatpumpComponent
+    ),
 
     cv.Optional(CONF_TOP4): text_sensor.text_sensor_schema(
       PanasonicHeatpumpTextSensor,

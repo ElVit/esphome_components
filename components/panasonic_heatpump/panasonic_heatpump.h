@@ -20,8 +20,6 @@ namespace esphome
     {
       READ_RESPONSE,
       CHECK_RESPONSE,
-      SET_NUMBER_TRAITS,
-      SET_SELECT_TRAITS,
       PUBLISH_SENSOR,
       PUBLISH_BINARY_SENSOR,
       PUBLISH_TEXT_SENSOR,
@@ -47,7 +45,6 @@ namespace esphome
       public:
         virtual void set_id(const int id) { id_ = id; }
         virtual void publish_new_state(const std::vector<uint8_t>& data) = 0;
-        virtual bool set_traits(std::map<std::string, int>& traits_settings) { return false; }
 
       protected:
         int id_ { -1 };
@@ -57,8 +54,6 @@ namespace esphome
     class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDevice
     {
     public:
-      bool traits_changed_ { false };
-
       PanasonicHeatpumpComponent() = default;
       // base class functions
       float get_setup_priority() const override { return setup_priority::DATA; }
@@ -69,7 +64,6 @@ namespace esphome
       // option functions
       void set_uart_client(uart::UARTComponent* uart) { this->uart_client_ = uart; }
       void set_log_uart_msg(bool active) { this->log_uart_msg_ = active; }
-      void set_cool_mode(bool active) { this->cool_mode_ = active; }
       // uart message variables to use in lambda functions
       int getResponseByte(const int index);
       // command functions
@@ -90,13 +84,11 @@ namespace esphome
       // options variables
       uart::UARTComponent* uart_client_ { nullptr };
       bool log_uart_msg_ { false };
-      bool cool_mode_ { false };
       // uart message variables
       std::vector<uint8_t> heatpump_message_;
       std::vector<uint8_t> response_message_;
       std::vector<uint8_t> request_message_;
       std::vector<uint8_t> command_message_;
-      std::map<std::string, int> traits_settings_;
       uint8_t payload_length_;
       uint8_t byte_;
       uint8_t current_response_count_ { 0 };
@@ -105,7 +97,6 @@ namespace esphome
       bool request_receiving_ { false };
       RequestType next_request_ { RequestType::INITIAL };
       LoopState loop_state_ { LoopState::RESTART_LOOP };
-      uint8_t traits_update_counter_ { 0 };
       // entity vectors
       std::vector<PanasonicHeatpumpEntity *> binary_sensors_;
       std::vector<PanasonicHeatpumpEntity *> climates_;

@@ -19,7 +19,9 @@ namespace esphome
 
       //traits.set_supports_action(true);
       traits.set_supports_current_temperature(true);
-      if (this->cool_mode_ && (this->id_ == ClimateIds::CONF_CLIMATE_ZONE1 || this->id_ == ClimateIds::CONF_CLIMATE_ZONE2))
+      if (this->cool_mode_ && 
+          (this->id_ == ClimateIds::CONF_CLIMATE_ZONE1 || 
+          this->id_ == ClimateIds::CONF_CLIMATE_ZONE2))
       {
         traits.set_supports_two_point_target_temperature(true);
         this->supported_modes_.insert(climate::CLIMATE_MODE_COOL);
@@ -106,25 +108,25 @@ namespace esphome
       if (data.empty()) return;
 
       uint8_t new_mode;
-      float new_target_temp_high;
-      float new_target_temp_low;
+      float new_target_temp_heat;
+      float new_target_temp_cool;
       float new_current_temp;
 
       new_mode = this->getClimateMode(data[6]);  // set9
       switch (this->id_)
       {
         case ClimateIds::CONF_CLIMATE_TANK:
-          new_target_temp_high = PanasonicDecode::getByteMinus128(data[42]);  // set11
+          new_target_temp_heat = PanasonicDecode::getByteMinus128(data[42]);  // set11
           new_current_temp = PanasonicDecode::getByteMinus128(data[141]);     // top10
           break;
         case ClimateIds::CONF_CLIMATE_ZONE1:
-          new_target_temp_high = PanasonicDecode::getByteMinus128(data[38]);  // set5
-          new_target_temp_low = PanasonicDecode::getByteMinus128(data[39]);   // set6
+          new_target_temp_heat = PanasonicDecode::getByteMinus128(data[38]);  // set5
+          new_target_temp_cool = PanasonicDecode::getByteMinus128(data[39]);   // set6
           new_current_temp = PanasonicDecode::getByteMinus128(data[139]);     // top56
           break;
         case ClimateIds::CONF_CLIMATE_ZONE2:
-          new_target_temp_high = PanasonicDecode::getByteMinus128(data[40]);  // set7
-          new_target_temp_low = PanasonicDecode::getByteMinus128(data[41]);   // set8
+          new_target_temp_heat = PanasonicDecode::getByteMinus128(data[40]);  // set7
+          new_target_temp_cool = PanasonicDecode::getByteMinus128(data[41]);   // set8
           new_current_temp = PanasonicDecode::getByteMinus128(data[140]);     // top57
           break;
         default: return;
@@ -132,24 +134,24 @@ namespace esphome
 
       if (!this->get_traits().get_supports_two_point_target_temperature() &&
           this->mode == new_mode &&
-          this->target_temperature == new_target_temp_high &&
+          this->target_temperature == new_target_temp_heat &&
           this->current_temperature == new_current_temp) return;
       if (this->get_traits().get_supports_two_point_target_temperature() &&
           this->mode == new_mode &&
-          this->target_temperature_high == new_target_temp_high &&
-          this->target_temperature_low == new_target_temp_low &&
+          this->target_temperature_high == new_target_temp_heat &&
+          this->target_temperature_low == new_target_temp_cool &&
           this->current_temperature == new_current_temp) return;
 
-      if (new_mode != 255) this->mode = (climate::ClimateMode) new_mode;
+      if (new_mode != 255) this->mode = (climate::ClimateMode)new_mode;
       //this->action = climate::CLIMATE_ACTION_IDLE;
       if (this->get_traits().get_supports_two_point_target_temperature())
       {
-        this->target_temperature_high = new_target_temp_high;
-        this->target_temperature_low = new_target_temp_low;
+        this->target_temperature_high = new_target_temp_heat;
+        this->target_temperature_low = new_target_temp_cool;
       }
       else
       {
-        this->target_temperature = new_target_temp_high;
+        this->target_temperature = new_target_temp_heat;
       }
       this->current_temperature = new_current_temp;
       this->publish_state();

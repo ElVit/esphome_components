@@ -403,46 +403,5 @@ namespace esphome
 
       this->publish_state(new_state);
     }
-
-    bool PanasonicHeatpumpNumber::set_traits(std::map<std::string, int>& traits_settings)
-    {
-      if (traits_settings.empty()) return false;
-
-      switch (this->id_)
-      {
-        case NumberIds::CONF_SET5: // Set Z1 Heat Request Temperature
-        case NumberIds::CONF_SET7: // Set Z2 Heat Request Temperature
-          if (this->traits.get_min_value() != -5.0 && traits_settings["heating_mode"] == 0)
-          {
-            this->traits.set_min_value(-5.0);
-            this->traits.set_max_value(5.0);
-            return true;
-          }
-          if (this->traits.get_min_value() != 20.0 && traits_settings["heating_mode"] == 1)
-          {
-            this->traits.set_min_value(20.0);
-            this->traits.set_max_value(60.0);
-            return true;
-          }
-          break;
-        case NumberIds::CONF_SET6: // Set Z1 Cool Request Temperature
-        case NumberIds::CONF_SET8: // Set Z2 Cool Request Temperature
-          if (this->traits.get_min_value() != -5.0 && traits_settings["cooling_mode"] == 0)
-          {
-            this->traits.set_min_value(-5.0);
-            this->traits.set_max_value(5.0);
-            return true;
-          }
-          if (this->traits.get_min_value() != 20.0 && traits_settings["cooling_mode"] == 1)
-          {
-            this->traits.set_min_value(20.0);
-            this->traits.set_max_value(60.0);
-            return true;
-          }
-          break;
-      };
-
-      return false;
-    }
   } // namespace panasonic_heatpump
 } // namespace esphome

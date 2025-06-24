@@ -269,7 +269,7 @@ namespace esphome
 
       if ((index < 0) || (index >= size))
       {
-        return "UNKNOWN";
+        return "UNDEFINED";
       }
 
       return array[index + 1];

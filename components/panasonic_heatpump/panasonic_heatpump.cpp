@@ -43,28 +43,7 @@ namespace esphome
         {
           bool result = this->check_response(this->heatpump_message_);
           this->loop_state_ = result ?
-            LoopState::SET_NUMBER_TRAITS : LoopState::SEND_REQUEST;
-          break;
-        }
-        // traits can be changed anytime, but entities will only be updated in home assistant,
-        // if the traits was set before connecting to home assistant. If now a traits must be changed later,
-        // a reboot of the ESP controller is required to see the changes in home assistant.
-        case LoopState::SET_NUMBER_TRAITS:
-        {
-          for (auto *entity : this->numbers_)
-          {
-            this->traits_changed_ = entity->set_traits(this->traits_settings_) ? true : this->traits_changed_;
-          }
-          this->loop_state_ = LoopState::SET_SELECT_TRAITS;
-          break;
-        }
-        case LoopState::SET_SELECT_TRAITS:
-        {
-          for (auto *entity : this->selects_)
-          {
-            this->traits_changed_ = entity->set_traits(this->traits_settings_) ? true : this->traits_changed_;
-          }
-          this->loop_state_ = LoopState::PUBLISH_SENSOR;
+            LoopState::PUBLISH_SENSOR : LoopState::SEND_REQUEST;
           break;
         }
         case LoopState::PUBLISH_SENSOR:
@@ -144,19 +123,6 @@ namespace esphome
         }
         default:
         {
-          if (this->traits_changed_) this->traits_update_counter_++;
-
-          // Perform reboot only if a traits (e.g. min/max value of a number entity) was changed the second time.
-          // The first traits change should happen before controller is connected to home assistant,
-          // because the initial traits value is 0 or an empty vector.
-          if (this->traits_update_counter_ > 1)
-          {
-            ESP_LOGW(TAG, "Limit values have changed. Rebooting so Home Assistant can reconfigures the entity limits.");
-            delay(100);   // NOLINT
-            App.safe_reboot();
-          }
-
-          this->traits_changed_ = false;
           this->loop_state_ = LoopState::READ_RESPONSE;
           break;
         }
@@ -330,11 +296,6 @@ namespace esphome
       // Check if the current response is a new response
       if (this->last_response_count_ == this->current_response_count_) return false;
       this->last_response_count_ = this->current_response_count_;
-
-      // Save some topic values that are needed for setting traits
-      traits_settings_["heating_mode"] = PanasonicDecode::getBit7and8(data[28]);   // top76
-      traits_settings_["cooling_mode"] = PanasonicDecode::getBit5and6(data[28]);   // top81
-      traits_settings_["cool_mode_configured"] = this->cool_mode_;
 
       return true;
     }

@@ -29,6 +29,7 @@ namespace esphome
       void set_cool_mode(bool value) { this->cool_mode_ = value; }
       void set_min_temperature(float value) { this->min_temperature_ = value; }
       void set_max_temperature(float value) { this->max_temperature_ = value; }
+      void set_temperature_step(float value) { this->temperature_step_ = value; }
 
     protected:
       void control(const climate::ClimateCall &call) override;
