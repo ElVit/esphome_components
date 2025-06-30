@@ -77,21 +77,34 @@ text_sensor:
   - platform: panasonic_heatpump
     top4:
       name: "Operating Mode State"
-    
+
 number:
   - platform: panasonic_heatpump
     set5:
       name: "Set Z1 Heat Request Temperature"
+      min_value: -5.0
+      max_value: 5.0
+      step: 1.0
 
 select:
   - platform: panasonic_heatpump
+    cool_mode: true
     set2:
       name: "Set Holiday Mode"
 
 switch:
-    - platform: panasonic_heatpump
-      set1:
-        name: "Set Heatpump"
+  - platform: panasonic_heatpump
+    set1:
+      name: "Set Heatpump"
+
+climate:
+  - platform: panasonic_heatpump
+    cool_mode: true
+    tank:
+      name: "DHW"
+      min_temperature: -5.0
+      max_temperature: 5.0
+      temperature_step: 0.5
 ```
 
 ## Configuration variables
@@ -413,6 +426,8 @@ text_sensor:
 ### Numbers
 
 All numbers are optional and all default number variables can be applied.  
+Additionally the options `min_value`, `max_value` and `step` can override the default limits of each set entitiy.  
+This is usefull for example for `set5` to `set8` if `direct temperature` is configured instead of `compensation curve` (see `top76` and `top81`).  
 Here a list of all supported numbers:
 
 ```yaml
@@ -525,11 +540,14 @@ switch:
 ### Selects
 
 All selects are optional and all default select variables can be applied.  
+Additionally the option `cool_mode` can be configured.  
+If `cool_mode` is set to `true` the entity `set9` will have the additional select options `COOL`, `COOL+TANK`, `AUTO` and `AUTO+TANK`.  
 Here a list of all supported selects:
 
 ```yaml
 select:
   - platform: panasonic_heatpump
+    cool_mode: false
     set2:
       name: "Set Holiday Mode"
     set3:
@@ -544,6 +562,27 @@ select:
       name: "Set External PadHeater"
     set35:
       name: "Set Bivalent Mode"
+```
+
+### Climates
+
+All climates are optional and all default climate variables can be applied.  
+Additionally the option `cool_mode` can be configured.  
+If `cool_mode` is set to `true` the entity `zone1` and `zone2` will have the additional climate modes `COOL` and `AUTO`.  
+Additionally the options `min_temperature`, `max_temperature` and `temperature_step` can override the default limits on each climate entitiy.  
+This is usefull for example for `zone1` and `zone2` if `direct temperature` is configured instead of `compensation curve` (see `top76` and `top81`).  
+Here a list of all supported climates:
+
+```yaml
+climate:
+  - platform: panasonic_heatpump
+    cool_mode: false
+    tank:
+      name: "DHW"
+    zone1:
+      name: "Zone 1"
+    zone2:
+      name: "Zone 2"
 ```
 
 ## Custom Entities (For Advanced Users)

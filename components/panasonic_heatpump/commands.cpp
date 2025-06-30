@@ -48,32 +48,32 @@ namespace esphome
 
     uint8_t PanasonicCommand::setMultiply2(size_t input)
     {
-      return input * 2;
+      return input * 0b10;
     }
 
     uint8_t PanasonicCommand::setMultiply4(size_t input)
     {
-      return input * 4;
+      return input * 0b100;
     }
 
     uint8_t PanasonicCommand::setPlus1Multiply4(size_t input)
     {
-      return (input + 1) * 4;
+      return (input + 1) * 0b100;
     }
 
     uint8_t PanasonicCommand::setPlus1Multiply8(size_t input)
     {
-      return (input + 1) * 8;
+      return (input + 1) * 0b1000;
     }
 
     uint8_t PanasonicCommand::setPlus1Multiply16(size_t input)
     {
-      return (input + 1) * 16;
+      return (input + 1) * 0b10000;
     }
 
     uint8_t PanasonicCommand::setPlus1Multiply64(size_t input)
     {
-      return (input + 1) * 64;
+      return (input + 1) * 0b1000000;
     }
 
     uint8_t PanasonicCommand::setPlus1(size_t input)
@@ -81,31 +81,26 @@ namespace esphome
       return input + 1;
     }
 
-    uint8_t PanasonicCommand::setPlus73(size_t input)
-    {
-      return input + 73;
-    }
-
     uint8_t PanasonicCommand::setPlus128(size_t input)
     {
-      return input + 128;
+      return input + 0b10000000;
     }
 
     uint8_t PanasonicCommand::setOperationMode(size_t input)
     {
       switch (input)
       {
-        case 0: return 18;  // heat-only
-        case 1: return 19;  // cool-only
-        case 2: return 24;  // auto
-        case 3: return 25;  // auto-heat
-        case 4: return 26;  // auto-cool
-        case 5: return 33;  // dhw-only
-        case 6: return 34;  // heat+dhw
-        case 7: return 35;  // cool+dhw
-        case 8: return 40;  // auto-dhw
-        case 9: return 41;  // auto-heat+dhw
-        case 10: return 42; // auto-cool+dhw
+        case 0:  return 0b100001; // 0x21 = tank
+        case 1:  return 0b010010; // 0x12 = heat
+        case 2:  return 0b100010; // 0x22 = heat+tank
+        case 3:  return 0b010011; // 0x13 = cool
+        case 4:  return 0b100011; // 0x23 = cool+tank
+        case 5:  return 0b011000; // 0x18 = auto
+        case 6:  return 0b101000; // 0x28 = auto+tank
+        case 7:  return 0b011001; // 0x19 = auto-heat
+        case 8:  return 0b101001; // 0x29 = auto-heat+tank
+        case 9:  return 0b011010; // 0x1A = auto-cool
+        case 10: return 0b101010; // 0x2A = auto-cool+tank
         default: return 0;  // do nothing
       }
     }

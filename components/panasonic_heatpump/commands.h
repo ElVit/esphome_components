@@ -2,10 +2,18 @@
 #include <cmath>
 #include <vector>
 
+#ifndef INIT_REQUEST_SIZE
 #define INIT_REQUEST_SIZE 8
+#endif
+#ifndef INIT_RESPONSE_SIZE
 #define INIT_RESPONSE_SIZE 51
+#endif
+#ifndef DATA_MESSAGE_SIZE
 #define DATA_MESSAGE_SIZE 111
+#endif
+#ifndef OPTIONAL_MESSAGE_SIZE
 #define OPTIONAL_MESSAGE_SIZE 20
+#endif
 
 
 namespace esphome
@@ -25,7 +33,6 @@ namespace esphome
       static uint8_t setPlus1Multiply16(size_t input);
       static uint8_t setPlus1Multiply64(size_t input);
       static uint8_t setPlus1(size_t input);
-      static uint8_t setPlus73(size_t input);
       static uint8_t setPlus128(size_t input);
       static uint8_t setOperationMode(size_t input);
       static uint8_t temp2hex(float temp);

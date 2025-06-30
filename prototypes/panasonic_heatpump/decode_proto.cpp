@@ -1,4 +1,4 @@
-#include "decode.h"
+#include "decode_proto.h"
 
 int getBit1(uint8_t input)
 {
@@ -179,7 +179,7 @@ float getPumpFlow(uint8_t input1, uint8_t input2)
   int PumpFlow2 = (int)input2;
   float PumpFlow1 = (((float)input1 - 1) / 256);
   float PumpFlow = PumpFlow2 + PumpFlow1;
-  
+
   return PumpFlow;
 }
 
@@ -189,7 +189,7 @@ float getFractional(uint8_t input, uint8_t shift)
   float result;
   int fractional = (int)((input >> shift) & 0b111) - 1;
   result = fractional * 0.25;
-  
+
   return result;
 }
 

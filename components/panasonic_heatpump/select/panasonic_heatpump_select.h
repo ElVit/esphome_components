@@ -1,23 +1,36 @@
 #pragma once
-#include "esphome/components/select/select.h"
 #include "esphome/core/component.h"
+#include "esphome/components/select/select.h"
 #include "../panasonic_heatpump.h"
+#include "../decode.h"
+#include "../commands.h"
 
 
 namespace esphome
 {
   namespace panasonic_heatpump
   {
-    class PanasonicHeatpumpSelect : public select::Select, public Component, public Parented<PanasonicHeatpumpComponent>
+    enum SelectIds : uint8_t
+    {
+      CONF_SET2,
+      CONF_SET3,
+      CONF_SET4,
+      CONF_SET9,
+      CONF_SET17,
+      CONF_SET26,
+      CONF_SET35,
+    };
+
+    class PanasonicHeatpumpSelect : public select::Select, public Component,
+          public Parented<PanasonicHeatpumpComponent>, public PanasonicHeatpumpEntity
     {
     public:
       PanasonicHeatpumpSelect() = default;
       void dump_config() override;
-      void set_id(int id) { this->id_ = id; }
+      void publish_new_state(const std::vector<uint8_t>& data) override;
 
     protected:
       void control(const std::string &value) override;
-      int id_;
     };
   } // namespace panasonic_heatpump
 } // namespace esphome
