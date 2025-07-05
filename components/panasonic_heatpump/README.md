@@ -445,23 +445,23 @@ number:
       name: "Set DHW Temp"
     set15:
       name: "Set Max Pump Duty"
-    set16_1:
+    set16_01:
       name: "Set Zone1 Heat Target High"
-    set16_2:
+    set16_02:
       name: "Set Zone1 Heat Target Low"
-    set16_3:
+    set16_03:
       name: "Set Zone1 Heat Outside Low"
-    set16_4:
+    set16_04:
       name: "Set Zone1 Heat Outside High"
-    set16_5:
+    set16_05:
       name: "Set Zone2 Heat Target High"
-    set16_6:
+    set16_06:
       name: "Set Zone2 Heat Target Low"
-    set16_7:
+    set16_07:
       name: "Set Zone2 Heat Outside Low"
-    set16_8:
+    set16_08:
       name: "Set Zone2 Heat Outside High"
-    set16_9:
+    set16_09:
       name: "Set Zone1 Cool Target High"
     set16_10:
       name: "Set Zone1 Cool Target Low"
