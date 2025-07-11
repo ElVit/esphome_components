@@ -2,14 +2,14 @@ substitutions:
   mdns_name: panasonic-heatpump
   device_name: Panasonic Heatpump
 
-  pin_rx_hp: GPIO4  # heatpump reads data (RX) on this pin
-  pin_tx_hp: GPIO3  # heatpump sends data (TX) on this pin
-  pin_tx_wm: GPIO1  # WiFi module sends data (TX) on this pin
-  pin_rx_wm: GPIO0  # WiFi module reads data (RX) on this pin
+  pin_rx_hp: GPIO37  # heatpump reads data (RX) on this pin    (yellow)
+  pin_tx_hp: GPIO39  # heatpump sends data (TX) on this pin    (green)
+  pin_tx_wm: GPIO18  # WiFi module sends data (TX) on this pin (white)
+  pin_rx_wm: GPIO16  # WiFi module reads data (RX) on this pin (blue)
 
 esp32:
-  board: esp32-c3-devkitm-1
-  variant: ESP32C3
+  board: lolin_s2_mini
+  variant: ESP32S2
   framework:
     type: esp-idf
 
