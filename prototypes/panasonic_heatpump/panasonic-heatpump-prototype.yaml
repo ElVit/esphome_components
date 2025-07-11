@@ -3,10 +3,10 @@ substitutions:
   device_name: Panasonic Heatpump
   device_description: Reads/Controls your Panasonic Aquarea Heatpump over UART
 
-  pin_rx_hp: GPIO4  # heatpump reads data (RX) on this pin     (green)
-  pin_tx_hp: GPIO3  # heatpump sends data (TX) on this pin     (yellow)
-  pin_tx_cz: GPIO1  # WiFi module sends data (TX) on this pin  (blue)
-  pin_rx_cz: GPIO0  # WiFi module reads data (RX) on this pin  (white)
+  pin_rx_hp: GPIO37  # heatpump reads data (RX) on this pin    (yellow)
+  pin_tx_hp: GPIO39  # heatpump sends data (TX) on this pin    (green)
+  pin_tx_wm: GPIO18  # WiFi module sends data (TX) on this pin (white)
+  pin_rx_wm: GPIO16  # WiFi module reads data (RX) on this pin (blue)
 
   # CN-CNT Pinout (from top to bottom)
   # 1 - +5V (250mA)
@@ -16,10 +16,10 @@ substitutions:
   # 5 - GND
 
 esp32:
-  board: esp32-c3-devkitm-1
-  variant: ESP32C3
+  board: lolin_s2_mini
+  variant: ESP32S2
   framework:
-    type: arduino
+    type: esp-idf
 
 esphome:
   name: $mdns_name
@@ -59,7 +59,7 @@ logger:
   level: DEBUG
 
 uart:
-  - id: uart_hp
+  - id: uart_heatpump
     # switch rx and tx to read what the heatpump is sending
     tx_pin: $pin_rx_hp
     rx_pin: $pin_tx_hp
@@ -87,12 +87,12 @@ uart:
               // (for more topics see heishamon_decode.xlsx or code-gen-result.md)
             }
         - uart.write: # Write rx to tx.
-            id: uart_cz
+            id: uart_cztaw1
             data: !lambda return bytes;
-  - id: uart_cz
+  - id: uart_cztaw1
     # switch rx and tx to read what the WiFi module is sending
-    tx_pin: $pin_rx_cz
-    rx_pin: $pin_tx_cz
+    tx_pin: $pin_rx_wm
+    rx_pin: $pin_tx_wm
     baud_rate: 9600
     data_bits: 8
     parity: EVEN
@@ -107,8 +107,16 @@ uart:
             ESP_LOGD("custom", "CZ-TAW1:");
             UARTDebug::log_hex(direction, bytes, ',');
         - uart.write: # Write rx to tx.
-            id: uart_hp
+            id: uart_heatpump
             data: !lambda return bytes;
+
+### if no CZ-TAW1 is connected the Panasonic Query (request message) can be send cyclic by ESPHome
+# interval:
+#  - interval: 5s
+#    then:
+#      - uart.write:
+#          id: uart_heatpump
+#          data: [ 0x71, 0x6c, 0x01, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x12 ]
 
 sensor:
   - platform: wifi_signal
