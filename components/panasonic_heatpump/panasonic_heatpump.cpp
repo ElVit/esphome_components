@@ -133,7 +133,7 @@ namespace esphome
     {
       while (this->available())
       {
-        // Read byte from heatpump and forward it directly to the client (CZ-TAW1)
+        // Read each byte from heatpump and forward it directly to the client (CZ-TAW1)
         this->read_byte(&byte_);
         if (this->uart_client_ != nullptr)
         {
@@ -216,7 +216,7 @@ namespace esphome
 
       while (this->uart_client_->available())
       {
-        // Read byte from client and forward it directly to the heatpump
+        // Read each byte from client and forward it directly to the heatpump
         this->uart_client_->read_byte(&byte_);
         this->write_byte(byte_);
 
@@ -273,6 +273,7 @@ namespace esphome
 
       if (data.empty()) return false;
       if (data[0] != 0x71) return false;
+      if (data[3] != 0x10) return false;
       if (data.size() != RESPONSE_MSG_SIZE)
       {
         ESP_LOGW(TAG, "Invalid response message length: recieved %d - expected %d", data.size(), RESPONSE_MSG_SIZE);
