@@ -1,19 +1,10 @@
 #pragma once
+#include <vector>
+#include <string>
 #include "esphome/core/component.h"
 #include "esphome/core/defines.h"
 #include "esphome/core/log.h"
 #include "esphome/components/uart/uart.h"
-#ifdef USE_SENSOR
-#include "esphome/components/sensor/sensor.h"
-#endif
-#ifdef USE_BUTTON
-#include "esphome/components/button/button.h"
-#endif
-#ifdef USE_NUMBER
-#include "esphome/components/number/number.h"
-#endif
-#include <vector>
-#include <string>
 
 #define UART_LOG_CHUNK_SIZE 153
 
@@ -22,93 +13,80 @@ namespace esphome
 {
   namespace maidesite_desk
   {
+    class MaidesiteDeskEntity
+    {
+      public:
+        virtual void set_id(const int id) { id_ = id; }
+        virtual void publish_new_state(const std::vector<uint8_t>& data) = 0;
+
+      protected:
+        int id_ { -1 };
+        float byte2float(int high, int low) { return static_cast<float>((high << 8) + low) / 10; }
+    };
 
     class MaidesiteDeskComponent : public Component, public uart::UARTDevice
     {
     public:
-#ifdef USE_SENSOR
-      SUB_SENSOR(unit);
-      SUB_SENSOR(height_abs);
-      SUB_SENSOR(height_pct);
-      SUB_SENSOR(height_min);
-      SUB_SENSOR(height_max);
-      SUB_SENSOR(position_m1);
-      SUB_SENSOR(position_m2);
-      SUB_SENSOR(position_m3);
-      SUB_SENSOR(position_m4);
-#endif
-#ifdef USE_BUTTON
-      SUB_BUTTON(unit);
-      SUB_BUTTON(step_up);
-      SUB_BUTTON(step_down);
-      SUB_BUTTON(stop);
-      SUB_BUTTON(goto_max);
-      SUB_BUTTON(goto_min);
-      SUB_BUTTON(goto_m1);
-      SUB_BUTTON(goto_m2);
-      SUB_BUTTON(goto_m3);
-      SUB_BUTTON(goto_m4);
-      SUB_BUTTON(save_m1);
-      SUB_BUTTON(save_m2);
-      SUB_BUTTON(save_m3);
-      SUB_BUTTON(save_m4);
-
-      void button_press_action(button::Button* object);
-#endif
-#ifdef USE_NUMBER
-      SUB_NUMBER(height_abs);
-      SUB_NUMBER(height_pct);
-
-      void number_control(number::Number* object, float value);
-#endif
-
       MaidesiteDeskComponent() = default;
       // base class functions
-      float get_setup_priority() const override { return setup_priority::LATE; }
+      float get_setup_priority() const override { return setup_priority::DATA; }
       void dump_config() override;
       void setup() override;
       void loop() override;
+      
       // option functions
       void set_log_uart_msg(bool enable) { this->log_uart_msg_ = enable; }
+      
+      void send_1byte_command(unsigned char cmd);
+      void send_2byte_command(unsigned char cmd, unsigned char high_byte, unsigned char low_byte);
+      
       // functions to use in lambdas
       void request_physical_limits();
       void request_limits();
       void request_settings();
       void request_move_to();
-      void step_up();
-      void step_down();
-      void stop();
-      void goto_height(float height);
       void goto_min_position();
       void goto_max_position();
-      void goto_mem_position(int pos);
-      void save_mem_position(int pos);
+      void goto_height_abs(float height);
+      void goto_height_pct(float height);
+      
+      // uart message variables to use in lambda functions
+      int getResponseByte(const int index);
 
-      // variables to use in lambdas
-      std::vector<uint8_t> response_message_;
-
-    protected:
-      // uart message functions
-      void decode_response(std::vector<uint8_t> message);
-      void send_simple_command(unsigned char cmd);
-      void send_2byte_command(unsigned char cmd, unsigned char high_byte, unsigned char low_byte);
-      float byte2float(int high, int low);
-      void log_uart_hex(std::string prefix, std::vector<uint8_t> bytes, uint8_t separator);
-
-      // options variables
-      bool log_uart_msg_ { false };
-      // uart message variables
-      std::vector<uint8_t> request_message_;
-      uint8_t response_payload_length_;
-      uint8_t request_payload_length_;
-      bool response_receiving_ { false };
-      bool request_receiving_ { false };
+      void add_button(MaidesiteDeskEntity *button) { buttons_.push_back(button); }
+      void add_number(MaidesiteDeskEntity *number) { numbers_.push_back(number); }
+      void add_sensor(MaidesiteDeskEntity *sensor) { sensors_.push_back(sensor); }
+      
       // sensor variables
-      float current_height_ = 0;
       float limit_min_ = 0;
       float limit_max_ = 0;
       float physical_min_ = 0;
       float physical_max_ = 0;
+
+    protected:
+      // uart message functions
+      void read_response();
+      void decode_response(std::vector<uint8_t> message);
+      void log_uart_hex(std::string prefix, std::vector<uint8_t> bytes, uint8_t separator);
+
+      // options variables
+      bool log_uart_msg_ { false };
+
+      // uart message variables
+      bool checksum_passed_ { false };
+      bool response_receiving_ { false };
+      bool request_receiving_ { false };
+      uint8_t byte_;
+      uint8_t checksum_;
+      uint8_t response_payload_length_;
+      uint8_t request_payload_length_;
+      std::vector<uint8_t> request_message_;
+      std::vector<uint8_t> response_message_;
+      std::vector<uint8_t> desk_message_;
+
+      std::vector<MaidesiteDeskEntity *> buttons_;
+      std::vector<MaidesiteDeskEntity *> numbers_;
+      std::vector<MaidesiteDeskEntity *> sensors_;
     };
   } // namespace maidesite_desk
 } // namespace esphome

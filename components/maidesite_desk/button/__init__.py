@@ -41,7 +41,9 @@ MaidesiteDeskButton = maidesite_desk_ns.class_("MaidesiteDeskButton", button.But
 
 CONFIG_SCHEMA = cv.Schema(
   {
-    cv.GenerateID(CONF_MAIDESITE_DESK_ID): cv.use_id(MaidesiteDeskComponent),
+    cv.GenerateID(CONF_MAIDESITE_DESK_ID): cv.use_id(
+      MaidesiteDeskComponent
+    ),
 
     cv.Optional(CONF_STEP_UP): button.button_schema(
       MaidesiteDeskButton,
@@ -90,11 +92,11 @@ CONFIG_SCHEMA = cv.Schema(
 ).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
-  hub = await cg.get_variable(config[CONF_MAIDESITE_DESK_ID])
+  parent = await cg.get_variable(config[CONF_MAIDESITE_DESK_ID])
   for index, key in enumerate(TYPES):
     if child_config := config.get(key):
       var = await button.new_button(child_config)
       await cg.register_component(var, child_config)
-      await cg.register_parented(var, config[CONF_MAIDESITE_DESK_ID])
-      cg.add(getattr(hub, f"set_{key}_button")(var))
+      cg.add(var.set_parent(parent))
       cg.add(var.set_id(index))
+      cg.add(parent.add_number(var))

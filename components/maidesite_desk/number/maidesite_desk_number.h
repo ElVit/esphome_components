@@ -8,16 +8,22 @@ namespace esphome
 {
   namespace maidesite_desk
   {
-    class MaidesiteDeskNumber : public number::Number, public Component, public Parented<MaidesiteDeskComponent>
+    enum NumberIds : uint8_t
+    {
+      CONF_HEIGHT_ABS,
+      CONF_HEIGHT_PCT,
+    };
+
+    class MaidesiteDeskNumber : public number::Number, public Component,
+          public Parented<MaidesiteDeskComponent>, public MaidesiteDeskEntity
     {
     public:
       MaidesiteDeskNumber() = default;
       void dump_config() override;
-      void set_id(int id) { this->id_ = id; }
+      void publish_new_state(const std::vector<uint8_t>& data) override;
 
     protected:
       void control(float value) override;
-      int id_;
     };
   } // namespace maidesite_desk
 } // namespace esphome
