@@ -590,6 +590,43 @@ namespace esphome
           if (this->has_state() && this->get_state() == new_state) return;
           break;
         }
+
+        case SensorIds::CONF_XTOP0:
+        {
+          new_state = PanasonicDecode::getWordMinus1(data, 14);
+          if (this->has_state() && this->get_state() == new_state) return;
+          break;
+        }
+        case SensorIds::CONF_XTOP1:
+        {
+          new_state = PanasonicDecode::getWordMinus1(data, 16);
+          if (this->has_state() && this->get_state() == new_state) return;
+          break;
+        }
+        case SensorIds::CONF_XTOP2:
+        {
+          new_state = PanasonicDecode::getWordMinus1(data, 18);
+          if (this->has_state() && this->get_state() == new_state) return;
+          break;
+        }
+        case SensorIds::CONF_XTOP3:
+        {
+          new_state = PanasonicDecode::getWordMinus1(data, 20);
+          if (this->has_state() && this->get_state() == new_state) return;
+          break;
+        }
+        case SensorIds::CONF_XTOP4:
+        {
+          new_state = PanasonicDecode::getWordMinus1(data, 22);
+          if (this->has_state() && this->get_state() == new_state) return;
+          break;
+        }
+        case SensorIds::CONF_XTOP5:
+        {
+          new_state = PanasonicDecode::getWordMinus1(data, 24);
+          if (this->has_state() && this->get_state() == new_state) return;
+          break;
+        }
         default: return;
       };
 

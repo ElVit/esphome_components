@@ -25,8 +25,8 @@ namespace esphome
 
     void PanasonicHeatpumpComponent::update()
     {
-      if (this->uart_client_ == nullptr)
-        this->next_request_ = RequestType::POLLING;
+      if (this->uart_client_ != nullptr) return;
+      this->next_request_ = this->send_extra_request_ ? RequestType::POLLING_EXTRA : RequestType::POLLING;
     }
 
     void PanasonicHeatpumpComponent::loop()
@@ -34,98 +34,91 @@ namespace esphome
       switch (this->loop_state_)
       {
         case LoopState::READ_RESPONSE:
-        {
           this->read_response();
           this->loop_state_ = LoopState::CHECK_RESPONSE;
           break;
-        }
         case LoopState::CHECK_RESPONSE:
-        {
-          bool result = this->check_response(this->heatpump_message_);
-          this->loop_state_ = result ?
-            LoopState::PUBLISH_SENSOR : LoopState::SEND_REQUEST;
+          this->current_response_ = this->check_response(this->heatpump_message_);
+          switch (this->current_response_)
+          {
+            case ResponseType::UNKNOWN:
+              this->loop_state_ = LoopState::SEND_REQUEST;
+              break;
+            case ResponseType::DEFAULT:
+              this->loop_state_ = LoopState::PUBLISH_SENSOR;
+              break;
+            case ResponseType::EXTRA:
+              this->loop_state_ = LoopState::PUBLISH_EXTRA_SENSOR;
+              break;
+          };
           break;
-        }
         case LoopState::PUBLISH_SENSOR:
-        {
           for (auto *entity : this->sensors_)
           {
             entity->publish_new_state(this->heatpump_message_);
           }
           this->loop_state_ = LoopState::PUBLISH_BINARY_SENSOR;
           break;
-        }
         case LoopState::PUBLISH_BINARY_SENSOR:
-        {
           for (auto *entity : this->binary_sensors_)
           {
             entity->publish_new_state(this->heatpump_message_);
           }
           this->loop_state_ = LoopState::PUBLISH_TEXT_SENSOR;
           break;
-        }
         case LoopState::PUBLISH_TEXT_SENSOR:
-        {
           for (auto *entity : this->text_sensors_)
           {
             entity->publish_new_state(this->heatpump_message_);
           }
           this->loop_state_ = LoopState::PUBLISH_NUMBER;
           break;
-        }
         case LoopState::PUBLISH_NUMBER:
-        {
           for (auto *entity : this->numbers_)
           {
             entity->publish_new_state(this->heatpump_message_);
           }
           this->loop_state_ = LoopState::PUBLISH_SELECT;
           break;
-        }
         case LoopState::PUBLISH_SELECT:
-        {
           for (auto *entity : this->selects_)
           {
             entity->publish_new_state(this->heatpump_message_);
           }
           this->loop_state_ = LoopState::PUBLISH_SWITCH;
           break;
-        }
         case LoopState::PUBLISH_SWITCH:
-        {
           for (auto *entity : this->switches_)
           {
             entity->publish_new_state(this->heatpump_message_);
           }
           this->loop_state_ = LoopState::PUBLISH_CLIMATE;
           break;
-        }
         case LoopState::PUBLISH_CLIMATE:
-        {
           for (auto *entity : this->climates_)
           {
             entity->publish_new_state(this->heatpump_message_);
           }
           this->loop_state_ = LoopState::SEND_REQUEST;
           break;
-        }
+        case LoopState::PUBLISH_EXTRA_SENSOR:
+          for (auto *entity : this->extra_sensors_)
+          {
+            entity->publish_new_state(this->heatpump_message_);
+          }
+          this->loop_state_ = LoopState::SEND_REQUEST;
+          break;
         case LoopState::SEND_REQUEST:
-        {
           this->send_request(this->next_request_);
           this->loop_state_ = LoopState::READ_REQUEST;
           break;
-        }
         case LoopState::READ_REQUEST:
-        {
           this->read_request();
           this->loop_state_ = LoopState::RESTART_LOOP;
           break;
-        }
         default:
-        {
           this->loop_state_ = LoopState::READ_RESPONSE;
           break;
-        }
       };
     }
 
@@ -205,6 +198,13 @@ namespace esphome
           this->flush();
           break;
         }
+        case RequestType::POLLING_EXTRA:
+        {
+          if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::PollingExtraMessage, DATA_MESSAGE_SIZE, ',');
+          this->write_array(PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE);
+          this->flush();
+          break;
+        }
       };
 
       this->next_request_ = RequestType::NONE;
@@ -264,41 +264,62 @@ namespace esphome
       return -1;
     }
 
-    bool PanasonicHeatpumpComponent::check_response(const std::vector<uint8_t>& data)
+    ResponseType PanasonicHeatpumpComponent::check_response(const std::vector<uint8_t>& data)
     {
       // Read response message:
-      // format:          0x71 [payload_length] 0x01 0x10 [[TOP0 - TOP114] ...] 0x00 [checksum]
+      // format:          0x71 [payload_length] 0x01 [0x10 || 0x21] [[TOP0 - TOP114] ...] 0x00 [checksum]
       // payload_length:  payload_length + 3 = packet_length
       // checksum:        if (sum(all bytes) & 0xFF == 0) ==> valid packet
 
-      if (data.empty()) return false;
-      if (data[0] != 0x71) return false;
-      if (data[3] != 0x10) return false;
+      if (data.empty()) return ResponseType::UNKNOWN;
+      if (data[0] != 0x71) return ResponseType::UNKNOWN;
       if (data.size() != RESPONSE_MSG_SIZE)
       {
         ESP_LOGW(TAG, "Invalid response message length: recieved %d - expected %d", data.size(), RESPONSE_MSG_SIZE);
         delay(10);  // NOLINT
-        return false;
+        return ResponseType::UNKNOWN;
       }
 
+      // Verify checksum
       uint8_t checksum = 0;
       for (int i = 0; i < data.size(); i++)
       {
         checksum += data[i];
       }
-      // checksum = checksum & 0xFF;
+      // all bytes (including checksum byte) shall be 0x00
       if (checksum != 0)
       {
         ESP_LOGW(TAG, "Invalid response message: checksum = 0x%02X, last_byte = 0x%02X", checksum, data[202]);
         delay(10);  // NOLINT
-        return false;
+        return ResponseType::UNKNOWN;
+      }
+
+      // Get response type
+      auto responseType = ResponseType::UNKNOWN;
+      if (data[3] == 0x10) responseType = ResponseType::DEFAULT;
+      if (data[3] == 0x21) responseType = ResponseType::EXTRA;
+      if (responseType == ResponseType::UNKNOWN)
+      {
+        ESP_LOGW(TAG, "Unknown response type (4. byte): 0x%02X. Expected 0x10 or 0x21.", data[3]);
+        delay(10);  // NOLINT
+        return ResponseType::UNKNOWN;
+      }
+
+      // Check if extra request shall be send
+      if (responseType == ResponseType::DEFAULT)
+      {
+        this->send_extra_request_ = data[199] > 0x02 ? true : false;
+      }
+      else
+      {
+        this->send_extra_request_ = false;
       }
 
       // Check if the current response is a new response
-      if (this->last_response_count_ == this->current_response_count_) return false;
+      if (this->last_response_count_ == this->current_response_count_) return ResponseType::UNKNOWN;
       this->last_response_count_ = this->current_response_count_;
 
-      return true;
+      return responseType;
     }
 
     void PanasonicHeatpumpComponent::set_command_high_nibble(const uint8_t value, const uint8_t index)

@@ -27,17 +27,26 @@ namespace esphome
       PUBLISH_SELECT,
       PUBLISH_SWITCH,
       PUBLISH_CLIMATE,
+      PUBLISH_EXTRA_SENSOR,
       SEND_REQUEST,
       READ_REQUEST,
-      RESTART_LOOP
+      RESTART_LOOP,
     };
 
     enum RequestType : uint8_t
     {
+      NONE,
+      COMMAND,
       INITIAL,
       POLLING,
-      COMMAND,
-      NONE
+      POLLING_EXTRA,
+    };
+
+    enum ResponseType : uint8_t
+    {
+      UNKNOWN,
+      DEFAULT,
+      EXTRA,
     };
 
     class PanasonicHeatpumpEntity
@@ -79,6 +88,7 @@ namespace esphome
       void add_sensor(PanasonicHeatpumpEntity *sensor) { sensors_.push_back(sensor); }
       void add_switch(PanasonicHeatpumpEntity *switch_) { switches_.push_back(switch_); }
       void add_text_sensor(PanasonicHeatpumpEntity *text_sensor) { text_sensors_.push_back(text_sensor); }
+      void add_extra_sensor(PanasonicHeatpumpEntity *sensor) { extra_sensors_.push_back(sensor); }
 
     protected:
       // options variables
@@ -95,8 +105,10 @@ namespace esphome
       uint8_t last_response_count_ { 0 };
       bool response_receiving_ { false };
       bool request_receiving_ { false };
-      RequestType next_request_ { RequestType::INITIAL };
+      bool send_extra_request_ { false };
       LoopState loop_state_ { LoopState::RESTART_LOOP };
+      RequestType next_request_ { RequestType::INITIAL };
+      ResponseType current_response_ { ResponseType::UNKNOWN };
       // entity vectors
       std::vector<PanasonicHeatpumpEntity *> binary_sensors_;
       std::vector<PanasonicHeatpumpEntity *> climates_;
@@ -105,12 +117,13 @@ namespace esphome
       std::vector<PanasonicHeatpumpEntity *> sensors_;
       std::vector<PanasonicHeatpumpEntity *> switches_;
       std::vector<PanasonicHeatpumpEntity *> text_sensors_;
+      std::vector<PanasonicHeatpumpEntity *> extra_sensors_;
 
       // uart message functions
       void read_response();
       void send_request(RequestType requestType);
       void read_request();
-      bool check_response(const std::vector<uint8_t>& data);
+      ResponseType check_response(const std::vector<uint8_t>& data);
     };
   }  // namespace panasonic_heatpump
 }  // namespace esphome
