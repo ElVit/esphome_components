@@ -38,7 +38,7 @@ namespace esphome
           this->loop_state_ = LoopState::CHECK_RESPONSE;
           break;
         case LoopState::CHECK_RESPONSE:
-          this->current_response_ = this->check_response(this->heatpump_message_);
+          this->current_response_ = this->check_response(this->response_message_);
           switch (this->current_response_)
           {
             case ResponseType::UNKNOWN:
@@ -55,56 +55,56 @@ namespace esphome
         case LoopState::PUBLISH_SENSOR:
           for (auto *entity : this->sensors_)
           {
-            entity->publish_new_state(this->heatpump_message_);
+            entity->publish_new_state(this->heatpump_default_message_);
           }
           this->loop_state_ = LoopState::PUBLISH_BINARY_SENSOR;
           break;
         case LoopState::PUBLISH_BINARY_SENSOR:
           for (auto *entity : this->binary_sensors_)
           {
-            entity->publish_new_state(this->heatpump_message_);
+            entity->publish_new_state(this->heatpump_default_message_);
           }
           this->loop_state_ = LoopState::PUBLISH_TEXT_SENSOR;
           break;
         case LoopState::PUBLISH_TEXT_SENSOR:
           for (auto *entity : this->text_sensors_)
           {
-            entity->publish_new_state(this->heatpump_message_);
+            entity->publish_new_state(this->heatpump_default_message_);
           }
           this->loop_state_ = LoopState::PUBLISH_NUMBER;
           break;
         case LoopState::PUBLISH_NUMBER:
           for (auto *entity : this->numbers_)
           {
-            entity->publish_new_state(this->heatpump_message_);
+            entity->publish_new_state(this->heatpump_default_message_);
           }
           this->loop_state_ = LoopState::PUBLISH_SELECT;
           break;
         case LoopState::PUBLISH_SELECT:
           for (auto *entity : this->selects_)
           {
-            entity->publish_new_state(this->heatpump_message_);
+            entity->publish_new_state(this->heatpump_default_message_);
           }
           this->loop_state_ = LoopState::PUBLISH_SWITCH;
           break;
         case LoopState::PUBLISH_SWITCH:
           for (auto *entity : this->switches_)
           {
-            entity->publish_new_state(this->heatpump_message_);
+            entity->publish_new_state(this->heatpump_default_message_);
           }
           this->loop_state_ = LoopState::PUBLISH_CLIMATE;
           break;
         case LoopState::PUBLISH_CLIMATE:
           for (auto *entity : this->climates_)
           {
-            entity->publish_new_state(this->heatpump_message_);
+            entity->publish_new_state(this->heatpump_default_message_);
           }
           this->loop_state_ = LoopState::SEND_REQUEST;
           break;
         case LoopState::PUBLISH_EXTRA_SENSOR:
           for (auto *entity : this->extra_sensors_)
           {
-            entity->publish_new_state(this->heatpump_message_);
+            entity->publish_new_state(this->heatpump_extra_message_);
           }
           this->loop_state_ = LoopState::SEND_REQUEST;
           break;
@@ -164,7 +164,6 @@ namespace esphome
         if (this->response_message_.size() > 2 &&
             this->response_message_.size() == this->payload_length_ + 3)
         {
-          this->heatpump_message_ = this->response_message_;
           this->response_receiving_ = false;
           this->current_response_count_++;
           if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_RX, this->response_message_, ',');
@@ -259,8 +258,13 @@ namespace esphome
 
     int PanasonicHeatpumpComponent::getResponseByte(const int index)
     {
-      if (this->heatpump_message_.size() > index) return this->heatpump_message_[index];
-      if (this->response_message_.size() > index) return this->response_message_[index];
+      if (this->heatpump_default_message_.size() > index) return this->heatpump_default_message_[index];
+      return -1;
+    }
+
+    int PanasonicHeatpumpComponent::getExtraResponseByte(const int index)
+    {
+      if (this->heatpump_extra_message_.size() > index) return this->heatpump_extra_message_[index];
       return -1;
     }
 
@@ -273,6 +277,7 @@ namespace esphome
 
       if (data.empty()) return ResponseType::UNKNOWN;
       if (data[0] != 0x71) return ResponseType::UNKNOWN;
+      if (this->response_receiving_) return ResponseType::UNKNOWN;
       if (data.size() != RESPONSE_MSG_SIZE)
       {
         ESP_LOGW(TAG, "Invalid response message length: recieved %d - expected %d", data.size(), RESPONSE_MSG_SIZE);
@@ -294,25 +299,26 @@ namespace esphome
         return ResponseType::UNKNOWN;
       }
 
-      // Get response type
+      // Get response type and save the response
       auto responseType = ResponseType::UNKNOWN;
-      if (data[3] == 0x10) responseType = ResponseType::DEFAULT;
-      if (data[3] == 0x21) responseType = ResponseType::EXTRA;
+      if (data[3] == 0x10)
+      {
+        responseType = ResponseType::DEFAULT;
+        this->heatpump_default_message_ = data;
+        this->send_extra_request_ = data[199] > 0x02 ? true : false;
+      }
+      else if (data[3] == 0x21) 
+      {
+        responseType = ResponseType::EXTRA;
+        this->heatpump_extra_message_ = data;
+        this->send_extra_request_ = false;
+      }
       if (responseType == ResponseType::UNKNOWN)
       {
         ESP_LOGW(TAG, "Unknown response type (4. byte): 0x%02X. Expected 0x10 or 0x21.", data[3]);
         delay(10);  // NOLINT
-        return ResponseType::UNKNOWN;
-      }
-
-      // Check if extra request shall be send
-      if (responseType == ResponseType::DEFAULT)
-      {
-        this->send_extra_request_ = data[199] > 0x02 ? true : false;
-      }
-      else
-      {
         this->send_extra_request_ = false;
+        return ResponseType::UNKNOWN;
       }
 
       // Check if the current response is a new response
@@ -330,7 +336,7 @@ namespace esphome
         this->command_message_.assign(std::begin(PanasonicCommand::CommandMessage),
                                 std::end(PanasonicCommand::CommandMessage));
       }
-      uint8_t lowNibble = this->heatpump_message_[index] & 0b1111;
+      uint8_t lowNibble = this->heatpump_default_message_[index] & 0b1111;
       uint8_t highNibble = value << 4;
       // set command byte
       this->command_message_[index] = highNibble + lowNibble;
@@ -349,7 +355,7 @@ namespace esphome
         this->command_message_.assign(std::begin(PanasonicCommand::CommandMessage),
                                 std::end(PanasonicCommand::CommandMessage));
       }
-      uint8_t highNibble = this->heatpump_message_[index] & 0b11110000;
+      uint8_t highNibble = this->heatpump_default_message_[index] & 0b11110000;
       uint8_t lowNibble = value & 0b1111;
       // set command byte
       this->command_message_[index] = highNibble + lowNibble;
@@ -390,27 +396,27 @@ namespace esphome
       if (index == 75 || index == 76 || index == 77 || index == 78 ||
           index == 86 || index == 87 || index == 88 || index == 89)
       {
-        this->command_message_[75] = this->heatpump_message_[75];
-        this->command_message_[76] = this->heatpump_message_[76];
-        this->command_message_[77] = this->heatpump_message_[77];
-        this->command_message_[78] = this->heatpump_message_[78];
-        this->command_message_[86] = this->heatpump_message_[86];
-        this->command_message_[87] = this->heatpump_message_[87];
-        this->command_message_[88] = this->heatpump_message_[88];
-        this->command_message_[89] = this->heatpump_message_[89];
+        this->command_message_[75] = this->heatpump_default_message_[75];
+        this->command_message_[76] = this->heatpump_default_message_[76];
+        this->command_message_[77] = this->heatpump_default_message_[77];
+        this->command_message_[78] = this->heatpump_default_message_[78];
+        this->command_message_[86] = this->heatpump_default_message_[86];
+        this->command_message_[87] = this->heatpump_default_message_[87];
+        this->command_message_[88] = this->heatpump_default_message_[88];
+        this->command_message_[89] = this->heatpump_default_message_[89];
       }
       // Set zone 2 curve bytes
       if (index == 79 || index == 80 || index == 81 || index == 82 ||
           index == 90 || index == 91 || index == 92 || index == 93)
       {
-        this->command_message_[79] = this->heatpump_message_[79];
-        this->command_message_[80] = this->heatpump_message_[80];
-        this->command_message_[81] = this->heatpump_message_[81];
-        this->command_message_[82] = this->heatpump_message_[82];
-        this->command_message_[90] = this->heatpump_message_[90];
-        this->command_message_[91] = this->heatpump_message_[91];
-        this->command_message_[92] = this->heatpump_message_[92];
-        this->command_message_[93] = this->heatpump_message_[93];
+        this->command_message_[79] = this->heatpump_default_message_[79];
+        this->command_message_[80] = this->heatpump_default_message_[80];
+        this->command_message_[81] = this->heatpump_default_message_[81];
+        this->command_message_[82] = this->heatpump_default_message_[82];
+        this->command_message_[90] = this->heatpump_default_message_[90];
+        this->command_message_[91] = this->heatpump_default_message_[91];
+        this->command_message_[92] = this->heatpump_default_message_[92];
+        this->command_message_[93] = this->heatpump_default_message_[93];
       }
 
       // set command byte
