@@ -176,34 +176,26 @@ namespace esphome
       switch (requestType)
       {
         case RequestType::COMMAND:
-        {
           if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, this->command_message_, ',');
           this->write_array(this->command_message_);
           this->flush();
           break;
-        }
         case RequestType::INITIAL:
-        {
           // Probably not necessary but CZ-TAW1 sends this query on boot
           if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE, ',');
           this->write_array(PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE);
           this->flush();
           break;
-        }
         case RequestType::POLLING:
-        {
           if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE, ',');
           this->write_array(PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE);
           this->flush();
           break;
-        }
         case RequestType::POLLING_EXTRA:
-        {
           if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::PollingExtraMessage, DATA_MESSAGE_SIZE, ',');
           this->write_array(PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE);
           this->flush();
           break;
-        }
       };
 
       this->next_request_ = RequestType::NONE;
