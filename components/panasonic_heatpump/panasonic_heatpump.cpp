@@ -193,7 +193,7 @@ namespace esphome
           break;
         case RequestType::POLLING_EXTRA:
           if (this->log_uart_msg_) PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::PollingExtraMessage, DATA_MESSAGE_SIZE, ',');
-          this->write_array(PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE);
+          this->write_array(PanasonicCommand::PollingExtraMessage, DATA_MESSAGE_SIZE);
           this->flush();
           break;
       };
