@@ -24,6 +24,7 @@ namespace esphome
           break;
         case 0x71:
           msgType = "polling_" + msgType;
+          if (data[3] == 0x21) msgType = "extra_" + msgType;
           break;
         case 0xF1:
           msgType = "command_" + msgType;

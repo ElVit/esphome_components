@@ -42,6 +42,7 @@ namespace esphome
       static const uint8_t InitialRequest[INIT_REQUEST_SIZE];
       static const uint8_t InitialResponse[INIT_RESPONSE_SIZE];
       static const uint8_t PollingMessage[DATA_MESSAGE_SIZE];
+      static const uint8_t PollingExtraMessage[DATA_MESSAGE_SIZE];
       static const uint8_t CommandMessage[DATA_MESSAGE_SIZE];
     };
   }  // namespace panasonic_heatpump

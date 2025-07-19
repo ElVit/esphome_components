@@ -20,7 +20,7 @@ namespace esphome
       //traits.set_supports_action(true);
       traits.set_supports_current_temperature(true);
       if (this->cool_mode_ && 
-          (this->id_ == ClimateIds::CONF_CLIMATE_ZONE1 || 
+          (this->id_ == ClimateIds::CONF_CLIMATE_ZONE1 ||
           this->id_ == ClimateIds::CONF_CLIMATE_ZONE2))
       {
         traits.set_supports_two_point_target_temperature(true);

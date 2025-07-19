@@ -27,17 +27,26 @@ namespace esphome
       PUBLISH_SELECT,
       PUBLISH_SWITCH,
       PUBLISH_CLIMATE,
+      PUBLISH_EXTRA_SENSOR,
       SEND_REQUEST,
       READ_REQUEST,
-      RESTART_LOOP
+      RESTART_LOOP,
     };
 
     enum RequestType : uint8_t
     {
+      NONE,
+      COMMAND,
       INITIAL,
       POLLING,
-      COMMAND,
-      NONE
+      POLLING_EXTRA,
+    };
+
+    enum ResponseType : uint8_t
+    {
+      UNKNOWN,
+      DEFAULT,
+      EXTRA,
     };
 
     class PanasonicHeatpumpEntity
@@ -66,6 +75,7 @@ namespace esphome
       void set_log_uart_msg(bool active) { this->log_uart_msg_ = active; }
       // uart message variables to use in lambda functions
       int getResponseByte(const int index);
+      int getExtraResponseByte(const int index);
       // command functions
       void set_command_high_nibble(const uint8_t value, const uint8_t index);
       void set_command_low_nibble(const uint8_t value, const uint8_t index);
@@ -79,13 +89,15 @@ namespace esphome
       void add_sensor(PanasonicHeatpumpEntity *sensor) { sensors_.push_back(sensor); }
       void add_switch(PanasonicHeatpumpEntity *switch_) { switches_.push_back(switch_); }
       void add_text_sensor(PanasonicHeatpumpEntity *text_sensor) { text_sensors_.push_back(text_sensor); }
+      void add_extra_sensor(PanasonicHeatpumpEntity *sensor) { extra_sensors_.push_back(sensor); }
 
     protected:
       // options variables
       uart::UARTComponent* uart_client_ { nullptr };
       bool log_uart_msg_ { false };
       // uart message variables
-      std::vector<uint8_t> heatpump_message_;
+      std::vector<uint8_t> heatpump_default_message_;
+      std::vector<uint8_t> heatpump_extra_message_;
       std::vector<uint8_t> response_message_;
       std::vector<uint8_t> request_message_;
       std::vector<uint8_t> command_message_;
@@ -95,8 +107,10 @@ namespace esphome
       uint8_t last_response_count_ { 0 };
       bool response_receiving_ { false };
       bool request_receiving_ { false };
-      RequestType next_request_ { RequestType::INITIAL };
+      bool send_extra_request_ { false };
       LoopState loop_state_ { LoopState::RESTART_LOOP };
+      RequestType next_request_ { RequestType::INITIAL };
+      ResponseType current_response_ { ResponseType::UNKNOWN };
       // entity vectors
       std::vector<PanasonicHeatpumpEntity *> binary_sensors_;
       std::vector<PanasonicHeatpumpEntity *> climates_;
@@ -105,12 +119,13 @@ namespace esphome
       std::vector<PanasonicHeatpumpEntity *> sensors_;
       std::vector<PanasonicHeatpumpEntity *> switches_;
       std::vector<PanasonicHeatpumpEntity *> text_sensors_;
+      std::vector<PanasonicHeatpumpEntity *> extra_sensors_;
 
       // uart message functions
       void read_response();
       void send_request(RequestType requestType);
       void read_request();
-      bool check_response(const std::vector<uint8_t>& data);
+      ResponseType check_response(const std::vector<uint8_t>& data);
     };
   }  // namespace panasonic_heatpump
 }  // namespace esphome

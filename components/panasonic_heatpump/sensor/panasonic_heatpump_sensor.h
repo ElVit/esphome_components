@@ -106,6 +106,13 @@ namespace esphome
       CONF_TOP136,
       CONF_TOP137,
       CONF_TOP138,
+
+      CONF_XTOP0,
+      CONF_XTOP1,
+      CONF_XTOP2,
+      CONF_XTOP3,
+      CONF_XTOP4,
+      CONF_XTOP5,
     };
 
     class PanasonicHeatpumpSensor : public sensor::Sensor, public Component,
