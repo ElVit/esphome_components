@@ -149,12 +149,11 @@ namespace esphome
           this->payload_length_ = byte_;
         }
         // Discard message if format is wrong
-        if ((this->response_message_.size() == 3 ||
-            this->response_message_.size() == 4) &&
-            byte_ != 0x01 && byte_ != 0x10 && byte_ != 0x21)
+        if ((this->response_message_.size() == 3 && byte_ != 0x01 && byte_ != 0x10) ||
+            (this->response_message_.size() == 4 && byte_ != 0x10 && byte_ != 0x21))
         {
           this->response_receiving_ = false;
-          ESP_LOGW(TAG, "Invalid response message: %d. byte is 0x%02X but expexted is 0x01 or 0x10",
+          ESP_LOGW(TAG, "Invalid response message: %d. byte is 0x%02X but expexted is 0x01, 0x10 or 0x21",
             response_message_.size(), byte_);
           delay(10);  // NOLINT
           continue;
@@ -227,12 +226,11 @@ namespace esphome
           this->payload_length_ = byte_;
         }
         // Discard message if format is wrong
-        if ((this->request_message_.size() == 3 ||
-            this->request_message_.size() == 4) &&
-            byte_ != 0x01 && byte_ != 0x10 && byte_ != 0x21)
+        if ((this->request_message_.size() == 3 && byte_ != 0x01 && byte_ != 0x10) ||
+            (this->request_message_.size() == 4 && byte_ != 0x10 && byte_ != 0x21))
         {
           this->request_receiving_ = false;
-          ESP_LOGW(TAG, "Invalid request message: %d. byte is 0x%02X but expexted is 0x01 or 0x10",
+          ESP_LOGW(TAG, "Invalid request message: %d. byte is 0x%02X but expexted is 0x01, 0x10 or 0x21",
             request_message_.size(), byte_);
           delay(10);  // NOLINT
           continue;
@@ -291,26 +289,26 @@ namespace esphome
         return ResponseType::UNKNOWN;
       }
 
+      this->send_extra_request_ = data[3] == 0x10 && data[199] > 0x02 && 
+                                  this->send_extra_request_ == false ? true : false;
+
       // Get response type and save the response
       auto responseType = ResponseType::UNKNOWN;
       if (data[3] == 0x10)
       {
         responseType = ResponseType::DEFAULT;
         this->heatpump_default_message_ = data;
-        this->send_extra_request_ = data[199] > 0x02 ? true : false;
       }
       else if (data[3] == 0x21) 
       {
         responseType = ResponseType::EXTRA;
         this->heatpump_extra_message_ = data;
-        this->send_extra_request_ = false;
       }
       if (responseType == ResponseType::UNKNOWN)
       {
         ESP_LOGW(TAG, "Unknown response type (4. byte): 0x%02X. Expected 0x10 or 0x21.", data[3]);
         delay(10);  // NOLINT
-        this->send_extra_request_ = false;
-        return ResponseType::UNKNOWN;
+        return responseType;
       }
 
       // Check if the current response is a new response
