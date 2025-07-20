@@ -231,9 +231,7 @@ TYPES = [
   CONF_TOP136,
   CONF_TOP137,
   CONF_TOP138,
-]
 
-EXTRA_TYPES = [
   CONF_XTOP0,
   CONF_XTOP1,
   CONF_XTOP2,
@@ -964,11 +962,7 @@ async def to_code(config):
       await cg.register_component(var, child_config)
       cg.add(var.set_parent(parent))
       cg.add(var.set_id(index))
-      cg.add(parent.add_sensor(var))
-  for index, key in enumerate(EXTRA_TYPES):
-    if child_config := config.get(key):
-      var = await sensor.new_sensor(child_config)
-      await cg.register_component(var, child_config)
-      cg.add(var.set_parent(parent))
-      cg.add(var.set_id(index))
-      cg.add(parent.add_extra_sensor(var))
+      if key.startswith("xtop"):
+        cg.add(parent.add_extra_sensor(var))
+      else:
+        cg.add(parent.add_sensor(var))
