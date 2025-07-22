@@ -10,8 +10,7 @@ namespace esphome
 
     void PanasonicHeatpumpComponent::dump_config()
     {
-      ESP_LOGCONFIG(TAG, "Panasonic Heatpump Component");
-      ESP_LOGW(TAG, "*** v0.0.4-dev2 ***");
+      ESP_LOGW(TAG, "*** Panasonic Heatpump Component v0.0.4 ***");
       delay(10);  // NOLINT
     }
 
