@@ -313,6 +313,19 @@ sensor:
       name: "Bivalent Advanced Stop Delay"
     top138:
       name: "Bivalent Advanced DHW Delay"
+
+    xtop0:
+      name: "Heat Power Consumption Extra"
+    xtop1:
+      name: "Cool Power Consumption Extra"
+    xtop2:
+      name: "DHW Power Consumption Extra"
+    xtop3:
+      name: "Heat Power Production Extra"
+    xtop4:
+      name: "Cool Power Production Extra"
+    xtop5:
+      name: "DHW Power Production Extra"
 ```
 
 ### Binary Sensors
