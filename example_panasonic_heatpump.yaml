@@ -100,6 +100,7 @@ sensor:
       name: "Heat Power Production"
     top16:
       name: "Heat Power Consumption"
+      id: heat_power_consumption
     top21:
       name: "Outside Pipe Temp"
     top22:
@@ -136,10 +137,12 @@ sensor:
       name: "Cool Power Production"
     top39:
       name: "Cool Power Consumption"
+      id: cool_power_consumption
     top40:
       name: "DHW Power Production"
     top41:
       name: "DHW Power Consumption"
+      id: dhw_power_consumption
     top42:
       name: "Z1 Water Target Temp"
     top43:
@@ -280,6 +283,34 @@ sensor:
     xtop5:
       name: "DHW Power Production Extra"
 
+  - platform: total_daily_energy
+    name: Heat Power Consumption Daily
+    power_id: heat_power_consumption
+    unit_of_measurement: kWh
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      - multiply: 0.001
+  - platform: total_daily_energy
+    name: Cool Power Consumption Daily
+    power_id: cool_power_consumption
+    unit_of_measurement: kWh
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      - multiply: 0.001
+  - platform: total_daily_energy
+    name: DHW Power Consumption Daily
+    power_id: dhw_power_consumption
+    unit_of_measurement: kWh
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      - multiply: 0.001
+
 binary_sensor:
   - platform: panasonic_heatpump
     top0:
@@ -328,7 +359,6 @@ binary_sensor:
       name: "Bivalent Advanced Heat"
     top133:
       name: "Bivalent Advanced DHW"
-
 
 text_sensor:
   - platform: panasonic_heatpump
