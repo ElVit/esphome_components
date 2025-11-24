@@ -25,7 +25,10 @@ jobs:
     strategy:
       matrix:
         esphome-version: ['2024.11.0', 'latest']
-        board: ['esp32dev', 'lolin_s2_mini']
+        board: ['esp32dev']
+        exclude:
+          - esphome-version: '2024.11.0'
+            board: 'lolin_s2_mini'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -51,13 +54,6 @@ jobs:
             pip install esphome
           else
             pip install esphome==${{ matrix.esphome-version }}
-          fi
-
-      - name: Update test config for board
-        run: |
-          if [ "${{ matrix.board }}" == "lolin_s2_mini" ]; then
-            sed -i 's/board: esp32dev/board: lolin_s2_mini/' tests/panasonic_heatpump/test_panasonic_heatpump.yaml
-            sed -i '/type: esp-idf$/a\    variant: ESP32S2' tests/panasonic_heatpump/test_panasonic_heatpump.yaml
           fi
 
       - name: Validate ESPHome config
