@@ -57,7 +57,7 @@ jobs:
         run: |
           if [ "${{ matrix.board }}" == "lolin_s2_mini" ]; then
             sed -i 's/board: esp32dev/board: lolin_s2_mini/' tests/panasonic_heatpump/test_panasonic_heatpump.yaml
-            sed -i '/type: esp-idf/a\    variant: ESP32S2' tests/panasonic_heatpump/test_panasonic_heatpump.yaml
+            sed -i '/type: esp-idf$/a\    variant: ESP32S2' tests/panasonic_heatpump/test_panasonic_heatpump.yaml
           fi
 
       - name: Validate ESPHome config
@@ -180,6 +180,12 @@ jobs:
 
           logger:
 
+          external_components:
+            - source:
+                type: local
+                path: ../../components
+              components: [panasonic_heatpump]
+
           uart:
             - id: uart_hp
               tx_pin: GPIO1
@@ -225,6 +231,12 @@ jobs:
             name: test-multi-panasonic
 
           logger:
+
+          external_components:
+            - source:
+                type: local
+                path: ../../components
+              components: [panasonic_heatpump]
 
           uart:
             - id: uart_hp1
