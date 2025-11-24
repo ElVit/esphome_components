@@ -24,10 +24,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        esphome-version: ['2024.11.0', 'latest']
+        esphome-version: ['2025.10.0', 'latest']
         board: ['esp32dev']
         exclude:
-          - esphome-version: '2024.11.0'
+          - esphome-version: '2025.10.0'
             board: 'lolin_s2_mini'
     steps:
       - name: Checkout repository
