@@ -28,6 +28,12 @@ logger:
 
 # api:
 
+external_components:
+  - source:
+      type: local
+      path: ../../components
+    components: [panasonic_heatpump]
+
 uart:
   - id: uart_heatpump
     tx_pin: $pin_rx_hp
