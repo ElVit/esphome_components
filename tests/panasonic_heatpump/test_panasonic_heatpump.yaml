@@ -1,0 +1,230 @@
+---
+# Test configuration for panasonic_heatpump component
+# This file validates all component features and configurations
+
+substitutions:
+  device_name: test-panasonic-heatpump
+  pin_rx_hp: GPIO37
+  pin_tx_hp: GPIO39
+  pin_tx_wm: GPIO18
+  pin_rx_wm: GPIO16
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+esphome:
+  name: ${device_name}
+  friendly_name: "Test Panasonic Heatpump"
+
+logger:
+  level: DEBUG
+
+# No WiFi/API needed for build tests
+# wifi:
+#   ssid: "test"
+#   password: "test12345678"
+
+# api:
+
+uart:
+  - id: uart_heatpump
+    tx_pin: $pin_rx_hp
+    rx_pin: $pin_tx_hp
+    baud_rate: 9600
+    data_bits: 8
+    parity: EVEN
+    stop_bits: 1
+  - id: uart_cz_taw1
+    tx_pin: $pin_rx_wm
+    rx_pin: $pin_tx_wm
+    baud_rate: 9600
+    data_bits: 8
+    parity: EVEN
+    stop_bits: 1
+
+# Test basic configuration
+panasonic_heatpump:
+  id: my_heatpump
+  uart_id: uart_heatpump
+  uart_client_id: uart_cz_taw1
+  log_uart_msg: true
+  update_interval: 3s
+
+# Test all sensor types
+sensor:
+  - platform: panasonic_heatpump
+    top1:
+      name: "Test Pump Flow"
+      id: test_pump_flow
+    top5:
+      name: "Test Main Inlet Temp"
+    top6:
+      name: "Test Main Outlet Temp"
+    top7:
+      name: "Test Main Target Temp"
+    top8:
+      name: "Test Compressor Freq"
+    top9:
+      name: "Test DHW Target Temp"
+    top10:
+      name: "Test DHW Temp"
+    top11:
+      name: "Test Operations Hours"
+    top12:
+      name: "Test Operations Counter"
+    top14:
+      name: "Test Outside Temp"
+    top15:
+      name: "Test Heat Power Production"
+    top16:
+      name: "Test Heat Power Consumption"
+    top21:
+      name: "Test Outside Pipe Temp"
+    top22:
+      name: "Test DHW Heat Delta"
+    top23:
+      name: "Test Heat Delta"
+    top24:
+      name: "Test Cool Delta"
+    top25:
+      name: "Test DHW Holiday Shift Temp"
+    top27:
+      name: "Test Z1 Heat Request Temp"
+    top28:
+      name: "Test Z1 Cool Request Temp"
+    top29:
+      name: "Test Z1 Heat Curve Target High Temp"
+    top30:
+      name: "Test Z1 Heat Curve Target Low Temp"
+    top31:
+      name: "Test Z1 Heat Curve Outside High Temp"
+    top32:
+      name: "Test Z1 Heat Curve Outside Low Temp"
+    top33:
+      name: "Test Room Thermostat Temp"
+    top34:
+      name: "Test Z2 Heat Request Temp"
+    top35:
+      name: "Test Z2 Cool Request Temp"
+    top36:
+      name: "Test Z1 Water Temp"
+    top37:
+      name: "Test Z2 Water Temp"
+    top38:
+      name: "Test Cool Power Production"
+    top39:
+      name: "Test Cool Power Consumption"
+    top40:
+      name: "Test DHW Power Production"
+    top41:
+      name: "Test DHW Power Consumption"
+    top42:
+      name: "Test Z1 Water Target Temp"
+    top43:
+      name: "Test Z2 Water Target Temp"
+    top45:
+      name: "Test Room Holiday Shift Temp"
+    top46:
+      name: "Test Buffer Temp"
+
+# Test all binary sensors
+binary_sensor:
+  - platform: panasonic_heatpump
+    top0:
+      name: "Test Heatpump State"
+    top1:
+      name: "Test Powerful Mode"
+    top2:
+      name: "Test Quiet Mode"
+    top3:
+      name: "Test Holiday Mode"
+    top4:
+      name: "Test Force Heater"
+    top5:
+      name: "Test Force DHW"
+    top6:
+      name: "Test Defrost State"
+    top7:
+      name: "Test Fast Hot Start"
+
+# Test all text sensors
+text_sensor:
+  - platform: panasonic_heatpump
+    top4:
+      name: "Test Operating Mode State"
+    top13:
+      name: "Test Last Error"
+    top17:
+      name: "Test Main Schedule State"
+    top18:
+      name: "Test Main Operating Mode"
+    top19:
+      name: "Test Main Zone State"
+    top20:
+      name: "Test DHW Operating Mode"
+    top26:
+      name: "Test Installer Settings"
+
+# Test all number controls
+number:
+  - platform: panasonic_heatpump
+    set5:
+      name: "Test Set Z1 Heat Request Temperature"
+      min_value: -5.0
+      max_value: 5.0
+      step: 1.0
+    set6:
+      name: "Test Set Z1 Cool Request Temperature"
+      min_value: -5.0
+      max_value: 5.0
+      step: 1.0
+    set7:
+      name: "Test Set Z2 Heat Request Temperature"
+      min_value: -5.0
+      max_value: 5.0
+      step: 1.0
+    set8:
+      name: "Test Set Z2 Cool Request Temperature"
+      min_value: -5.0
+      max_value: 5.0
+      step: 1.0
+    set9:
+      name: "Test Set DHW Target Temperature"
+      min_value: 40.0
+      max_value: 65.0
+      step: 1.0
+
+# Test all select controls
+select:
+  - platform: panasonic_heatpump
+    set2:
+      name: "Test Set Holiday Mode"
+    set3:
+      name: "Test Set Powerful Mode"
+    set4:
+      name: "Test Set Quiet Mode"
+    set10:
+      name: "Test Set Z1 Operating Mode"
+    set11:
+      name: "Test Set Z2 Operating Mode"
+    set12:
+      name: "Test Set DHW Operating Mode"
+    set13:
+      name: "Test Set Force Heater"
+    set14:
+      name: "Test Set Force DHW"
+
+# Test all switch controls
+switch:
+  - platform: panasonic_heatpump
+    set1:
+      name: "Test Set Heatpump"
+
+# Test climate platform
+climate:
+  - platform: panasonic_heatpump
+    name: "Test Heatpump Climate"
+    supports_cool: true
+    supports_heat: true
