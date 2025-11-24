@@ -148,17 +148,21 @@ namespace esphome
       return (byte6 & ~(base << bit)) | (val << bit);
     }
 
-    uint8_t PanasonicCommand::setDemandControl(size_t input)
-    {
-      switch (input)
-      {
-        case 0: return 0xEB;
-        case 1: return 0xB8;
-        case 2: return 0x85;
-        case 3: return 0x52;
-        case 4: return 0x2B;
-        default: return 0;    // do nothing
-      }
-    }
-  }  // namespace panasonic_heatpump
+uint8_t PanasonicCommand::setDemandControl(size_t input) {
+  switch (input) {
+    case 0:
+      return 0xEB;
+    case 1:
+      return 0xB8;
+    case 2:
+      return 0x85;
+    case 3:
+      return 0x52;
+    case 4:
+      return 0x2B;
+    default:
+      return 0;  // do nothing
+  }
+}
+}  // namespace panasonic_heatpump
 }  // namespace esphome
