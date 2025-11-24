@@ -21,9 +21,19 @@ class TestPanasonicHeatpumpIntegration:
         return os.path.join(base_dir, 'tests', 'panasonic_heatpump', 'test_panasonic_heatpump.yaml')
 
     @pytest.fixture
-    def minimal_config(self):
+    def components_dir(self):
+        """Get the path to the components directory."""
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        return os.path.join(base_dir, 'components')
+
+    @pytest.fixture
+    def minimal_config(self, components_dir):
         """Create a minimal test configuration."""
         return {
+            'external_components': [{
+                'source': components_dir,
+                'components': ['panasonic_heatpump']
+            }],
             'esp32': {
                 'board': 'esp32dev',
                 'framework': {'type': 'esp-idf'}
@@ -84,9 +94,13 @@ class TestPanasonicHeatpumpIntegration:
         finally:
             os.unlink(temp_path)
 
-    def test_multi_instance_config(self):
+    def test_multi_instance_config(self, components_dir):
         """Test configuration with multiple component instances."""
         config = {
+            'external_components': [{
+                'source': components_dir,
+                'components': ['panasonic_heatpump']
+            }],
             'esp32': {
                 'board': 'esp32dev',
                 'framework': {'type': 'esp-idf'}
@@ -144,9 +158,13 @@ class TestPanasonicHeatpumpIntegration:
         finally:
             os.unlink(temp_path)
 
-    def test_all_sensors_config(self):
+    def test_all_sensors_config(self, components_dir):
         """Test configuration with all sensor types."""
         config = {
+            'external_components': [{
+                'source': components_dir,
+                'components': ['panasonic_heatpump']
+            }],
             'esp32': {
                 'board': 'esp32dev',
                 'framework': {'type': 'esp-idf'}
@@ -201,9 +219,13 @@ class TestPanasonicHeatpumpIntegration:
         finally:
             os.unlink(temp_path)
 
-    def test_climate_config(self):
+    def test_climate_config(self, components_dir):
         """Test configuration with climate platform."""
         config = {
+            'external_components': [{
+                'source': components_dir,
+                'components': ['panasonic_heatpump']
+            }],
             'esp32': {
                 'board': 'esp32dev',
                 'framework': {'type': 'esp-idf'}
