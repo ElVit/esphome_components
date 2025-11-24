@@ -140,38 +140,96 @@ binary_sensor:
   - platform: panasonic_heatpump
     top0:
       name: "Test Heatpump State"
-    top1:
-      name: "Test Powerful Mode"
     top2:
-      name: "Test Quiet Mode"
+      name: "Test Force DHW State"
     top3:
-      name: "Test Holiday Mode"
-    top4:
-      name: "Test Force Heater"
-    top5:
-      name: "Test Force DHW"
-    top6:
-      name: "Test Defrost State"
-    top7:
-      name: "Test Fast Hot Start"
+      name: "Test Quiet Mode Schedule"
+    top13:
+      name: "Test Main Schedule State"
+    top26:
+      name: "Test Defrosting State"
+    top60:
+      name: "Test Internal Heater State"
+    top61:
+      name: "Test External Heater State"
+    top68:
+      name: "Test Force Heater State"
+    top69:
+      name: "Test Sterilization State"
+    top99:
+      name: "Test Buffer Installed"
+    top100:
+      name: "Test DHW Installed"
+    top108:
+      name: "Test Alt External Sensor"
+    top109:
+      name: "Test Anti Freeze Mode"
+    top110:
+      name: "Test Optional PCB"
+    top119:
+      name: "Test External Control"
+    top120:
+      name: "Test External Heat Cool Control"
+    top121:
+      name: "Test External Error Signal"
+    top122:
+      name: "Test External Compressor Control"
+    top123:
+      name: "Test Z2 Pump State"
+    top124:
+      name: "Test Z1 Pump State"
+    top129:
+      name: "Test Bivalent Control"
+    top132:
+      name: "Test Bivalent Advanced Heat"
+    top133:
+      name: "Test Bivalent Advanced DHW"
 
 # Test all text sensors
 text_sensor:
   - platform: panasonic_heatpump
     top4:
-      name: "Test Operating Mode State"
-    top13:
-      name: "Test Last Error"
+      name: "Test Operation Mode"
     top17:
-      name: "Test Main Schedule State"
+      name: "Test Powerful Mode Time"
     top18:
-      name: "Test Main Operating Mode"
+      name: "Test Quiet Mode Level"
     top19:
-      name: "Test Main Zone State"
+      name: "Test Holiday Mode State"
     top20:
-      name: "Test DHW Operating Mode"
-    top26:
-      name: "Test Installer Settings"
+      name: "Test ThreeWay Valve State"
+    top44:
+      name: "Test Error"
+    top58:
+      name: "Test DHW Heater State"
+    top59:
+      name: "Test Room Heater State"
+    top76:
+      name: "Test Heating Mode"
+    top81:
+      name: "Test Cooling Mode"
+    top92:
+      name: "Test Heat Pump Model"
+    top94:
+      name: "Test Zones State"
+    top101:
+      name: "Test Solar Mode"
+    top106:
+      name: "Test Pump Flowrate Mode"
+    top107:
+      name: "Test Liquid Type"
+    top111:
+      name: "Test Z1 Sensor Settings"
+    top112:
+      name: "Test Z2 Sensor Settings"
+    top114:
+      name: "Test External Pad Heater"
+    top125:
+      name: "Test TwoWay Valve State"
+    top126:
+      name: "Test ThreeWay Valve State2"
+    top130:
+      name: "Test Bivalent Mode"
 
 # Test all number controls
 number:
@@ -196,8 +254,8 @@ number:
       min_value: -5.0
       max_value: 5.0
       step: 1.0
-    set9:
-      name: "Test Set DHW Target Temperature"
+    set11:
+      name: "Test Set DHW Temp"
       min_value: 40.0
       max_value: 65.0
       step: 1.0
@@ -208,19 +266,17 @@ select:
     set2:
       name: "Test Set Holiday Mode"
     set3:
-      name: "Test Set Powerful Mode"
-    set4:
       name: "Test Set Quiet Mode"
-    set10:
-      name: "Test Set Z1 Operating Mode"
-    set11:
-      name: "Test Set Z2 Operating Mode"
-    set12:
-      name: "Test Set DHW Operating Mode"
-    set13:
-      name: "Test Set Force Heater"
-    set14:
-      name: "Test Set Force DHW"
+    set4:
+      name: "Test Set Powerful Mode"
+    set9:
+      name: "Test Set Operation Mode"
+    set17:
+      name: "Test Set Zones"
+    set26:
+      name: "Test Set External PadHeater"
+    set35:
+      name: "Test Set Bivalent Mode"
 
 # Test all switch controls
 switch:
