@@ -287,6 +287,10 @@ switch:
 # Test climate platform
 climate:
   - platform: panasonic_heatpump
-    name: "Test Heatpump Climate"
-    supports_cool: true
-    supports_heat: true
+    cool_mode: true
+    tank:
+      name: "Test Tank Climate"
+    zone1:
+      name: "Test Zone1 Climate"
+    zone2:
+      name: "Test Zone2 Climate"
