@@ -1,0 +1,288 @@
+name: Test Panasonic Heatpump Component
+
+on:
+  push:
+    branches:
+      - main
+      - 'heatpump**'
+    paths:
+      - 'components/panasonic_heatpump/**'
+      - 'tests/panasonic_heatpump/**'
+      - '.github/workflows/test_panasonic_heatpump.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'components/panasonic_heatpump/**'
+      - 'tests/panasonic_heatpump/**'
+      - '.github/workflows/test_panasonic_heatpump.yml'
+  workflow_dispatch:
+
+jobs:
+  test-build:
+    name: Test ESPHome Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        esphome-version: ['2024.11.0', 'latest']
+        board: ['esp32dev', 'lolin_s2_mini']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.esphome-version }}-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.esphome-version }}-
+            ${{ runner.os }}-pip-
+
+      - name: Install ESPHome
+        run: |
+          pip install --upgrade pip
+          if [ "${{ matrix.esphome-version }}" == "latest" ]; then
+            pip install esphome
+          else
+            pip install esphome==${{ matrix.esphome-version }}
+          fi
+
+      - name: Update test config for board
+        run: |
+          if [ "${{ matrix.board }}" == "lolin_s2_mini" ]; then
+            sed -i 's/board: esp32dev/board: lolin_s2_mini/' tests/panasonic_heatpump/test_panasonic_heatpump.yaml
+            sed -i '/framework:/a\    variant: ESP32S2' tests/panasonic_heatpump/test_panasonic_heatpump.yaml
+          fi
+
+      - name: Validate ESPHome config
+        run: |
+          esphome config tests/panasonic_heatpump/test_panasonic_heatpump.yaml
+
+      - name: Build firmware
+        run: |
+          esphome compile tests/panasonic_heatpump/test_panasonic_heatpump.yaml
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        if: matrix.esphome-version == 'latest' && matrix.board == 'esp32dev'
+        with:
+          name: firmware-${{ matrix.board }}-${{ matrix.esphome-version }}
+          path: |
+            .esphome/build/test-panasonic-heatpump/.pioenvs/test-panasonic-heatpump/firmware.bin
+            .esphome/build/test-panasonic-heatpump/.pioenvs/test-panasonic-heatpump/firmware.elf
+          retention-days: 7
+
+  lint-code:
+    name: Lint C++ Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format
+
+      - name: Run clang-format check
+        run: |
+          find components/panasonic_heatpump -name '*.cpp' -o -name '*.h' | \
+          xargs clang-format -style=file --dry-run --Werror
+
+  lint-python:
+    name: Lint Python Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install linting tools
+        run: |
+          pip install --upgrade pip
+          pip install flake8 pylint black
+
+      - name: Run black check
+        run: |
+          black --check components/panasonic_heatpump/
+
+      - name: Run flake8
+        run: |
+          flake8 components/panasonic_heatpump/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 components/panasonic_heatpump/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  test-python:
+    name: Python Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pytest pytest-cov esphome
+
+      - name: Run Python unit tests
+        run: |
+          pytest tests/panasonic_heatpump/ -v --cov=components/panasonic_heatpump --cov-report=xml --cov-report=term
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-panasonic-heatpump
+          fail_ci_if_error: false
+
+  test-minimal-config:
+    name: Test Minimal Configuration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install ESPHome
+        run: |
+          pip install --upgrade pip
+          pip install esphome
+
+      - name: Create minimal test config
+        run: |
+          cat > tests/panasonic_heatpump/test_panasonic_minimal.yaml << 'EOF'
+          esp32:
+            board: esp32dev
+            framework:
+              type: esp-idf
+
+          esphome:
+            name: test-minimal-panasonic
+
+          logger:
+
+          uart:
+            - id: uart_hp
+              tx_pin: GPIO1
+              rx_pin: GPIO3
+              baud_rate: 9600
+              parity: EVEN
+
+          panasonic_heatpump:
+            id: hp
+            uart_id: uart_hp
+          EOF
+
+      - name: Validate minimal config
+        run: |
+          esphome config tests/panasonic_heatpump/test_panasonic_minimal.yaml
+
+  test-multiconf:
+    name: Test Multiple Instances
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install ESPHome
+        run: |
+          pip install --upgrade pip
+          pip install esphome
+
+      - name: Create multi-instance test config
+        run: |
+          cat > tests/panasonic_heatpump/test_panasonic_multi.yaml << 'EOF'
+          esp32:
+            board: esp32dev
+            framework:
+              type: esp-idf
+
+          esphome:
+            name: test-multi-panasonic
+
+          logger:
+
+          uart:
+            - id: uart_hp1
+              tx_pin: GPIO1
+              rx_pin: GPIO3
+              baud_rate: 9600
+              parity: EVEN
+            - id: uart_hp2
+              tx_pin: GPIO16
+              rx_pin: GPIO17
+              baud_rate: 9600
+              parity: EVEN
+
+          panasonic_heatpump:
+            - id: hp1
+              uart_id: uart_hp1
+              update_interval: 3s
+            - id: hp2
+              uart_id: uart_hp2
+              update_interval: 5s
+
+          sensor:
+            - platform: panasonic_heatpump
+              panasonic_heatpump_id: hp1
+              top1:
+                name: "HP1 Pump Flow"
+            - platform: panasonic_heatpump
+              panasonic_heatpump_id: hp2
+              top1:
+                name: "HP2 Pump Flow"
+          EOF
+
+      - name: Validate multi-instance config
+        run: |
+          esphome config tests/panasonic_heatpump/test_panasonic_multi.yaml
+
+  summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [test-build, lint-code, lint-python, test-python, test-minimal-config, test-multiconf]
+    if: always()
+    steps:
+      - name: Check test results
+        run: |
+          echo "Test Build: ${{ needs.test-build.result }}"
+          echo "Lint C++: ${{ needs.lint-code.result }}"
+          echo "Lint Python: ${{ needs.lint-python.result }}"
+          echo "Python Unit Tests: ${{ needs.test-python.result }}"
+          echo "Minimal Config: ${{ needs.test-minimal-config.result }}"
+          echo "Multi-instance Config: ${{ needs.test-multiconf.result }}"
+          
+          if [ "${{ needs.test-build.result }}" != "success" ] || \
+             [ "${{ needs.lint-code.result }}" != "success" ] || \
+             [ "${{ needs.lint-python.result }}" != "success" ] || \
+             [ "${{ needs.test-python.result }}" != "success" ] || \
+             [ "${{ needs.test-minimal-config.result }}" != "success" ] || \
+             [ "${{ needs.test-multiconf.result }}" != "success" ]; then
+            echo "One or more tests failed"
+            exit 1
+          fi
+          echo "All tests passed successfully!"
