@@ -4,10 +4,10 @@
 
 substitutions:
   device_name: test-panasonic-heatpump
-  pin_rx_hp: GPIO37
-  pin_tx_hp: GPIO39
+  pin_rx_hp: GPIO16
+  pin_tx_hp: GPIO17
   pin_tx_wm: GPIO18
-  pin_rx_wm: GPIO16
+  pin_rx_wm: GPIO19
 
 esp32:
   board: esp32dev
