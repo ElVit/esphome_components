@@ -41,11 +41,11 @@ class TestPanasonicHeatpumpConfig:
             import os
             # Add components directory to path
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', 'components'
+                os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
             
-            from panasonic_heatpump import __init__ as ph_init
+            import panasonic_heatpump as ph_init
             assert ph_init is not None
         except ImportError as e:
             pytest.fail(f"Failed to import panasonic_heatpump: {e}")
@@ -55,11 +55,11 @@ class TestPanasonicHeatpumpConfig:
         import sys
         import os
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', 'components'
+            os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
         
-        from panasonic_heatpump import __init__ as ph_init
+        import panasonic_heatpump as ph_init
         
         assert hasattr(ph_init, 'CODEOWNERS')
         assert ph_init.CODEOWNERS == ['@elvit']
@@ -75,11 +75,11 @@ class TestPanasonicHeatpumpConfig:
         import sys
         import os
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', 'components'
+            os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
         
-        from panasonic_heatpump import __init__ as ph_init
+        import panasonic_heatpump as ph_init
         
         assert hasattr(ph_init, 'CONF_PANASONIC_HEATPUMP_ID')
         assert ph_init.CONF_PANASONIC_HEATPUMP_ID == "panasonic_heatpump"
@@ -97,11 +97,11 @@ class TestPanasonicHeatpumpConfig:
         import sys
         import os
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', 'components'
+            os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
         
-        from panasonic_heatpump import __init__ as ph_init
+        import panasonic_heatpump as ph_init
         
         assert hasattr(ph_init, 'CONFIG_SCHEMA')
         assert ph_init.CONFIG_SCHEMA is not None
@@ -137,11 +137,11 @@ class TestPanasonicHeatpumpConfig:
         import sys
         import os
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', 'components'
+            os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
         
-        from panasonic_heatpump import __init__ as ph_init
+        import panasonic_heatpump as ph_init
         
         # The default is specified in the schema as False
         # This test verifies the constant exists
@@ -158,11 +158,11 @@ class TestPanasonicHeatpumpConfig:
         import sys
         import os
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', 'components'
+            os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
         
-        from panasonic_heatpump import __init__ as ph_init
+        import panasonic_heatpump as ph_init
         
         # Verify MULTICONF is True, allowing multiple instances
         assert ph_init.MULTICONF is True
@@ -172,11 +172,11 @@ class TestPanasonicHeatpumpConfig:
         import sys
         import os
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', 'components'
+            os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
         
-        from panasonic_heatpump import __init__ as ph_init
+        import panasonic_heatpump as ph_init
         
         assert 'uart' in ph_init.DEPENDENCIES
 
@@ -185,11 +185,11 @@ class TestPanasonicHeatpumpConfig:
         import sys
         import os
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', 'components'
+            os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
         
-        from panasonic_heatpump import __init__ as ph_init
+        import panasonic_heatpump as ph_init
         
         # Verify namespace constant exists
         assert hasattr(ph_init, 'panasonic_heatpump_ns')
@@ -204,7 +204,7 @@ class TestPanasonicHeatpumpPlatforms:
             import sys
             import os
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', 'components'
+                os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
             
@@ -219,7 +219,7 @@ class TestPanasonicHeatpumpPlatforms:
             import sys
             import os
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', 'components'
+                os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
             
@@ -234,7 +234,7 @@ class TestPanasonicHeatpumpPlatforms:
             import sys
             import os
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', 'components'
+                os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
             
@@ -249,7 +249,7 @@ class TestPanasonicHeatpumpPlatforms:
             import sys
             import os
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', 'components'
+                os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
             
@@ -264,7 +264,7 @@ class TestPanasonicHeatpumpPlatforms:
             import sys
             import os
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', 'components'
+                os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
             
@@ -279,7 +279,7 @@ class TestPanasonicHeatpumpPlatforms:
             import sys
             import os
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', 'components'
+                os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
             
@@ -294,7 +294,7 @@ class TestPanasonicHeatpumpPlatforms:
             import sys
             import os
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', 'components'
+                os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
             
@@ -330,11 +330,11 @@ class TestPanasonicHeatpumpCodeGeneration:
         import sys
         import os
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', 'components'
+            os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
         
-        from panasonic_heatpump import __init__ as ph_init
+        import panasonic_heatpump as ph_init
         
         assert hasattr(ph_init, 'to_code')
         assert callable(ph_init.to_code)
