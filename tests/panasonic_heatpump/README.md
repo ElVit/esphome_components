@@ -12,18 +12,18 @@ This directory contains comprehensive tests for the `panasonic_heatpump` ESPHome
 - Tests code generation logic
 
 ### Integration Tests (`test_panasonic_heatpump_integration.py`)
-- Tests ESPHome configuration validation for all board types
-- Tests ESP8266 minimal configuration
-- Tests ESP32-S2 configuration
-- Tests ESP32-C3 configuration
-- Tests dual UART support with CZ-TAW1 wireless thermostat controller
-- Tests full feature configuration with all platforms
+- Tests minimal feature configuration on ESP32 board
+- Tests full feature configuration on ESP32 board
+- Tests configuration on ESP8266 board
+- Tests configuration on ESP32-S2 board
+- Tests configuration on ESP32-C3 board
+- Tests configuration with CZ-TAW1 (UART-proxy)
 
 ### Test Configuration Files
-- `test_panasonic_heatpump_esp8266.yaml` - ESP8266 D1 Mini with minimal setup
-- `test_panasonic_heatpump_esp32s2.yaml` - ESP32-S2 with limited GPIO configuration
-- `test_panasonic_heatpump_esp32c3.yaml` - ESP32-C3 RISC-V based chip
-- `test_panasonic_heatpump_cztaw1.yaml` - Dual UART setup for CZ-TAW1 client support
+- `test_panasonic_heatpump_esp8266.yaml` - ESP8266 Wemos D1 Mini
+- `test_panasonic_heatpump_esp32s2.yaml` - ESP32-S2 Wemos S2 Mini
+- `test_panasonic_heatpump_esp32c3.yaml` - ESP32-C3 mini (RISC-V)
+- `test_panasonic_heatpump_cztaw1.yaml` - UART proxy setup for CZ-TAW1 client support
 - `test_panasonic_heatpump_mini.yaml` - Minimal ESP32 configuration for basic testing
 - `test_panasonic_heatpump_full.yaml` - Comprehensive ESP32 configuration with all features
 
@@ -87,7 +87,7 @@ The GitHub Actions workflow (`.github/workflows/test_panasonic_heatpump.yml`) in
    - Validates minimal configuration file
    - Ensures component works with bare minimum settings
 
-6. **test-multiconf**: Tests full configuration
+6. **test-full-config**: Tests full configuration
    - Validates full feature configuration with all platforms
 
 7. **summary**: Aggregates all test results
@@ -111,15 +111,14 @@ The test suite covers:
 
 ✅ Component configuration validation  
 ✅ UART dependency checking  
-✅ Multi-instance support (MULTICONF)  
 ✅ All sensor platforms  
 ✅ All binary sensor platforms  
 ✅ All text sensor platforms  
 ✅ All number control platforms  
 ✅ All select control platforms  
 ✅ All switch control platforms  
-✅ Climate platform with heating/cooling  
-✅ Code compilation for ESP32 variants  
+✅ All climate control platforms  
+✅ Code compilation for different ESP boards  
 ✅ C++ code formatting  
 ✅ Python code formatting and style  
 
@@ -136,7 +135,6 @@ uart:
 
 panasonic_heatpump:
   id: hp
-  uart_id: uart_hp
 ```
 
 ### Full Configuration
@@ -159,17 +157,6 @@ panasonic_heatpump:
   uart_client_id: uart_client
   log_uart_msg: true
   update_interval: 3s
-```
-
-### Multiple Instances
-```yaml
-panasonic_heatpump:
-  - id: hp1
-    uart_id: uart_hp1
-    update_interval: 3s
-  - id: hp2
-    uart_id: uart_hp2
-    update_interval: 5s
 ```
 
 ## Adding New Tests
@@ -208,8 +195,8 @@ All tests must pass before merging to main branch. The GitHub Actions workflow e
 - Code compiles successfully
 - Code follows formatting standards
 - All unit and integration tests pass
-- Multiple ESPHome versions are supported
-- Multiple ESP32 variants are supported
+- Latest ESPHome versions is supported
+- ESP8266 and ESP32 boards are supported
 
 ## Contributing
 
