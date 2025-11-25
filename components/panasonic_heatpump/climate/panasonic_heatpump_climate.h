@@ -4,6 +4,7 @@
 #include "../panasonic_heatpump.h"
 #include "../decode.h"
 #include "../commands.h"
+#include <set>
 
 namespace esphome {
 namespace panasonic_heatpump {
@@ -45,7 +46,6 @@ class PanasonicHeatpumpClimate : public climate::Climate,
   float min_temperature_{-5.0};
   float max_temperature_{5.0};
   float temperature_step_{0.5};
-  std::set<climate::ClimateMode> supported_modes_{climate::CLIMATE_MODE_OFF, climate::CLIMATE_MODE_HEAT};
 };
 }  // namespace panasonic_heatpump
 }  // namespace esphome
