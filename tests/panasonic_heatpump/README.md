@@ -12,21 +12,20 @@ This directory contains comprehensive tests for the `panasonic_heatpump` ESPHome
 - Tests code generation logic
 
 ### Integration Tests (`test_panasonic_heatpump_integration.py`)
-- Tests ESPHome configuration validation
-- Tests compilation of minimal configurations
-- Tests multi-instance support
-- Tests all sensor platforms together
-- Tests climate platform configuration
+- Tests ESPHome configuration validation for all board types
+- Tests ESP8266 minimal configuration
+- Tests ESP32-S2 configuration
+- Tests ESP32-C3 configuration
+- Tests dual UART support with CZ-TAW1 wireless thermostat controller
+- Tests full feature configuration with all platforms
 
-### Test Configuration (`test_panasonic_heatpump.yaml`)
-- Comprehensive YAML configuration testing all component features
-- Tests all sensor types (top1-top46)
-- Tests all binary sensors (top0-top7)
-- Tests all text sensors (top4, top13, top17-top20, top26)
-- Tests all number controls (set5-set9)
-- Tests all select controls (set2-set4, set10-set14)
-- Tests all switch controls (set1)
-- Tests climate platform with heat and cool support
+### Test Configuration Files
+- `test_panasonic_heatpump_esp8266.yaml` - ESP8266 D1 Mini with minimal setup
+- `test_panasonic_heatpump_esp32s2.yaml` - ESP32-S2 with limited GPIO configuration
+- `test_panasonic_heatpump_esp32c3.yaml` - ESP32-C3 RISC-V based chip
+- `test_panasonic_heatpump_cztaw1.yaml` - Dual UART setup for CZ-TAW1 client support
+- `test_panasonic_heatpump_mini.yaml` - Minimal ESP32 configuration for basic testing
+- `test_panasonic_heatpump_full.yaml` - Comprehensive ESP32 configuration with all features
 
 ## Running Tests Locally
 
@@ -69,10 +68,8 @@ The GitHub Actions workflow (`.github/workflows/test_panasonic_heatpump.yml`) in
 ### Jobs
 
 1. **test-build**: Validates and compiles the component
-   - Tests on multiple ESPHome versions (2024.11.0, latest)
-   - Tests on multiple boards (esp32dev, lolin_s2_mini)
-   - Caches pip dependencies for faster runs
-   - Uploads build artifacts
+   - Tests on multiple board types: ESP8266, ESP32 (full), ESP32-S2, ESP32-C3 and with CZ-TAW1 (UART-proxy)
+   - Uses esphome/build-action for firmware compilation
 
 2. **lint-code**: Runs clang-format on C++ code
    - Ensures consistent code formatting
@@ -87,10 +84,11 @@ The GitHub Actions workflow (`.github/workflows/test_panasonic_heatpump.yml`) in
    - Uploads coverage to Codecov
 
 5. **test-minimal-config**: Tests minimal configuration
+   - Validates minimal configuration file
    - Ensures component works with bare minimum settings
 
-6. **test-multiconf**: Tests multiple instances
-   - Validates MULTICONF support
+6. **test-multiconf**: Tests full configuration
+   - Validates full feature configuration with all platforms
 
 7. **summary**: Aggregates all test results
    - Fails if any test job fails
