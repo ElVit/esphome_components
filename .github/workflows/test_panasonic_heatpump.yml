@@ -26,7 +26,6 @@ jobs:
     strategy:
       matrix:
         esphome-version: ['2025.10.0', 'latest']
-        board: ['esp32dev']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,16 +33,14 @@ jobs:
       - name: Build ESPHome firmware
         uses: esphome/build-action@v7
         with:
-          yaml_file: tests/panasonic_heatpump/test_panasonic_heatpump.yaml
+          yaml-file: tests/panasonic_heatpump/test_panasonic_heatpump.yaml
           version: ${{ matrix.esphome-version }}
-          platform: ESP32
-          board: ${{ matrix.board }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
-        if: matrix.esphome-version == 'latest' && matrix.board == 'esp32dev'
+        if: matrix.esphome-version == 'latest'
         with:
-          name: firmware-${{ matrix.board }}-${{ matrix.esphome-version }}
+          name: firmware-esp32dev-${{ matrix.esphome-version }}
           path: |
             .esphome/build/test-panasonic-heatpump/.pioenvs/test-panasonic-heatpump/firmware.bin
             .esphome/build/test-panasonic-heatpump/.pioenvs/test-panasonic-heatpump/firmware.elf
