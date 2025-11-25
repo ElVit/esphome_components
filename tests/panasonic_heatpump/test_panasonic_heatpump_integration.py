@@ -8,7 +8,6 @@ import pytest
 import subprocess
 import os
 import tempfile
-import yaml
 
 
 class TestPanasonicHeatpumpIntegration:
@@ -26,40 +25,11 @@ class TestPanasonicHeatpumpIntegration:
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         return os.path.join(base_dir, 'components')
 
-    @pytest.fixture
-    def minimal_config(self, components_dir):
-        """Create a minimal test configuration."""
-        return {
-            'external_components': [{
-                'source': components_dir,
-                'components': ['panasonic_heatpump']
-            }],
-            'esp32': {
-                'board': 'esp32dev',
-                'framework': {'type': 'esp-idf'}
-            },
-            'esphome': {
-                'name': 'test-panasonic-minimal',
-            },
-            'logger': {},
-            'uart': [{
-                'id': 'uart_hp',
-                'tx_pin': 'GPIO1',
-                'rx_pin': 'GPIO3',
-                'baud_rate': 9600,
-                'parity': 'EVEN',
-            }],
-            'panasonic_heatpump': {
-                'id': 'hp',
-                'uart_id': 'uart_hp',
-            }
-        }
-
     def test_validate_test_config(self, test_yaml_path):
         """Test that the test configuration is valid."""
         if not os.path.exists(test_yaml_path):
             pytest.skip(f"Test file not found: {test_yaml_path}")
-        
+
         try:
             result = subprocess.run(
                 ['esphome', 'config', test_yaml_path],
@@ -73,10 +43,37 @@ class TestPanasonicHeatpumpIntegration:
         except subprocess.TimeoutExpired:
             pytest.fail("ESPHome config validation timed out")
 
-    def test_compile_minimal_config(self, minimal_config):
+    def test_compile_minimal_config(self, components_dir):
         """Test compiling a minimal configuration."""
+        yaml_text = f"""external_components:
+  - source: {components_dir}
+    components:
+      - panasonic_heatpump
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+esphome:
+  name: test-panasonic-minimal
+
+logger:
+
+uart:
+  - id: uart_hp
+    tx_pin: GPIO1
+    rx_pin: GPIO3
+    baud_rate: 9600
+    parity: EVEN
+
+panasonic_heatpump:
+  id: hp
+  uart_id: uart_hp
+"""
+
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
-            yaml.dump(minimal_config, f)
+            f.write(yaml_text)
             temp_path = f.name
 
         try:
@@ -94,56 +91,56 @@ class TestPanasonicHeatpumpIntegration:
         finally:
             os.unlink(temp_path)
 
-    def test_multi_instance_config(self, components_dir):
-        """Test that multiple component instances are supported via MULTICONF."""
-        # MULTICONF is supported but requires each instance to be configured separately
-        # This is tested through the unit tests which verify MULTICONF = True
-        pytest.skip("Multiple instances require separate YAML files in real usage")
-
     def test_all_sensors_config(self, components_dir):
         """Test configuration with all sensor types."""
-        config = {
-            'external_components': [{
-                'source': components_dir,
-                'components': ['panasonic_heatpump']
-            }],
-            'esp32': {
-                'board': 'esp32dev',
-                'framework': {'type': 'esp-idf'}
-            },
-            'esphome': {
-                'name': 'test-all-sensors',
-            },
-            'logger': {},
-            'uart': [{
-                'id': 'uart_hp',
-                'tx_pin': 'GPIO1',
-                'rx_pin': 'GPIO3',
-                'baud_rate': 9600,
-                'parity': 'EVEN',
-            }],
-            'panasonic_heatpump': {
-                'id': 'hp',
-                'uart_id': 'uart_hp',
-            },
-            'sensor': [{
-                'platform': 'panasonic_heatpump',
-                'top1': {'name': 'Test Pump Flow'},
-                'top5': {'name': 'Test Main Inlet Temp'},
-                'top14': {'name': 'Test Outside Temp'},
-            }],
-            'binary_sensor': [{
-                'platform': 'panasonic_heatpump',
-                'top0': {'name': 'Test Heatpump State'},
-            }],
-            'text_sensor': [{
-                'platform': 'panasonic_heatpump',
-                'top4': {'name': 'Test Operating Mode State'},
-            }],
-        }
+        yaml_text = f"""external_components:
+  - source: {components_dir}
+    components:
+      - panasonic_heatpump
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+esphome:
+  name: test-all-sensors
+
+logger:
+
+uart:
+  - id: uart_hp
+    tx_pin: GPIO1
+    rx_pin: GPIO3
+    baud_rate: 9600
+    parity: EVEN
+
+panasonic_heatpump:
+  id: hp
+  uart_id: uart_hp
+
+sensor:
+  - platform: panasonic_heatpump
+    top1:
+      name: "Test Pump Flow"
+    top5:
+      name: "Test Main Inlet Temp"
+    top14:
+      name: "Test Outside Temp"
+
+binary_sensor:
+  - platform: panasonic_heatpump
+    top0:
+      name: "Test Heatpump State"
+
+text_sensor:
+  - platform: panasonic_heatpump
+    top4:
+      name: "Test Operating Mode State"
+"""
 
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
-            yaml.dump(config, f)
+            f.write(yaml_text)
             temp_path = f.name
 
         try:
