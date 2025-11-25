@@ -97,7 +97,7 @@ The GitHub Actions workflow (`.github/workflows/test_panasonic_heatpump.yml`) in
 ### Triggers
 
 The workflow runs on:
-- Push to `main` or `panasonic_dev` branches
+- Push to `main` or `heatpump**` branches
 - Pull requests to `main` branch
 - Manual workflow dispatch
 - When relevant files change:
