@@ -26,25 +26,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        esphome-version: ['2025.10.0', 'latest']
+        board: [esp8266, esp32s2, esp32c3, full]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build ESPHome firmware
+      - name: Build ESPHome firmware for ${{ matrix.board }}
         uses: esphome/build-action@v7
         with:
-          yaml-file: tests/panasonic_heatpump/test_panasonic_heatpump.yaml
-          version: ${{ matrix.esphome-version }}
+          yaml-file: tests/panasonic_heatpump/test_panasonic_heatpump_${{ matrix.board == 'full' && 'full' || matrix.board == 'mini' && 'mini' || matrix.board }}.yaml
+          version: latest
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
-        if: matrix.esphome-version == 'latest'
         with:
-          name: firmware-esp32dev-${{ matrix.esphome-version }}
+          name: firmware-${{ matrix.board }}
           path: |
-            .esphome/build/test-panasonic-heatpump/.pioenvs/test-panasonic-heatpump/firmware.bin
-            .esphome/build/test-panasonic-heatpump/.pioenvs/test-panasonic-heatpump/firmware.elf
+            .esphome/build/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board == 'mini' && 'mini' || matrix.board }}/.pioenvs/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board == 'mini' && 'mini' || matrix.board }}/firmware.bin
+            .esphome/build/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board == 'mini' && 'mini' || matrix.board }}/.pioenvs/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board == 'mini' && 'mini' || matrix.board }}/firmware.elf
           retention-days: 7
 
   lint-code:
@@ -140,40 +139,9 @@ jobs:
           pip install --upgrade pip
           pip install esphome
 
-      - name: Create minimal test config
-        run: |
-          cat > tests/panasonic_heatpump/test_panasonic_minimal.yaml << 'EOF'
-          esp32:
-            board: esp32dev
-            framework:
-              type: esp-idf
-
-          esphome:
-            name: test-minimal-panasonic
-
-          logger:
-
-          external_components:
-            - source:
-                type: local
-                path: ../../components
-              components: [panasonic_heatpump]
-
-          uart:
-            - id: uart_hp
-              tx_pin: GPIO1
-              rx_pin: GPIO3
-              baud_rate: 9600
-              parity: EVEN
-
-          panasonic_heatpump:
-            id: hp
-            uart_id: uart_hp
-          EOF
-
       - name: Validate minimal config
         run: |
-          esphome config tests/panasonic_heatpump/test_panasonic_minimal.yaml
+          esphome config tests/panasonic_heatpump/test_panasonic_heatpump_mini.yaml
 
   test-multiconf:
     name: Test Full Configuration
@@ -193,51 +161,9 @@ jobs:
           pip install --upgrade pip
           pip install esphome
 
-      - name: Create full feature test config
-        run: |
-          cat > tests/panasonic_heatpump/test_panasonic_multi.yaml << 'EOF'
-          esp32:
-            board: esp32dev
-            framework:
-              type: esp-idf
-
-          esphome:
-            name: test-multi-panasonic
-
-          logger:
-
-          external_components:
-            - source:
-                type: local
-                path: ../../components
-              components: [panasonic_heatpump]
-
-          uart:
-            - id: uart_hp1
-              tx_pin: GPIO1
-              rx_pin: GPIO3
-              baud_rate: 9600
-              parity: EVEN
-            - id: uart_hp2
-              tx_pin: GPIO16
-              rx_pin: GPIO17
-              baud_rate: 9600
-              parity: EVEN
-
-          panasonic_heatpump:
-            id: hp1
-            uart_id: uart_hp1
-            update_interval: 3s
-
-          sensor:
-            - platform: panasonic_heatpump
-              top1:
-                name: "HP1 Pump Flow"
-          EOF
-
       - name: Validate full config
         run: |
-          esphome config tests/panasonic_heatpump/test_panasonic_multi.yaml
+          esphome config tests/panasonic_heatpump/test_panasonic_heatpump_full.yaml
 
   summary:
     name: Test Summary
@@ -254,7 +180,7 @@ jobs:
           echo "Python Unit Tests: ${{ needs.test-python.result }}"
           echo "Minimal Config: ${{ needs.test-minimal-config.result }}"
           echo "Multi-instance Config: ${{ needs.test-multiconf.result }}"
-          
+
           if [ "${{ needs.test-build.result }}" != "success" ] || \
              [ "${{ needs.lint-code.result }}" != "success" ] || \
              [ "${{ needs.lint-python.result }}" != "success" ] || \
