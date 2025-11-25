@@ -6,13 +6,18 @@ This directory contains tests for all custom ESPHome components in this reposito
 
 ```
 tests/
-├── requirements.txt          # Common Python dependencies for all tests
-├── panasonic_heatpump/      # Tests for panasonic_heatpump component
+├── requirements.txt                                  # Common Python dependencies for all tests
+├── panasonic_heatpump/                              # Tests for panasonic_heatpump component
 │   ├── README.md
-│   ├── test_panasonic_heatpump.yaml
-│   ├── test_panasonic_heatpump_unit.py
-│   └── test_panasonic_heatpump_integration.py
-└── [other_component]/       # Tests for other components (future)
+│   ├── test_panasonic_heatpump_unit.py              # Unit tests
+│   ├── test_panasonic_heatpump_integration.py       # Integration tests
+│   ├── test_panasonic_heatpump_esp8266.yaml         # ESP8266 test config
+│   ├── test_panasonic_heatpump_esp32s2.yaml         # ESP32-S2 test config
+│   ├── test_panasonic_heatpump_esp32c3.yaml         # ESP32-C3 test config
+│   ├── test_panasonic_heatpump_cztaw1.yaml          # CZ-TAW1 dual UART test config
+│   ├── test_panasonic_heatpump_mini.yaml            # Minimal ESP32 test config
+│   └── test_panasonic_heatpump_full.yaml            # Full ESP32 test config
+└── [other_component]/                               # Tests for other components (future)
 ```
 
 ## Running Tests
