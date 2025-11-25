@@ -1,0 +1,87 @@
+---
+# Test configuration for panasonic_heatpump component on ESP32
+# Full-featured ESP32 with multiple GPIO pins
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+esphome:
+  name: test-panasonic-heatpump-cztaw1
+  friendly_name: "Test Panasonic Heatpump CZ-TAW1"
+
+logger:
+  level: DEBUG
+
+external_components:
+  - source:
+      type: local
+      path: ../../components
+    components: [panasonic_heatpump]
+
+uart:
+  - id: uart_heatpump
+    tx_pin: GPIO16
+    rx_pin: GPIO17
+    baud_rate: 9600
+    data_bits: 8
+    parity: EVEN
+    stop_bits: 1
+  - id: uart_cz_taw1
+    tx_pin: GPIO19
+    rx_pin: GPIO18
+    baud_rate: 9600
+    data_bits: 8
+    parity: EVEN
+    stop_bits: 1
+
+# Test configuration with cz_taw1 client
+panasonic_heatpump:
+  id: my_heatpump
+  uart_id: uart_heatpump
+  uart_client_id: uart_cz_taw1
+  log_uart_msg: true
+  update_interval: 3s
+
+# Test sensor types - first item only
+sensor:
+  - platform: panasonic_heatpump
+    top1:
+      name: "Pump Flow"
+
+# Test binary sensors - first item only
+binary_sensor:
+  - platform: panasonic_heatpump
+    top0:
+      name: "Heatpump State"
+
+# Test text sensors - first item only
+text_sensor:
+  - platform: panasonic_heatpump
+    top4:
+      name: "Operating Mode State"
+
+# Test number controls - first item only
+number:
+  - platform: panasonic_heatpump
+    set5:
+      name: "Set Z1 Heat Request Temperature"
+
+# Test select controls - first item only
+select:
+  - platform: panasonic_heatpump
+    set2:
+      name: "Set Holiday Mode"
+
+# Test switch controls - first item only
+switch:
+  - platform: panasonic_heatpump
+    set1:
+      name: "Set Heatpump"
+
+# Test climate controls - first item only
+climate:
+  - platform: panasonic_heatpump
+    tank:
+      name: "DHW"
