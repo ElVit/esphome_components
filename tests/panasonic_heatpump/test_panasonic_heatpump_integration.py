@@ -96,51 +96,45 @@ class TestPanasonicHeatpumpIntegration:
 
     def test_multi_instance_config(self, components_dir):
         """Test configuration with multiple component instances."""
-        config = {
-            'external_components': [{
-                'source': components_dir,
-                'components': ['panasonic_heatpump']
-            }],
-            'esp32': {
-                'board': 'esp32dev',
-                'framework': {'type': 'esp-idf'}
-            },
-            'esphome': {
-                'name': 'test-multi-panasonic',
-            },
-            'logger': {},
-            'uart': [
-                {
-                    'id': 'uart_hp1',
-                    'tx_pin': 'GPIO1',
-                    'rx_pin': 'GPIO3',
-                    'baud_rate': 9600,
-                    'parity': 'EVEN',
-                },
-                {
-                    'id': 'uart_hp2',
-                    'tx_pin': 'GPIO16',
-                    'rx_pin': 'GPIO17',
-                    'baud_rate': 9600,
-                    'parity': 'EVEN',
-                }
-            ],
-            'panasonic_heatpump': [
-                {
-                    'id': 'hp1',
-                    'uart_id': 'uart_hp1',
-                    'update_interval': '3s',
-                },
-                {
-                    'id': 'hp2',
-                    'uart_id': 'uart_hp2',
-                    'update_interval': '5s',
-                }
-            ]
-        }
+        # Create YAML text directly to preserve list structure
+        yaml_text = f"""external_components:
+  - source: {components_dir}
+    components:
+      - panasonic_heatpump
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+esphome:
+  name: test-multi-panasonic
+
+logger:
+
+uart:
+  - id: uart_hp1
+    tx_pin: GPIO1
+    rx_pin: GPIO3
+    baud_rate: 9600
+    parity: EVEN
+  - id: uart_hp2
+    tx_pin: GPIO16
+    rx_pin: GPIO17
+    baud_rate: 9600
+    parity: EVEN
+
+panasonic_heatpump:
+  - id: hp1
+    uart_id: uart_hp1
+    update_interval: 3s
+  - id: hp2
+    uart_id: uart_hp2
+    update_interval: 5s
+"""
 
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
-            yaml.dump(config, f)
+            f.write(yaml_text)
             temp_path = f.name
 
         try:
@@ -221,40 +215,45 @@ class TestPanasonicHeatpumpIntegration:
 
     def test_climate_config(self, components_dir):
         """Test configuration with climate platform."""
-        config = {
-            'external_components': [{
-                'source': components_dir,
-                'components': ['panasonic_heatpump']
-            }],
-            'esp32': {
-                'board': 'esp32dev',
-                'framework': {'type': 'esp-idf'}
-            },
-            'esphome': {
-                'name': 'test-climate',
-            },
-            'logger': {},
-            'uart': [{
-                'id': 'uart_hp',
-                'tx_pin': 'GPIO1',
-                'rx_pin': 'GPIO3',
-                'baud_rate': 9600,
-                'parity': 'EVEN',
-            }],
-            'panasonic_heatpump': {
-                'id': 'hp',
-                'uart_id': 'uart_hp',
-            },
-            'climate': [{
-                'platform': 'panasonic_heatpump',
-                'name': 'Test Climate',
-                'supports_cool': True,
-                'supports_heat': True,
-            }],
-        }
+        # Create YAML text directly to preserve climate structure
+        yaml_text = f"""external_components:
+  - source: {components_dir}
+    components:
+      - panasonic_heatpump
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+esphome:
+  name: test-climate
+
+logger:
+
+uart:
+  - id: uart_hp
+    tx_pin: GPIO1
+    rx_pin: GPIO3
+    baud_rate: 9600
+    parity: EVEN
+
+panasonic_heatpump:
+  id: hp
+  uart_id: uart_hp
+
+climate:
+  - platform: panasonic_heatpump
+    panasonic_heatpump_id: hp
+    cool_mode: true
+    tank:
+      name: "Tank"
+    zone1:
+      name: "Zone 1"
+"""
 
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
-            yaml.dump(config, f)
+            f.write(yaml_text)
             temp_path = f.name
 
         try:
