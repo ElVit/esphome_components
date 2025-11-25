@@ -134,7 +134,7 @@ jobs:
         run: |
           esphome config tests/panasonic_heatpump/test_panasonic_heatpump_mini.yaml
 
-  test-multiconf:
+  test-full-config:
     name: Test Full Configuration
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -160,7 +160,7 @@ jobs:
     name: Test Summary
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: [test-build, lint-code, lint-python, test-python, test-minimal-config, test-multiconf]
+    needs: [test-build, lint-code, lint-python, test-python, test-minimal-config, test-full-config]
     if: always()
     steps:
       - name: Check test results
