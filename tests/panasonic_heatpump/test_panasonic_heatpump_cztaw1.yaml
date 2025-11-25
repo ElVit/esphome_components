@@ -1,6 +1,6 @@
 ---
-# Test configuration for panasonic_heatpump component on ESP32
-# Full-featured ESP32 with multiple GPIO pins
+# Test configuration for panasonic_heatpump component with CZ-TAW1 (UART-man-in-the-middle)
+# Tests the proxy functionality of the CZ-TAW1 client to the heatpump
 
 esp32:
   board: esp32dev
