@@ -37,15 +37,6 @@ jobs:
           yaml-file: tests/panasonic_heatpump/test_panasonic_heatpump_${{ matrix.board == 'full' && 'full' || matrix.board }}.yaml
           version: latest
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: firmware-${{ matrix.board }}
-          path: |
-            .esphome/build/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board }}/.pioenvs/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board }}/firmware.bin
-            .esphome/build/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board }}/.pioenvs/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board }}/firmware.elf
-          retention-days: 7
-
   lint-code:
     name: Lint C++ Code
     runs-on: ubuntu-latest
