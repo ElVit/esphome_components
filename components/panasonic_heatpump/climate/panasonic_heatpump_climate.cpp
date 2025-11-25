@@ -13,15 +13,15 @@ climate::ClimateTraits PanasonicHeatpumpClimate::traits() {
   auto traits = climate::ClimateTraits();
 
   // traits.set_supports_action(true);
-  traits.set_supports_current_temperature(true);
+  traits.add_feature_flags(climate::CLIMATE_SUPPORTS_CURRENT_TEMPERATURE);
+  traits.set_supported_modes({climate::CLIMATE_MODE_OFF, climate::CLIMATE_MODE_HEAT});
   if (this->cool_mode_ &&
       (this->id_ == ClimateIds::CONF_CLIMATE_ZONE1 || this->id_ == ClimateIds::CONF_CLIMATE_ZONE2)) {
-    traits.set_supports_two_point_target_temperature(true);
-    this->supported_modes_.insert(climate::CLIMATE_MODE_COOL);
-    this->supported_modes_.insert(climate::CLIMATE_MODE_AUTO);
+    traits.add_feature_flags(climate::CLIMATE_REQUIRES_TWO_POINT_TARGET_TEMPERATURE);
+    traits.add_supported_mode(climate::CLIMATE_MODE_COOL);
+    traits.add_supported_mode(climate::CLIMATE_MODE_AUTO);
   }
 
-  traits.set_supported_modes(this->supported_modes_);
   traits.set_visual_min_temperature(this->min_temperature_);
   traits.set_visual_max_temperature(this->max_temperature_);
   traits.set_visual_temperature_step(this->temperature_step_);
@@ -115,18 +115,22 @@ void PanasonicHeatpumpClimate::publish_new_state(const std::vector<uint8_t>& dat
     return;
   };
 
-  if (!this->get_traits().get_supports_two_point_target_temperature() && this->mode == new_mode &&
-      this->target_temperature == new_target_temp_heat && this->current_temperature == new_current_temp)
+  if (!this->get_traits().has_feature_flags(climate::CLIMATE_REQUIRES_TWO_POINT_TARGET_TEMPERATURE) &&
+      this->mode == new_mode &&
+      this->target_temperature == new_target_temp_heat &&
+      this->current_temperature == new_current_temp)
     return;
-  if (this->get_traits().get_supports_two_point_target_temperature() && this->mode == new_mode &&
-      this->target_temperature_high == new_target_temp_heat && this->target_temperature_low == new_target_temp_cool &&
+  if (this->get_traits().has_feature_flags(climate::CLIMATE_REQUIRES_TWO_POINT_TARGET_TEMPERATURE) &&
+      this->mode == new_mode &&
+      this->target_temperature_high == new_target_temp_heat &&
+      this->target_temperature_low == new_target_temp_cool &&
       this->current_temperature == new_current_temp)
     return;
 
   if (new_mode != 255)
     this->mode = (climate::ClimateMode)new_mode;
   // this->action = climate::CLIMATE_ACTION_IDLE;
-  if (this->get_traits().get_supports_two_point_target_temperature()) {
+  if (this->get_traits().has_feature_flags(climate::CLIMATE_REQUIRES_TWO_POINT_TARGET_TEMPERATURE)) {
     this->target_temperature_high = new_target_temp_heat;
     this->target_temperature_low = new_target_temp_cool;
   } else {
