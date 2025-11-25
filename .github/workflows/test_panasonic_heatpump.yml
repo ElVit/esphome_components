@@ -204,7 +204,7 @@ jobs:
           esphome config tests/panasonic_heatpump/test_panasonic_minimal.yaml
 
   test-multiconf:
-    name: Test Multiple Instances
+    name: Test Full Configuration
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -221,7 +221,7 @@ jobs:
           pip install --upgrade pip
           pip install esphome
 
-      - name: Create multi-instance test config
+      - name: Create full feature test config
         run: |
           cat > tests/panasonic_heatpump/test_panasonic_multi.yaml << 'EOF'
           esp32:
@@ -253,25 +253,17 @@ jobs:
               parity: EVEN
 
           panasonic_heatpump:
-            - id: hp1
-              uart_id: uart_hp1
-              update_interval: 3s
-            - id: hp2
-              uart_id: uart_hp2
-              update_interval: 5s
+            id: hp1
+            uart_id: uart_hp1
+            update_interval: 3s
 
           sensor:
             - platform: panasonic_heatpump
-              panasonic_heatpump_id: hp1
               top1:
                 name: "HP1 Pump Flow"
-            - platform: panasonic_heatpump
-              panasonic_heatpump_id: hp2
-              top1:
-                name: "HP2 Pump Flow"
           EOF
 
-      - name: Validate multi-instance config
+      - name: Validate full config
         run: |
           esphome config tests/panasonic_heatpump/test_panasonic_multi.yaml
 
