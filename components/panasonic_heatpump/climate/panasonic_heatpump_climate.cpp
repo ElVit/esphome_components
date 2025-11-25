@@ -116,15 +116,12 @@ void PanasonicHeatpumpClimate::publish_new_state(const std::vector<uint8_t>& dat
   };
 
   if (!this->get_traits().has_feature_flags(climate::CLIMATE_REQUIRES_TWO_POINT_TARGET_TEMPERATURE) &&
-      this->mode == new_mode &&
-      this->target_temperature == new_target_temp_heat &&
+      this->mode == new_mode && this->target_temperature == new_target_temp_heat &&
       this->current_temperature == new_current_temp)
     return;
   if (this->get_traits().has_feature_flags(climate::CLIMATE_REQUIRES_TWO_POINT_TARGET_TEMPERATURE) &&
-      this->mode == new_mode &&
-      this->target_temperature_high == new_target_temp_heat &&
-      this->target_temperature_low == new_target_temp_cool &&
-      this->current_temperature == new_current_temp)
+      this->mode == new_mode && this->target_temperature_high == new_target_temp_heat &&
+      this->target_temperature_low == new_target_temp_cool && this->current_temperature == new_current_temp)
     return;
 
   if (new_mode != 255)
