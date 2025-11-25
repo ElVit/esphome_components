@@ -7,214 +7,130 @@ Tests the component's behavior with actual ESPHome compilation.
 import pytest
 import subprocess
 import os
-import tempfile
 
 
 class TestPanasonicHeatpumpIntegration:
     """Integration tests using ESPHome CLI."""
 
     @pytest.fixture
-    def test_yaml_path(self):
-        """Get the path to the test YAML file."""
+    def test_yaml_esp8266(self):
+        """Get the path to the ESP8266 test YAML file."""
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        return os.path.join(base_dir, 'tests', 'panasonic_heatpump', 'test_panasonic_heatpump.yaml')
+        return os.path.join(base_dir, 'tests', 'panasonic_heatpump', 'test_panasonic_heatpump_esp8266.yaml')
 
     @pytest.fixture
-    def components_dir(self):
-        """Get the path to the components directory."""
+    def test_yaml_esp32(self):
+        """Get the path to the ESP32 test YAML file."""
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        return os.path.join(base_dir, 'components')
+        return os.path.join(base_dir, 'tests', 'panasonic_heatpump', 'test_panasonic_heatpump_full.yaml')
 
-    def test_validate_test_config(self, test_yaml_path):
-        """Test that the test configuration is valid."""
-        if not os.path.exists(test_yaml_path):
-            pytest.skip(f"Test file not found: {test_yaml_path}")
+    @pytest.fixture
+    def test_yaml_esp32s2(self):
+        """Get the path to the ESP32-S2 test YAML file."""
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        return os.path.join(base_dir, 'tests', 'panasonic_heatpump', 'test_panasonic_heatpump_esp32s2.yaml')
+
+    @pytest.fixture
+    def test_yaml_esp32c3(self):
+        """Get the path to the ESP32-C3 test YAML file."""
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        return os.path.join(base_dir, 'tests', 'panasonic_heatpump', 'test_panasonic_heatpump_esp32c3.yaml')
+
+    @pytest.fixture
+    def test_yaml_cztaw1(self):
+        """Get the path to the CZ-TAW1 client test YAML file."""
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        return os.path.join(base_dir, 'tests', 'panasonic_heatpump', 'test_panasonic_heatpump_cztaw1.yaml')
+
+    def test_validate_esp8266_config(self, test_yaml_esp8266):
+        """Test that the ESP8266 configuration is valid."""
+        if not os.path.exists(test_yaml_esp8266):
+            pytest.skip(f"Test file not found: {test_yaml_esp8266}")
 
         try:
             result = subprocess.run(
-                ['esphome', 'config', test_yaml_path],
+                ['esphome', 'config', test_yaml_esp8266],
                 capture_output=True,
                 text=True,
                 timeout=120
             )
-            assert result.returncode == 0, f"Config validation failed: {result.stderr}"
+            assert result.returncode == 0, f"ESP8266 config validation failed: {result.stderr}"
         except FileNotFoundError:
             pytest.skip("ESPHome not installed")
         except subprocess.TimeoutExpired:
             pytest.fail("ESPHome config validation timed out")
 
-    def test_compile_minimal_config(self, components_dir):
-        """Test compiling a minimal configuration."""
-        yaml_text = f"""external_components:
-  - source: {components_dir}
-    components:
-      - panasonic_heatpump
-
-esp32:
-  board: esp32dev
-  framework:
-    type: esp-idf
-
-esphome:
-  name: test-panasonic-minimal
-
-logger:
-
-uart:
-  - id: uart_hp
-    tx_pin: GPIO1
-    rx_pin: GPIO3
-    baud_rate: 9600
-    parity: EVEN
-
-panasonic_heatpump:
-  id: hp
-  uart_id: uart_hp
-"""
-
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
-            f.write(yaml_text)
-            temp_path = f.name
+    def test_validate_esp32_config(self, test_yaml_esp32):
+        """Test that the ESP32 configuration is valid."""
+        if not os.path.exists(test_yaml_esp32):
+            pytest.skip(f"Test file not found: {test_yaml_esp32}")
 
         try:
             result = subprocess.run(
-                ['esphome', 'config', temp_path],
+                ['esphome', 'config', test_yaml_esp32],
                 capture_output=True,
                 text=True,
                 timeout=120
             )
-            assert result.returncode == 0, f"Minimal config validation failed: {result.stderr}"
+            assert result.returncode == 0, f"ESP32 config validation failed: {result.stderr}"
         except FileNotFoundError:
             pytest.skip("ESPHome not installed")
         except subprocess.TimeoutExpired:
             pytest.fail("ESPHome config validation timed out")
-        finally:
-            os.unlink(temp_path)
 
-    def test_all_sensors_config(self, components_dir):
-        """Test configuration with all sensor types."""
-        yaml_text = f"""external_components:
-  - source: {components_dir}
-    components:
-      - panasonic_heatpump
-
-esp32:
-  board: esp32dev
-  framework:
-    type: esp-idf
-
-esphome:
-  name: test-all-sensors
-
-logger:
-
-uart:
-  - id: uart_hp
-    tx_pin: GPIO1
-    rx_pin: GPIO3
-    baud_rate: 9600
-    parity: EVEN
-
-panasonic_heatpump:
-  id: hp
-  uart_id: uart_hp
-
-sensor:
-  - platform: panasonic_heatpump
-    top1:
-      name: "Test Pump Flow"
-    top5:
-      name: "Test Main Inlet Temp"
-    top14:
-      name: "Test Outside Temp"
-
-binary_sensor:
-  - platform: panasonic_heatpump
-    top0:
-      name: "Test Heatpump State"
-
-text_sensor:
-  - platform: panasonic_heatpump
-    top4:
-      name: "Test Operating Mode State"
-"""
-
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
-            f.write(yaml_text)
-            temp_path = f.name
+    def test_validate_esp32s2_config(self, test_yaml_esp32s2):
+        """Test that the ESP32-S2 configuration is valid."""
+        if not os.path.exists(test_yaml_esp32s2):
+            pytest.skip(f"Test file not found: {test_yaml_esp32s2}")
 
         try:
             result = subprocess.run(
-                ['esphome', 'config', temp_path],
+                ['esphome', 'config', test_yaml_esp32s2],
                 capture_output=True,
                 text=True,
                 timeout=120
             )
-            assert result.returncode == 0, f"All sensors config validation failed: {result.stderr}"
+            assert result.returncode == 0, f"ESP32-S2 config validation failed: {result.stderr}"
         except FileNotFoundError:
             pytest.skip("ESPHome not installed")
         except subprocess.TimeoutExpired:
             pytest.fail("ESPHome config validation timed out")
-        finally:
-            os.unlink(temp_path)
 
-    def test_climate_config(self, components_dir):
-        """Test configuration with climate platform."""
-        # Create YAML text directly to preserve climate structure
-        yaml_text = f"""external_components:
-  - source: {components_dir}
-    components:
-      - panasonic_heatpump
-
-esp32:
-  board: esp32dev
-  framework:
-    type: esp-idf
-
-esphome:
-  name: test-climate
-
-logger:
-
-uart:
-  - id: uart_hp
-    tx_pin: GPIO1
-    rx_pin: GPIO3
-    baud_rate: 9600
-    parity: EVEN
-
-panasonic_heatpump:
-  id: hp
-  uart_id: uart_hp
-
-climate:
-  - platform: panasonic_heatpump
-    cool_mode: true
-    tank:
-      name: "DHW Tank"
-    zone1:
-      name: "Heating Zone 1"
-"""
-
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
-            f.write(yaml_text)
-            temp_path = f.name
+    def test_validate_esp32c3_config(self, test_yaml_esp32c3):
+        """Test that the ESP32-C3 configuration is valid."""
+        if not os.path.exists(test_yaml_esp32c3):
+            pytest.skip(f"Test file not found: {test_yaml_esp32c3}")
 
         try:
             result = subprocess.run(
-                ['esphome', 'config', temp_path],
+                ['esphome', 'config', test_yaml_esp32c3],
                 capture_output=True,
                 text=True,
                 timeout=120
             )
-            assert result.returncode == 0, f"Climate config validation failed: {result.stderr}"
+            assert result.returncode == 0, f"ESP32-C3 config validation failed: {result.stderr}"
         except FileNotFoundError:
             pytest.skip("ESPHome not installed")
         except subprocess.TimeoutExpired:
             pytest.fail("ESPHome config validation timed out")
-        finally:
-            os.unlink(temp_path)
 
+    def test_validate_cztaw1_config(self, test_yaml_cztaw1):
+        """Test that the CZ-TAW1 client configuration with dual UART is valid."""
+        if not os.path.exists(test_yaml_cztaw1):
+            pytest.skip(f"Test file not found: {test_yaml_cztaw1}")
+
+        try:
+            result = subprocess.run(
+                ['esphome', 'config', test_yaml_cztaw1],
+                capture_output=True,
+                text=True,
+                timeout=120
+            )
+            assert result.returncode == 0, f"CZ-TAW1 config validation failed: {result.stderr}"
+        except FileNotFoundError:
+            pytest.skip("ESPHome not installed")
+        except subprocess.TimeoutExpired:
+            pytest.fail("ESPHome config validation timed out")
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
