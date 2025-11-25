@@ -36,7 +36,7 @@ void PanasonicHeatpumpComponent::loop() {
     case ResponseType::UNKNOWN:
       this->loop_state_ = LoopState::SEND_REQUEST;
       break;
-    case ResponseType::DEFAULT:
+    case ResponseType::STANDARD:
       this->loop_state_ = LoopState::PUBLISH_SENSOR;
       break;
     case ResponseType::EXTRA:
@@ -269,7 +269,7 @@ ResponseType PanasonicHeatpumpComponent::check_response(const std::vector<uint8_
   // Get response type and save the response
   auto responseType = ResponseType::UNKNOWN;
   if (data[3] == 0x10) {
-    responseType = ResponseType::DEFAULT;
+    responseType = ResponseType::STANDARD;
     this->heatpump_default_message_ = data;
   } else if (data[3] == 0x21) {
     responseType = ResponseType::EXTRA;
