@@ -27,43 +27,17 @@ jobs:
       matrix:
         esphome-version: ['2025.10.0', 'latest']
         board: ['esp32dev']
-        exclude:
-          - esphome-version: '2025.10.0'
-            board: 'lolin_s2_mini'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Build ESPHome firmware
+        uses: esphome/build-action@v7
         with:
-          python-version: '3.11'
-
-      - name: Cache pip dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.esphome-version }}-${{ hashFiles('**/requirements*.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.esphome-version }}-
-            ${{ runner.os }}-pip-
-
-      - name: Install ESPHome
-        run: |
-          pip install --upgrade pip
-          if [ "${{ matrix.esphome-version }}" == "latest" ]; then
-            pip install esphome
-          else
-            pip install esphome==${{ matrix.esphome-version }}
-          fi
-
-      - name: Validate ESPHome config
-        run: |
-          esphome config tests/panasonic_heatpump/test_panasonic_heatpump.yaml
-
-      - name: Build firmware
-        run: |
-          esphome compile tests/panasonic_heatpump/test_panasonic_heatpump.yaml
+          yaml_file: tests/panasonic_heatpump/test_panasonic_heatpump.yaml
+          version: ${{ matrix.esphome-version }}
+          platform: ESP32
+          board: ${{ matrix.board }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
