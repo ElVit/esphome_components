@@ -1,6 +1,6 @@
 ---
-# Test configuration for panasonic_heatpump component
-# This file validates all component features and configurations
+# Test configuration for panasonic_heatpump component - minimal configuration
+# Tests basic component functionality with minimal required settings
 
 esp32:
   board: esp32dev
