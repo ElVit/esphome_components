@@ -34,7 +34,7 @@ jobs:
       - name: Build ESPHome firmware for ${{ matrix.board }}
         uses: esphome/build-action@v7
         with:
-          yaml-file: tests/panasonic_heatpump/test_panasonic_heatpump_${{ matrix.board == 'full' && 'full' || matrix.board == 'mini' && 'mini' || matrix.board }}.yaml
+          yaml-file: tests/panasonic_heatpump/test_panasonic_heatpump_${{ matrix.board == 'full' && 'full' || matrix.board }}.yaml
           version: latest
 
       - name: Upload build artifacts
@@ -42,8 +42,8 @@ jobs:
         with:
           name: firmware-${{ matrix.board }}
           path: |
-            .esphome/build/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board == 'mini' && 'mini' || matrix.board }}/.pioenvs/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board == 'mini' && 'mini' || matrix.board }}/firmware.bin
-            .esphome/build/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board == 'mini' && 'mini' || matrix.board }}/.pioenvs/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board == 'mini' && 'mini' || matrix.board }}/firmware.elf
+            .esphome/build/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board }}/.pioenvs/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board }}/firmware.bin
+            .esphome/build/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board }}/.pioenvs/test-panasonic-heatpump-${{ matrix.board == 'full' && 'full' || matrix.board }}/firmware.elf
           retention-days: 7
 
   lint-code:
