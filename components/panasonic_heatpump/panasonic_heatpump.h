@@ -39,7 +39,7 @@ enum RequestType : uint8_t {
 
 enum ResponseType : uint8_t {
   UNKNOWN,
-  DEFAULT,
+  STANDARD,
   EXTRA,
 };
 
