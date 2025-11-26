@@ -128,12 +128,19 @@ void PanasonicHeatpumpComponent::read_response() {
     if (this->response_message_.size() == 2) {
       this->payload_length_ = byte_;
     }
-    // Discard message if format is wrong
-    if ((this->response_message_.size() == 3 && byte_ != 0x01 && byte_ != 0x10) ||
-        (this->response_message_.size() == 4 && byte_ != 0x10 && byte_ != 0x21)) {
+    // 3. byte shall be 0x01 or 0x10
+    if (this->response_message_.size() == 3 && byte_ != 0x01 && byte_ != 0x10) {
       this->response_receiving_ = false;
-      ESP_LOGW(TAG, "Invalid response message: %d. byte is 0x%02X but expexted is 0x01, 0x10 or 0x21",
-               response_message_.size(), byte_);
+      ESP_LOGW(TAG, "Invalid response message: 0x%s. Expected last byte to be 0x01 or 0x10",
+               PanasonicHelpers::byte_array_to_hex_string(this->response_message_, ','));
+      delay(10);  // NOLINT
+      continue;
+    }
+    // 4. byte shall be 0x10 or 0x21
+    if (this->response_message_.size() == 4 && byte_ != 0x10 && byte_ != 0x21) {
+      this->response_receiving_ = false;
+      ESP_LOGW(TAG, "Invalid response message: 0x%s. Expected last byte to be 0x10 or 0x21",
+               PanasonicHelpers::byte_array_to_hex_string(this->response_message_, ','));
       delay(10);  // NOLINT
       continue;
     }
@@ -203,12 +210,19 @@ void PanasonicHeatpumpComponent::read_request() {
     if (this->request_message_.size() == 2) {
       this->payload_length_ = byte_;
     }
-    // Discard message if format is wrong
-    if ((this->request_message_.size() == 3 && byte_ != 0x01 && byte_ != 0x10) ||
-        (this->request_message_.size() == 4 && byte_ != 0x10 && byte_ != 0x21)) {
+    // 3. byte shall be 0x01 or 0x10
+    if (this->request_message_.size() == 3 && byte_ != 0x01 && byte_ != 0x10) {
       this->request_receiving_ = false;
-      ESP_LOGW(TAG, "Invalid request message: %d. byte is 0x%02X but expexted is 0x01, 0x10 or 0x21",
-               request_message_.size(), byte_);
+      ESP_LOGW(TAG, "Invalid request message: 0x%s. Expected last byte to be 0x01 or 0x10",
+               PanasonicHelpers::byte_array_to_hex_string(this->request_message_, ','));
+      delay(10);  // NOLINT
+      continue;
+    }
+    // 4. byte shall be 0x10 or 0x21
+    if (this->request_message_.size() == 4 && byte_ != 0x10 && byte_ != 0x21) {
+      this->request_receiving_ = false;
+      ESP_LOGW(TAG, "Invalid request message: 0x%s. Expected last byte to be 0x10 or 0x21",
+               PanasonicHelpers::byte_array_to_hex_string(this->request_message_, ','));
       delay(10);  // NOLINT
       continue;
     }
