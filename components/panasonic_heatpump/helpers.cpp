@@ -47,9 +47,9 @@ std::string PanasonicHelpers::byte_array_to_hex_string(const uint8_t* data, cons
   std::string hexStr = "";
   char buffer[5];
 
-  for (size_t i = 0; i < length; i++)
-  {
-    if (i > 0) hexStr += separator;
+  for (size_t i = 0; i < length; i++) {
+    if (i > 0)
+      hexStr += separator;
     sprintf(buffer, "%02X", data[i]);
     hexStr += buffer;
   }
