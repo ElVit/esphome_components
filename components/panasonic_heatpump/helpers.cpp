@@ -31,18 +31,29 @@ void PanasonicHelpers::log_uart_hex(UartLogDirection direction, const uint8_t* d
   ESP_LOGI(TAG, "%s %s[%i]", msgDir.c_str(), msgType.c_str(), length);
   delay(10);
 
-  char buffer[5];
-  for (size_t i = 0; i < length; i++) {
-    if (i > 0)
-      logStr += separator;
-    sprintf(buffer, "%02X", data[i]);
-    logStr += buffer;
-  }
+  logStr += byte_array_to_hex_string(data, length, separator);
 
   for (size_t i = 0; i < logStr.length(); i += UART_LOG_CHUNK_SIZE) {
     ESP_LOGI(TAG, "%s %s", msgDir.c_str(), logStr.substr(i, UART_LOG_CHUNK_SIZE).c_str());
     delay(10);
   }
+}
+
+std::string PanasonicHelpers::byte_array_to_hex_string(const std::vector<uint8_t>& data, const char separator) {
+  return PanasonicHelpers::byte_array_to_hex_string(&data[0], data.size(), separator);
+}
+
+std::string PanasonicHelpers::byte_array_to_hex_string(const uint8_t* data, const size_t length, const char separator) {
+  std::string hexStr = "";
+  char buffer[5];
+
+  for (size_t i = 0; i < length; i++)
+  {
+    if (i > 0) hexStr += separator;
+    sprintf(buffer, "%02X", data[i]);
+    hexStr += buffer;
+  }
+  return hexStr;
 }
 }  // namespace panasonic_heatpump
 }  // namespace esphome
