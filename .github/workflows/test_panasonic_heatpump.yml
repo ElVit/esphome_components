@@ -170,7 +170,7 @@ jobs:
           echo "Lint Python: ${{ needs.lint-python.result }}"
           echo "Python Unit Tests: ${{ needs.test-python.result }}"
           echo "Minimal Config: ${{ needs.test-minimal-config.result }}"
-          echo "Multi-instance Config: ${{ needs.test-full-config.result }}"
+          echo "Full Config: ${{ needs.test-full-config.result }}"
 
           if [ "${{ needs.test-build.result }}" != "success" ] || \
              [ "${{ needs.lint-code.result }}" != "success" ] || \
