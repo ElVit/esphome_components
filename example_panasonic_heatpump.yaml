@@ -419,23 +419,23 @@ number:
       name: "Set DHW Temp"
     set15:
       name: "Set Max Pump Duty"
-    set16_1:
+    set16_01:
       name: "Set Zone1 Heat Target High"
-    set16_2:
+    set16_02:
       name: "Set Zone1 Heat Target Low"
-    set16_3:
+    set16_03:
       name: "Set Zone1 Heat Outside Low"
-    set16_4:
+    set16_04:
       name: "Set Zone1 Heat Outside High"
-    set16_5:
+    set16_05:
       name: "Set Zone2 Heat Target High"
-    set16_6:
+    set16_06:
       name: "Set Zone2 Heat Target Low"
-    set16_7:
+    set16_07:
       name: "Set Zone2 Heat Outside Low"
-    set16_8:
+    set16_08:
       name: "Set Zone2 Heat Outside High"
-    set16_9:
+    set16_09:
       name: "Set Zone1 Cool Target High"
     set16_10:
       name: "Set Zone1 Cool Target Low"
@@ -474,8 +474,38 @@ number:
     set38:
       name: "Set Bivalent AP Stop Temp"
 
+switch:
+  - platform: panasonic_heatpump
+    set1:
+      name: "Set Heatpump"
+    set10:
+      name: "Set Force DHW"
+    set12:
+      name: "Set Force Defrost"
+    set13:
+      name: "Set Force Sterilization"
+    set14:
+      name: "Set Pump"
+    set24:
+      name: "Set Main Schedule"
+    set25:
+      name: "Set Alt External Sensor"
+    set28:
+      name: "Set Buffer"
+    set30:
+      name: "Set External Control"
+    set31:
+      name: "Set External Error"
+    set32:
+      name: "Set External Compressor Control"
+    set33:
+      name: "Set External Heat Cool Control"
+    set34:
+      name: "Set Bivalent Control"
+
 select:
   - platform: panasonic_heatpump
+    cool_mode: true
     set2:
       name: "Set Holiday Mode"
     set3:
@@ -491,31 +521,12 @@ select:
     set35:
       name: "Set Bivalent Mode"
 
-switch:
-    - platform: panasonic_heatpump
-      set1:
-        name: "Set Heatpump"
-      set10:
-        name: "Set Force DHW"
-      set12:
-        name: "Set Force Defrost"
-      set13:
-        name: "Set Force Sterilization"
-      set14:
-        name: "Set Pump"
-      set24:
-        name: "Set Main Schedule"
-      set25:
-        name: "Set Alt External Sensor"
-      set28:
-        name: "Set Buffer"
-      set30:
-        name: "Set External Control"
-      set31:
-        name: "Set External Error"
-      set32:
-        name: "Set External Compressor Control"
-      set33:
-        name: "Set External Heat Cool Control"
-      set34:
-        name: "Set Bivalent Control"
+climate:
+  - platform: panasonic_heatpump
+    cool_mode: true
+    tank:
+      name: "DHW"
+    zone1:
+      name: "Zone 1"
+    zone2:
+      name: "Zone 2"
