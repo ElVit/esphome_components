@@ -10,7 +10,7 @@ from .. import (
     panasonic_heatpump_ns,
 )
 
-CONF_SET1 = "set1"  # Set Heatpump
+CONF_SET1 = "set1"    # Set Heatpump
 CONF_SET10 = "set10"  # Set Force DHW
 CONF_SET12 = "set12"  # Set Force Defrost
 CONF_SET13 = "set13"  # Set Force Sterilization
