@@ -11,6 +11,8 @@
 #include "decode.h"
 #include "commands.h"
 
+#define PANASONIC_HEATPUMP_VERSION "0.0.5"
+
 namespace esphome {
 namespace panasonic_heatpump {
 enum LoopState : uint8_t {

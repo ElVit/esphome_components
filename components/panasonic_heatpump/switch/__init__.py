@@ -91,7 +91,6 @@ CONFIG_SCHEMA = cv.Schema(
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
-
 async def to_code(config):
     parent = await cg.get_variable(config[CONF_PANASONIC_HEATPUMP_ID])
     for index, key in enumerate(TYPES):

@@ -27,7 +27,6 @@ TYPES = [
     CONF_CLIMATE_ZONE2,
 ]
 
-
 def climate_options(min_temp, max_temp, temp_step) -> cv.Schema:
     schema = cv.Schema(
         {
@@ -60,7 +59,6 @@ CONFIG_SCHEMA = cv.Schema(
         ).extend(climate_options(-5.0, 5.0, 0.5)),
     }
 ).extend(cv.COMPONENT_SCHEMA)
-
 
 async def to_code(config):
     parent = await cg.get_variable(config[CONF_PANASONIC_HEATPUMP_ID])

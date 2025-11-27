@@ -16,7 +16,6 @@ from .. import (
     panasonic_heatpump_ns,
 )
 
-
 CONF_SET5 = "set5"  # Set Z1 Heat Request Temperature
 CONF_SET6 = "set6"  # Set Z1 Cool Request Temperature
 CONF_SET7 = "set7"  # Set Z2 Heat Request Temperature
@@ -87,7 +86,6 @@ TYPES = [
     CONF_SET38,
 ]
 
-
 def number_options(min_val, max_val, step) -> cv.Schema:
     schema = cv.Schema(
         {
@@ -97,7 +95,6 @@ def number_options(min_val, max_val, step) -> cv.Schema:
         }
     )
     return schema
-
 
 PanasonicHeatpumpNumber = panasonic_heatpump_ns.class_(
     "PanasonicHeatpumpNumber", number.Number, cg.Component
@@ -257,7 +254,6 @@ CONFIG_SCHEMA = cv.Schema(
         ).extend(number_options(-10.0, 0.0, 1.0)),
     }
 ).extend(cv.COMPONENT_SCHEMA)
-
 
 async def to_code(config):
     parent = await cg.get_variable(config[CONF_PANASONIC_HEATPUMP_ID])

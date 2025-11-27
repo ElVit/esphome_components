@@ -10,7 +10,6 @@ from .. import (
     panasonic_heatpump_ns,
 )
 
-
 CONF_COOL_MODE = "cool_mode"
 CONF_SET2 = "set2"  # Set Holiday Mode
 CONF_SET3 = "set3"  # Set Quiet Mode
@@ -62,6 +61,7 @@ CONF_SELECTS = [
     ["Disabled", "Type-A", "Type-B"],
     ["Alternative", "Parallel", "Advanced Parallel"],
 ]
+
 CONF_SELECT_COOL_MODE = [
     "TANK",
     "HEAT",
@@ -105,7 +105,6 @@ CONFIG_SCHEMA = cv.Schema(
         ),
     }
 ).extend(cv.COMPONENT_SCHEMA)
-
 
 async def to_code(config):
     parent = await cg.get_variable(config[CONF_PANASONIC_HEATPUMP_ID])

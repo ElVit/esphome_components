@@ -3,15 +3,13 @@ import esphome.config_validation as cv
 from esphome.components import uart
 from esphome.const import CONF_ID
 
-
 CODEOWNERS = ["@elvit"]
-MULTICONF = True
 DEPENDENCIES = ["uart"]
+MULTICONF = True
 
 CONF_PANASONIC_HEATPUMP_ID = "panasonic_heatpump"
 CONF_UART_CLIENT = "uart_client_id"
 CONF_LOG_UART_MSG = "log_uart_msg"
-
 
 panasonic_heatpump_ns = cg.esphome_ns.namespace("panasonic_heatpump")
 PanasonicHeatpumpComponent = panasonic_heatpump_ns.class_(

@@ -6,7 +6,7 @@ namespace panasonic_heatpump {
 static const char* const TAG = "panasonic_heatpump";
 
 void PanasonicHeatpumpComponent::dump_config() {
-  ESP_LOGW(TAG, "*** Panasonic Heatpump Component v0.0.4 ***");
+  ESP_LOGW(TAG, "*** Panasonic Heatpump Component v%s ***", PanasonicHeatpumpComponent::PANASONIC_HEATPUMP_VERSION);
   delay(10);  // NOLINT
 }
 

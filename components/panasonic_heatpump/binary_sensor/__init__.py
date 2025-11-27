@@ -10,7 +10,6 @@ from .. import (
     panasonic_heatpump_ns,
 )
 
-
 CONF_TOP0 = "top0"  # Heatpump State
 CONF_TOP2 = "top2"  # Force DHW State
 CONF_TOP3 = "top3"  # Quiet Mode Schedule
@@ -151,7 +150,6 @@ CONFIG_SCHEMA = cv.Schema(
         ),
     }
 ).extend(cv.COMPONENT_SCHEMA)
-
 
 async def to_code(config):
     parent = await cg.get_variable(config[CONF_PANASONIC_HEATPUMP_ID])
