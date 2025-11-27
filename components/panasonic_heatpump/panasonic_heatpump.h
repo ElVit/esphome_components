@@ -11,7 +11,9 @@
 #include "decode.h"
 #include "commands.h"
 
+#ifndef PANASONIC_HEATPUMP_VERSION
 #define PANASONIC_HEATPUMP_VERSION "0.0.5"
+#endif
 
 namespace esphome {
 namespace panasonic_heatpump {
