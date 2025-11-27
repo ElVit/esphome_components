@@ -92,6 +92,8 @@ namespace esphome
       void add_extra_sensor(PanasonicHeatpumpEntity *sensor) { extra_sensors_.push_back(sensor); }
 
     protected:
+      const std::string version = "0.0.5";
+      
       // options variables
       uart::UARTComponent* uart_client_ { nullptr };
       bool log_uart_msg_ { false };
