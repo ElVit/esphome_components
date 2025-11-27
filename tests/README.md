@@ -14,7 +14,7 @@ tests/
 │   ├── test_panasonic_heatpump_esp8266.yaml         # ESP8266 test config
 │   ├── test_panasonic_heatpump_esp32s2.yaml         # ESP32-S2 test config
 │   ├── test_panasonic_heatpump_esp32c3.yaml         # ESP32-C3 test config
-│   ├── test_panasonic_heatpump_cztaw1.yaml          # CZ-TAW1 dual UART test config
+│   ├── test_panasonic_heatpump_cztaw1.yaml          # CZ-TAW1 test config
 │   ├── test_panasonic_heatpump_mini.yaml            # Minimal ESP32 test config
 │   └── test_panasonic_heatpump_full.yaml            # Full ESP32 test config
 └── [other_component]/                               # Tests for other components (future)
