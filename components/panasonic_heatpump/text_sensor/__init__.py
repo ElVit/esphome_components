@@ -10,7 +10,6 @@ from .. import (
     panasonic_heatpump_ns,
 )
 
-
 ICON_OPERATION_MODE = "mdi:thermostat"
 ICON_POWERFUL_MODE = "mdi:arm-flex"
 ICON_QUIET_MODE = "mdi:sleep"
@@ -26,7 +25,6 @@ ICON_LIQUID = "mdi:water"
 ICON_VALVE = "mdi:pipe-valve"
 ICON_PUMP = "mdi:pump"
 ICON_EXTERNAL_PAD_HEATER = "mdi:radiator"
-
 
 CONF_TOP4 = "top4"  # Operation Mode
 # ToDo: Split up top4 into top4_1 (Heating Mode State) and top4_2 (DHW Mode State)
