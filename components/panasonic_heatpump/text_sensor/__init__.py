@@ -28,19 +28,19 @@ ICON_PUMP = "mdi:pump"
 ICON_EXTERNAL_PAD_HEATER = "mdi:radiator"
 
 
-CONF_TOP4 = "top4"      # Operation Mode
+CONF_TOP4 = "top4"  # Operation Mode
 # ToDo: Split up top4 into top4_1 (Heating Mode State) and top4_2 (DHW Mode State)
-CONF_TOP17 = "top17"    # Powerful Mode Time
-CONF_TOP18 = "top18"    # Quiet Mode Level
-CONF_TOP19 = "top19"    # Holiday Mode State
-CONF_TOP20 = "top20"    # ThreeWay Valve State
-CONF_TOP44 = "top44"    # Error
-CONF_TOP58 = "top58"    # DHW Heater State
-CONF_TOP59 = "top59"    # Room Heater State
-CONF_TOP76 = "top76"    # Heating Mode
-CONF_TOP81 = "top81"    # Cooling Mode
-CONF_TOP92 = "top92"    # Heat Pump Model
-CONF_TOP94 = "top94"    # Zones State
+CONF_TOP17 = "top17"  # Powerful Mode Time
+CONF_TOP18 = "top18"  # Quiet Mode Level
+CONF_TOP19 = "top19"  # Holiday Mode State
+CONF_TOP20 = "top20"  # ThreeWay Valve State
+CONF_TOP44 = "top44"  # Error
+CONF_TOP58 = "top58"  # DHW Heater State
+CONF_TOP59 = "top59"  # Room Heater State
+CONF_TOP76 = "top76"  # Heating Mode
+CONF_TOP81 = "top81"  # Cooling Mode
+CONF_TOP92 = "top92"  # Heat Pump Model
+CONF_TOP94 = "top94"  # Zones State
 CONF_TOP101 = "top101"  # Solar Mode
 CONF_TOP106 = "top106"  # Pump Flowrate Mode
 CONF_TOP107 = "top107"  # Liquid Type
