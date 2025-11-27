@@ -6,11 +6,6 @@ from esphome.components.climate import (
     ClimatePreset,
 )
 from esphome.const import (
-    CONF_ID,
-    CONF_SUPPORTED_MODES,
-    CONF_SUPPORTED_PRESETS,
-    CONF_CUSTOM_PRESETS,
-    CONF_VISUAL,
     CONF_MIN_TEMPERATURE,
     CONF_MAX_TEMPERATURE,
     CONF_TEMPERATURE_STEP,
