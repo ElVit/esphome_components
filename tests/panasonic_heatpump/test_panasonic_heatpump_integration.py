@@ -115,7 +115,7 @@ class TestPanasonicHeatpumpIntegration:
             pytest.fail("ESPHome config validation timed out")
 
     def test_validate_cztaw1_config(self, test_yaml_cztaw1):
-        """Test that the CZ-TAW1 client configuration with dual UART is valid."""
+        """Test that the CZ-TAW1 client configuration with UART-proxy is valid."""
         if not os.path.exists(test_yaml_cztaw1):
             pytest.skip(f"Test file not found: {test_yaml_cztaw1}")
 
