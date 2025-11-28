@@ -9,24 +9,19 @@
 #define UART_LOG_CHUNK_SIZE 120
 #endif
 
+namespace esphome {
+namespace panasonic_heatpump {
+enum UartLogDirection : uint8_t {
+  UART_LOG_RX,
+  UART_LOG_TX,
+};
 
-namespace esphome
-{
-  namespace panasonic_heatpump
-  {
-    enum UartLogDirection : uint8_t
-    {
-      UART_LOG_RX,
-      UART_LOG_TX,
-    };
-
-    class PanasonicHelpers
-    {
-    public:
-      static void log_uart_hex(UartLogDirection direction, const std::vector<uint8_t>& data, const char separator);
-      static void log_uart_hex(UartLogDirection direction, const uint8_t* data, const size_t length, const char separator);
-      static std::string byte_array_to_hex_string(const std::vector<uint8_t>& data, const char separator);
-      static std::string byte_array_to_hex_string(const uint8_t* data, const size_t length, const char separator);
-    };
-  }
-}
+class PanasonicHelpers {
+ public:
+  static void log_uart_hex(UartLogDirection direction, const std::vector<uint8_t>& data, const char separator);
+  static void log_uart_hex(UartLogDirection direction, const uint8_t* data, const size_t length, const char separator);
+  static std::string byte_array_to_hex_string(const std::vector<uint8_t>& data, const char separator);
+  static std::string byte_array_to_hex_string(const uint8_t* data, const size_t length, const char separator);
+};
+}  // namespace panasonic_heatpump
+}  // namespace esphome

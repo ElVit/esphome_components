@@ -2,16 +2,19 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import number
 from esphome.const import (
-  UNIT_CELSIUS,
-  UNIT_KELVIN,
-  UNIT_MINUTE,
-  ENTITY_CATEGORY_CONFIG,
-  CONF_MIN_VALUE,
-  CONF_MAX_VALUE,
-  CONF_STEP,
+    UNIT_CELSIUS,
+    UNIT_KELVIN,
+    UNIT_MINUTE,
+    ENTITY_CATEGORY_CONFIG,
+    CONF_MIN_VALUE,
+    CONF_MAX_VALUE,
+    CONF_STEP,
 )
-from .. import CONF_PANASONIC_HEATPUMP_ID, PanasonicHeatpumpComponent, panasonic_heatpump_ns
-
+from .. import (
+    CONF_PANASONIC_HEATPUMP_ID,
+    PanasonicHeatpumpComponent,
+    panasonic_heatpump_ns,
+)
 
 CONF_SET5 = "set5"  # Set Z1 Heat Request Temperature
 CONF_SET6 = "set6"  # Set Z1 Cool Request Temperature
@@ -48,284 +51,224 @@ CONF_SET37 = "set37"  # Set Bivalent AP Start Temp
 CONF_SET38 = "set38"  # Set Bivalent AP Stop Temp
 
 TYPES = [
-  CONF_SET5,
-  CONF_SET6,
-  CONF_SET7,
-  CONF_SET8,
-  CONF_SET11,
-  CONF_SET15,
-  CONF_SET16_01,
-  CONF_SET16_02,
-  CONF_SET16_03,
-  CONF_SET16_04,
-  CONF_SET16_05,
-  CONF_SET16_06,
-  CONF_SET16_07,
-  CONF_SET16_08,
-  CONF_SET16_09,
-  CONF_SET16_10,
-  CONF_SET16_11,
-  CONF_SET16_12,
-  CONF_SET16_13,
-  CONF_SET16_14,
-  CONF_SET16_15,
-  CONF_SET16_16,
-  CONF_SET18,
-  CONF_SET19,
-  CONF_SET20,
-  CONF_SET21,
-  CONF_SET22,
-  CONF_SET23,
-  CONF_SET27,
-  CONF_SET29,
-  CONF_SET36,
-  CONF_SET37,
-  CONF_SET38,
+    CONF_SET5,
+    CONF_SET6,
+    CONF_SET7,
+    CONF_SET8,
+    CONF_SET11,
+    CONF_SET15,
+    CONF_SET16_01,
+    CONF_SET16_02,
+    CONF_SET16_03,
+    CONF_SET16_04,
+    CONF_SET16_05,
+    CONF_SET16_06,
+    CONF_SET16_07,
+    CONF_SET16_08,
+    CONF_SET16_09,
+    CONF_SET16_10,
+    CONF_SET16_11,
+    CONF_SET16_12,
+    CONF_SET16_13,
+    CONF_SET16_14,
+    CONF_SET16_15,
+    CONF_SET16_16,
+    CONF_SET18,
+    CONF_SET19,
+    CONF_SET20,
+    CONF_SET21,
+    CONF_SET22,
+    CONF_SET23,
+    CONF_SET27,
+    CONF_SET29,
+    CONF_SET36,
+    CONF_SET37,
+    CONF_SET38,
 ]
 
-def number_options(min_val, max_val, step) -> cv.Schema:
-  schema = cv.Schema({
-    cv.Optional(CONF_MIN_VALUE, default=min_val): cv.float_,
-    cv.Optional(CONF_MAX_VALUE, default=max_val): cv.float_,
-    cv.Optional(CONF_STEP, default=step): cv.float_range(min=1.0, max=10.0),
-  })
-  return schema
 
-PanasonicHeatpumpNumber = panasonic_heatpump_ns.class_("PanasonicHeatpumpNumber", number.Number, cg.Component)
+def number_options(min_val, max_val, step) -> cv.Schema:
+    schema = cv.Schema(
+        {
+            cv.Optional(CONF_MIN_VALUE, default=min_val): cv.float_,
+            cv.Optional(CONF_MAX_VALUE, default=max_val): cv.float_,
+            cv.Optional(CONF_STEP, default=step): cv.float_range(min=1.0, max=10.0),
+        }
+    )
+    return schema
+
+
+PanasonicHeatpumpNumber = panasonic_heatpump_ns.class_(
+    "PanasonicHeatpumpNumber", number.Number, cg.Component
+)
 
 CONFIG_SCHEMA = cv.Schema(
-  {
-    cv.GenerateID(CONF_PANASONIC_HEATPUMP_ID): cv.use_id(
-      PanasonicHeatpumpComponent
-    ),
-
-    cv.Optional(CONF_SET5): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-    ).extend(
-      number_options(-5.0, 5.0, 1.0)
-    ),
-    cv.Optional(CONF_SET6): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-    ).extend(
-      number_options(-5.0, 5.0, 1.0)
-    ),
-    cv.Optional(CONF_SET7): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-    ).extend(
-      number_options(-5.0, 5.0, 1.0)
-    ),
-    cv.Optional(CONF_SET8): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-    ).extend(
-      number_options(-5.0, 5.0, 1.0)
-    ),
-    cv.Optional(CONF_SET11): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-    ).extend(
-      number_options(40.0, 75.0, 1.0)
-    ),
-    cv.Optional(CONF_SET15): number.number_schema(
-      PanasonicHeatpumpNumber,
-    ).extend(
-      number_options(64.0, 254.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_01): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(20.0, 60.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_02): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(20.0, 60.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_03): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(-20.0, 15.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_04): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(-20.0, 15.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_05): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(20.0, 60.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_06): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(20.0, 60.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_07): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(-20.0, 15.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_08): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(-20.0, 15.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_09): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(5.0, 20.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_10): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(5.0, 20.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_11): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(15.0, 30.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_12): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(15.0, 30.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_13): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(5.0, 20.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_14): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(5.0, 20.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_15): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(15.0, 30.0, 1.0)
-    ),
-    cv.Optional(CONF_SET16_16): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-      entity_category=ENTITY_CATEGORY_CONFIG,
-    ).extend(
-      number_options(15.0, 30.0, 1.0)
-    ),
-    cv.Optional(CONF_SET18): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_KELVIN,
-    ).extend(
-      number_options(1.0, 15.0, 1.0)
-    ),
-    cv.Optional(CONF_SET19): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_KELVIN,
-    ).extend(
-      number_options(1.0, 15.0, 1.0)
-    ),
-    cv.Optional(CONF_SET20): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_KELVIN,
-    ).extend(
-      number_options(112.0, -2.0, 1.0)
-    ),
-    cv.Optional(CONF_SET21): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_MINUTE,
-    ).extend(
-      number_options(0.0, 250.0, 1.0)
-    ),
-    cv.Optional(CONF_SET22): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_KELVIN,
-    ).extend(
-      number_options(1.0, 15.0, 1.0)
-    ),
-    cv.Optional(CONF_SET23): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_KELVIN,
-    ).extend(
-      number_options(1.0, 15.0, 1.0)
-    ),
-    cv.Optional(CONF_SET27): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_KELVIN,
-    ).extend(
-      number_options(0.0, 10.0, 1.0)
-    ),
-    cv.Optional(CONF_SET29): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-    ).extend(
-      number_options(5.0, 35.0, 1.0)
-    ),
-    cv.Optional(CONF_SET36): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-    ).extend(
-      number_options(-15.0, 35.0, 1.0)
-    ),
-    cv.Optional(CONF_SET37): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-    ).extend(
-      number_options(-10.0, 0.0, 1.0)
-    ),
-    cv.Optional(CONF_SET38): number.number_schema(
-      PanasonicHeatpumpNumber,
-      unit_of_measurement=UNIT_CELSIUS,
-    ).extend(
-      number_options(-10.0, 0.0, 1.0)
-    ),
-  }
+    {
+        cv.GenerateID(CONF_PANASONIC_HEATPUMP_ID): cv.use_id(
+            PanasonicHeatpumpComponent
+        ),
+        cv.Optional(CONF_SET5): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+        ).extend(number_options(-5.0, 5.0, 1.0)),
+        cv.Optional(CONF_SET6): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+        ).extend(number_options(-5.0, 5.0, 1.0)),
+        cv.Optional(CONF_SET7): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+        ).extend(number_options(-5.0, 5.0, 1.0)),
+        cv.Optional(CONF_SET8): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+        ).extend(number_options(-5.0, 5.0, 1.0)),
+        cv.Optional(CONF_SET11): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+        ).extend(number_options(40.0, 75.0, 1.0)),
+        cv.Optional(CONF_SET15): number.number_schema(
+            PanasonicHeatpumpNumber,
+        ).extend(number_options(64.0, 254.0, 1.0)),
+        cv.Optional(CONF_SET16_01): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(20.0, 60.0, 1.0)),
+        cv.Optional(CONF_SET16_02): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(20.0, 60.0, 1.0)),
+        cv.Optional(CONF_SET16_03): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(-20.0, 15.0, 1.0)),
+        cv.Optional(CONF_SET16_04): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(-20.0, 15.0, 1.0)),
+        cv.Optional(CONF_SET16_05): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(20.0, 60.0, 1.0)),
+        cv.Optional(CONF_SET16_06): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(20.0, 60.0, 1.0)),
+        cv.Optional(CONF_SET16_07): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(-20.0, 15.0, 1.0)),
+        cv.Optional(CONF_SET16_08): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(-20.0, 15.0, 1.0)),
+        cv.Optional(CONF_SET16_09): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(5.0, 20.0, 1.0)),
+        cv.Optional(CONF_SET16_10): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(5.0, 20.0, 1.0)),
+        cv.Optional(CONF_SET16_11): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(15.0, 30.0, 1.0)),
+        cv.Optional(CONF_SET16_12): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(15.0, 30.0, 1.0)),
+        cv.Optional(CONF_SET16_13): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(5.0, 20.0, 1.0)),
+        cv.Optional(CONF_SET16_14): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(5.0, 20.0, 1.0)),
+        cv.Optional(CONF_SET16_15): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(15.0, 30.0, 1.0)),
+        cv.Optional(CONF_SET16_16): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ).extend(number_options(15.0, 30.0, 1.0)),
+        cv.Optional(CONF_SET18): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_KELVIN,
+        ).extend(number_options(1.0, 15.0, 1.0)),
+        cv.Optional(CONF_SET19): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_KELVIN,
+        ).extend(number_options(1.0, 15.0, 1.0)),
+        cv.Optional(CONF_SET20): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_KELVIN,
+        ).extend(number_options(112.0, -2.0, 1.0)),
+        cv.Optional(CONF_SET21): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_MINUTE,
+        ).extend(number_options(0.0, 250.0, 1.0)),
+        cv.Optional(CONF_SET22): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_KELVIN,
+        ).extend(number_options(1.0, 15.0, 1.0)),
+        cv.Optional(CONF_SET23): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_KELVIN,
+        ).extend(number_options(1.0, 15.0, 1.0)),
+        cv.Optional(CONF_SET27): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_KELVIN,
+        ).extend(number_options(0.0, 10.0, 1.0)),
+        cv.Optional(CONF_SET29): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+        ).extend(number_options(5.0, 35.0, 1.0)),
+        cv.Optional(CONF_SET36): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+        ).extend(number_options(-15.0, 35.0, 1.0)),
+        cv.Optional(CONF_SET37): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+        ).extend(number_options(-10.0, 0.0, 1.0)),
+        cv.Optional(CONF_SET38): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+        ).extend(number_options(-10.0, 0.0, 1.0)),
+    }
 ).extend(cv.COMPONENT_SCHEMA)
 
+
 async def to_code(config):
-  parent = await cg.get_variable(config[CONF_PANASONIC_HEATPUMP_ID])
-  for index, key in enumerate(TYPES):
-    if child_config := config.get(key):
-      var = await number.new_number(
-        child_config,
-        min_value=child_config[CONF_MIN_VALUE],
-        max_value=child_config[CONF_MAX_VALUE],
-        step=child_config[CONF_STEP],
-      )
-      await cg.register_component(var, child_config)
-      cg.add(var.set_parent(parent))
-      cg.add(var.set_id(index))
-      cg.add(parent.add_number(var))
+    parent = await cg.get_variable(config[CONF_PANASONIC_HEATPUMP_ID])
+    for index, key in enumerate(TYPES):
+        if child_config := config.get(key):
+            var = await number.new_number(
+                child_config,
+                min_value=child_config[CONF_MIN_VALUE],
+                max_value=child_config[CONF_MAX_VALUE],
+                step=child_config[CONF_STEP],
+            )
+            await cg.register_component(var, child_config)
+            cg.add(var.set_parent(parent))
+            cg.add(var.set_id(index))
+            cg.add(parent.add_number(var))

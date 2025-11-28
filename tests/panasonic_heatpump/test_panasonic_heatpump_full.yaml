@@ -1,52 +1,42 @@
+---
+# Test configuration for panasonic_heatpump component
+# This file validates all component features and configurations
+
 esp32:
-  board: lolin_s2_mini
-  variant: ESP32S2
+  board: esp32dev
   framework:
     type: esp-idf
 
 esphome:
-  name: panasonic-heatpump
-  friendly_name: Panasonic Heatpump
-
-ota:
-  platform: esphome
-  password: !secret ota_password
-
-api:
-  encryption:
-    key: !secret ha_api_key
-
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-  ap:
-    ssid: "Panasonic Heatpump Fallback"
-    password: !secret fallback_password
+  name: test-panasonic-heatpump-full
+  friendly_name: "Test Panasonic Heatpump Full"
 
 logger:
+  level: DEBUG
 
 external_components:
   - source:
-      type: git
-      url: https://github.com/ElVit/esphome_components/
-    components: [ panasonic_heatpump ]
+      type: local
+      path: ../../components
+    components: [panasonic_heatpump]
 
 uart:
   - id: uart_heatpump
-    tx_pin: GPIO37  # heatpump reads data (RX) on this pin    (yellow)
-    rx_pin: GPIO39  # heatpump sends data (TX) on this pin    (green)
+    tx_pin: GPIO16
+    rx_pin: GPIO17
     baud_rate: 9600
     data_bits: 8
     parity: EVEN
     stop_bits: 1
   - id: uart_cz_taw1
-    tx_pin: GPIO16  # WiFi module reads data (RX) on this pin (blue)
-    rx_pin: GPIO18  # WiFi module sends data (TX) on this pin (white)
+    tx_pin: GPIO19
+    rx_pin: GPIO18
     baud_rate: 9600
     data_bits: 8
     parity: EVEN
     stop_bits: 1
 
+# Test basic configuration
 panasonic_heatpump:
   id: my_heatpump
   uart_id: uart_heatpump
@@ -54,6 +44,7 @@ panasonic_heatpump:
   log_uart_msg: true
   update_interval: 3s
 
+# Test all sensor types
 sensor:
   - platform: panasonic_heatpump
     top1:
@@ -80,7 +71,7 @@ sensor:
       name: "Heat Power Production"
     top16:
       name: "Heat Power Consumption"
-      id: heat_power_consumption
+      id: heat_power_cons
     top21:
       name: "Outside Pipe Temp"
     top22:
@@ -117,12 +108,12 @@ sensor:
       name: "Cool Power Production"
     top39:
       name: "Cool Power Consumption"
-      id: cool_power_consumption
+      id: cool_power_cons
     top40:
       name: "DHW Power Production"
     top41:
       name: "DHW Power Consumption"
-      id: dhw_power_consumption
+      id: dhw_power_cons
     top42:
       name: "Z1 Water Target Temp"
     top43:
@@ -249,7 +240,6 @@ sensor:
       name: "Bivalent Advanced Stop Delay"
     top138:
       name: "Bivalent Advanced DHW Delay"
-
     xtop0:
       name: "Heat Power Consumption Extra"
     xtop1:
@@ -263,34 +253,7 @@ sensor:
     xtop5:
       name: "DHW Power Production Extra"
 
-  - platform: total_daily_energy
-    name: Heat Power Consumption Daily
-    power_id: heat_power_consumption
-    unit_of_measurement: kWh
-    state_class: total_increasing
-    device_class: energy
-    accuracy_decimals: 3
-    filters:
-      - multiply: 0.001
-  - platform: total_daily_energy
-    name: Cool Power Consumption Daily
-    power_id: cool_power_consumption
-    unit_of_measurement: kWh
-    state_class: total_increasing
-    device_class: energy
-    accuracy_decimals: 3
-    filters:
-      - multiply: 0.001
-  - platform: total_daily_energy
-    name: DHW Power Consumption Daily
-    power_id: dhw_power_consumption
-    unit_of_measurement: kWh
-    state_class: total_increasing
-    device_class: energy
-    accuracy_decimals: 3
-    filters:
-      - multiply: 0.001
-
+# Test all binary sensors
 binary_sensor:
   - platform: panasonic_heatpump
     top0:
@@ -340,6 +303,7 @@ binary_sensor:
     top133:
       name: "Bivalent Advanced DHW"
 
+# Test all text sensors
 text_sensor:
   - platform: panasonic_heatpump
     top4:
@@ -385,6 +349,7 @@ text_sensor:
     top130:
       name: "Bivalent Mode"
 
+# Test all number controls
 number:
   - platform: panasonic_heatpump
     set5:
@@ -396,7 +361,7 @@ number:
     set8:
       name: "Set Z2 Cool Request Temperature"
     set11:
-      name: "Set DHW Temp"
+      name: "Set DHW Temperature"
     set15:
       name: "Set Max Pump Duty"
     set16_01:
@@ -454,35 +419,7 @@ number:
     set38:
       name: "Set Bivalent AP Stop Temp"
 
-switch:
-  - platform: panasonic_heatpump
-    set1:
-      name: "Set Heatpump"
-    set10:
-      name: "Set Force DHW"
-    set12:
-      name: "Set Force Defrost"
-    set13:
-      name: "Set Force Sterilization"
-    set14:
-      name: "Set Pump"
-    set24:
-      name: "Set Main Schedule"
-    set25:
-      name: "Set Alt External Sensor"
-    set28:
-      name: "Set Buffer"
-    set30:
-      name: "Set External Control"
-    set31:
-      name: "Set External Error"
-    set32:
-      name: "Set External Compressor Control"
-    set33:
-      name: "Set External Heat Cool Control"
-    set34:
-      name: "Set Bivalent Control"
-
+# Test all select controls
 select:
   - platform: panasonic_heatpump
     cool_mode: true
@@ -501,12 +438,43 @@ select:
     set35:
       name: "Set Bivalent Mode"
 
+# Test all switch controls
+switch:
+  - platform: panasonic_heatpump
+    set1:
+      name: "Set Heatpump"
+    set10:
+      name: "Set Force DHW"
+    set12:
+      name: "Set Force Defrost"
+    set13:
+      name: "Set Force Sterilization"
+    set14:
+      name: "Set Pump Max Speed"
+    set24:
+      name: "Set Main Schedule"
+    set25:
+      name: "Set Alt External Sensor"
+    set28:
+      name: "Set Buffer Installed"
+    set30:
+      name: "Set External Control"
+    set31:
+      name: "Set External Error"
+    set32:
+      name: "Set External Compressor Control"
+    set33:
+      name: "Set External Heat Cool Control"
+    set34:
+      name: "Set Bivalent Control"
+
+# Test climate platform
 climate:
   - platform: panasonic_heatpump
     cool_mode: true
     tank:
       name: "DHW"
     zone1:
-      name: "Zone 1"
+      name: "Zone1"
     zone2:
-      name: "Zone 2"
+      name: "Zone2"
