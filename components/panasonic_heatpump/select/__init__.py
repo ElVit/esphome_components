@@ -1,9 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import select
-from esphome.const import (
-    ENTITY_CATEGORY_CONFIG,
-)
 from .. import (
     CONF_PANASONIC_HEATPUMP_ID,
     PanasonicHeatpumpComponent,

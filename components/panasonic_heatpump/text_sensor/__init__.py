@@ -1,9 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import text_sensor
-from esphome.const import (
-    DEVICE_CLASS_HEAT,
-)
 from .. import (
     CONF_PANASONIC_HEATPUMP_ID,
     PanasonicHeatpumpComponent,
