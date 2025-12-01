@@ -25,6 +25,14 @@ void PanasonicHeatpumpComponent::update() {
 }
 
 void PanasonicHeatpumpComponent::loop() {
+  // Check if no request was sent for uart_client_timeout when uart_client is configured
+  if (this->uart_client_ != nullptr && this->uart_client_timeout_ > 0) {
+    uint32_t current_time = millis();
+    if (current_time - this->last_request_time_ >= this->uart_client_timeout_) {
+      this->next_request_ = RequestType::POLLING;
+    }
+  }
+
   switch (this->loop_state_) {
   case LoopState::READ_RESPONSE:
     this->read_response();
@@ -184,6 +192,9 @@ void PanasonicHeatpumpComponent::send_request(RequestType requestType) {
     break;
   };
 
+  // Update last request time when request was sent
+  this->last_request_time_ = millis();
+
   this->next_request_ = RequestType::NONE;
 }
 
@@ -232,6 +243,9 @@ void PanasonicHeatpumpComponent::read_request() {
       this->request_receiving_ = false;
       if (this->log_uart_msg_)
         PanasonicHelpers::log_uart_hex(UART_LOG_TX, this->request_message_, ',');
+
+      // Update last request time when request is complete
+      this->last_request_time_ = millis();
     }
   }
 }
