@@ -1,0 +1,184 @@
+name: Test Panasonic Heatpump Component
+
+on:
+  push:
+    branches:
+      - main
+      - 'heatpump**'
+    paths:
+      - 'components/panasonic_heatpump/**'
+      - 'tests/panasonic_heatpump/**'
+      - '.github/workflows/test_panasonic_heatpump.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'components/panasonic_heatpump/**'
+      - 'tests/panasonic_heatpump/**'
+      - '.github/workflows/test_panasonic_heatpump.yml'
+  workflow_dispatch:
+
+jobs:
+  test-build:
+    name: Test ESPHome Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        board: [esp8266, esp32s2, esp32c3, full]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build ESPHome firmware for ${{ matrix.board }}
+        uses: esphome/build-action@v7
+        with:
+          yaml-file: tests/panasonic_heatpump/test_panasonic_heatpump_${{ matrix.board == 'full' && 'full' || matrix.board }}.yaml
+          version: latest
+
+  lint-code:
+    name: Lint C++ Code
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format
+
+      - name: Run clang-format check
+        run: |
+          find components/panasonic_heatpump -name '*.cpp' -o -name '*.h' | \
+          xargs clang-format -style=file --dry-run --Werror
+
+  lint-python:
+    name: Lint Python Code
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install linting tools
+        run: |
+          pip install --upgrade pip
+          pip install flake8 pylint black
+
+      - name: Run black check
+        run: |
+          black --check components/panasonic_heatpump/
+
+      - name: Run flake8
+        run: |
+          flake8 components/panasonic_heatpump/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 components/panasonic_heatpump/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  test-python:
+    name: Python Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pytest pytest-cov esphome
+
+      - name: Run Python unit tests
+        run: |
+          pytest tests/panasonic_heatpump/ -v --cov=components/panasonic_heatpump --cov-report=xml --cov-report=term
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-panasonic-heatpump
+          fail_ci_if_error: false
+
+  test-minimal-config:
+    name: Test Minimal Configuration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install ESPHome
+        run: |
+          pip install --upgrade pip
+          pip install esphome
+
+      - name: Validate minimal config
+        run: |
+          esphome config tests/panasonic_heatpump/test_panasonic_heatpump_mini.yaml
+
+  test-full-config:
+    name: Test Full Configuration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install ESPHome
+        run: |
+          pip install --upgrade pip
+          pip install esphome
+
+      - name: Validate full config
+        run: |
+          esphome config tests/panasonic_heatpump/test_panasonic_heatpump_full.yaml
+
+  summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [test-build, lint-code, lint-python, test-python, test-minimal-config, test-full-config]
+    if: always()
+    steps:
+      - name: Check test results
+        run: |
+          echo "Test Build: ${{ needs.test-build.result }}"
+          echo "Lint C++: ${{ needs.lint-code.result }}"
+          echo "Lint Python: ${{ needs.lint-python.result }}"
+          echo "Python Unit Tests: ${{ needs.test-python.result }}"
+          echo "Minimal Config: ${{ needs.test-minimal-config.result }}"
+          echo "Full Config: ${{ needs.test-full-config.result }}"
+
+          if [ "${{ needs.test-build.result }}" != "success" ] || \
+             [ "${{ needs.lint-code.result }}" != "success" ] || \
+             [ "${{ needs.lint-python.result }}" != "success" ] || \
+             [ "${{ needs.test-python.result }}" != "success" ] || \
+             [ "${{ needs.test-minimal-config.result }}" != "success" ] || \
+             [ "${{ needs.test-full-config.result }}" != "success" ]; then
+            echo "One or more tests failed"
+            exit 1
+          fi
+          echo "All tests passed successfully!"
