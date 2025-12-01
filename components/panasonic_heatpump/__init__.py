@@ -22,7 +22,9 @@ CONFIG_SCHEMA = (
         {
             cv.GenerateID(): cv.declare_id(PanasonicHeatpumpComponent),
             cv.Optional(CONF_UART_CLIENT): cv.use_id(uart.UARTComponent),
-            cv.Optional(CONF_UART_CLIENT_TIMEOUT, default="10000ms"): cv.positive_time_period_milliseconds,
+            cv.Optional(
+                CONF_UART_CLIENT_TIMEOUT, default="10000ms"
+            ): cv.positive_time_period_milliseconds,
             cv.Optional(CONF_LOG_UART_MSG, default=False): cv.boolean,
         }
     )
