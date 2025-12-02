@@ -62,6 +62,7 @@ panasonic_heatpump:
   uart_client_id: uart_cz_taw1
   log_uart_msg: true
   update_interval: 5s
+  uart_client_timeout: 10s
 
 sensor:
   - platform: panasonic_heatpump
@@ -110,14 +111,15 @@ climate:
 ## Configuration variables
 
 - **id** (*Optional*, ID): Manually specify the ID used for actions.
-- **update_interval** (*Optional*, Time): The interval of the polling request message to get the heatpump values. This time applies only if no `uart_client_id` is set. Defaults to 3s.
-- **uart_id** (Optional, ID): Manually specify the UART ID of the Heatpump. Required if multiple UART buses are defined.
-- **uart_client_id** (*Optional*, ID): Manually specify the UART ID of an additonal UART client like the Panasonic CZ-TAW1. If this ID is not set then your ESP controller will send the polling request messages.
+- **update_interval** (*Optional*, [Time](https://esphome.io/guides/configuration-types/#time)): The interval of the polling request message to get the heatpump values. This time applies only if no `uart_client_id` is set. Defaults to 3s.
+- **uart_id** (Optional, [ID](https://esphome.io/guides/configuration-types/#id)): Manually specify the UART ID of the Heatpump. Required if multiple UART buses are defined.
+- **uart_client_id** (*Optional*, [ID](https://esphome.io/guides/configuration-types/#id)): Manually specify the UART ID of an additonal UART client like the Panasonic CZ-TAW1. If this ID is not set then your ESP controller will send the polling request messages.
 - **log_uart_msg** (*Optional*, boolean): Shows the raw UART messages in the logs, if set to `true`. The messages will be written to the log level `INFO`. Defaults to false.
+- **uart_client_timeout** (*Optional*, [Time](https://esphome.io/guides/configuration-types/#time)): Maximum idle time for the `uart_client_id` connection. If no request is sent from the UART client for this duration, the component will send a POLLING request to the heatpump. This will (hopefully) prevent the heatpump from becoming unresponsive. Defaults to `10s`.
 
 ### Sensors
 
-All sensors are optional and all default sensor variables can be applied.  
+All sensors are optional and all options from [sensor component](https://esphome.io/components/sensor/) can be applied.  
 Here a list of all supported sensors:
 
 ```yaml
@@ -330,7 +332,7 @@ sensor:
 
 ### Binary Sensors
 
-All binary sensors are optional and all default binary sensor variables can be applied.  
+All binary sensors are optional and all options from [binary sensor component](https://esphome.io/components/binary_sensor/) can be applied.  
 Here a list of all supported binary sensors:
 
 ```yaml
@@ -386,7 +388,7 @@ binary_sensor:
 
 ### Text Sensors
 
-All text sensors are optional and all default text sensor variables can be applied.  
+All text sensors are optional and all options from [text sensor component](https://esphome.io/components/text_sensor/) can be applied.  
 Here a list of all supported text sensors:
 
 ```yaml
@@ -438,7 +440,7 @@ text_sensor:
 
 ### Numbers
 
-All numbers are optional and all default number variables can be applied.  
+All numbers are optional and all options from [number component](https://esphome.io/components/number/) can be applied.  
 Additionally the options `min_value`, `max_value` and `step` can override the default limits of each set entitiy.  
 This is usefull for example for `set5` to `set8` if `direct temperature` is configured instead of `compensation curve` (see `top76` and `top81`).  
 Here a list of all supported numbers:
@@ -516,7 +518,7 @@ number:
 
 ### Switches
 
-All switches are optional and all default switch variables can be applied.  
+All switches are optional and all options from [switch component](https://esphome.io/components/switch/) can be applied.  
 Here a list of all supported switches:
 
 ```yaml
@@ -552,7 +554,7 @@ switch:
 
 ### Selects
 
-All selects are optional and all default select variables can be applied.  
+All selects are optional and all options from [select component](https://esphome.io/components/select/) can be applied.  
 Additionally the option `cool_mode` can be configured.  
 If `cool_mode` is set to `true` the entity `set9` will have the additional select options `COOL`, `COOL+TANK`, `AUTO` and `AUTO+TANK`.  
 Here a list of all supported selects:
@@ -579,7 +581,7 @@ select:
 
 ### Climates
 
-All climates are optional and all default climate variables can be applied.  
+All climates are optional and all options from [climate component](https://esphome.io/components/climate/) can be applied.  
 Additionally the option `cool_mode` can be configured.  
 If `cool_mode` is set to `true` the entity `zone1` and `zone2` will have the additional climate modes `COOL` and `AUTO`.  
 Additionally the options `min_temperature`, `max_temperature` and `temperature_step` can override the default limits on each climate entitiy.  
