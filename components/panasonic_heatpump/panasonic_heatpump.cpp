@@ -26,7 +26,7 @@ void PanasonicHeatpumpComponent::update() {
 
 void PanasonicHeatpumpComponent::loop() {
   // Check if no request was sent for uart_client_timeout when uart_client is configured
-  if (this->uart_client_ != nullptr && this->uart_client_timeout_ > 0) {
+  if (this->uart_client_ != nullptr && this->uart_client_timeout_ > 100) {
     uint32_t current_time = millis();
     if (current_time - this->last_request_time_ >= this->uart_client_timeout_) {
       this->next_request_ = RequestType::POLLING;
