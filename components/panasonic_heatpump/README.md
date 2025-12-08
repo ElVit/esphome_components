@@ -110,12 +110,12 @@ climate:
 
 ## Configuration variables
 
-- **id** (*Optional*, ID): Manually specify the ID used for actions.
-- **update_interval** (*Optional*, [Time](https://esphome.io/guides/configuration-types/#time)): The interval of the polling request message to get the heatpump values. This time applies only if no `uart_client_id` is set. Defaults to `3s`.
-- **uart_id** (Optional, [ID](https://esphome.io/guides/configuration-types/#id)): Manually specify the UART ID of the Heatpump. Required if multiple UART buses are defined.
-- **uart_client_id** (*Optional*, [ID](https://esphome.io/guides/configuration-types/#id)): Manually specify the UART ID of an additonal UART client like the Panasonic CZ-TAW1. If this ID is not set then your ESP controller will send the polling request messages.
-- **log_uart_msg** (*Optional*, boolean): Shows the raw UART messages in the logs, if set to `true`. The messages will be written to the log level `INFO`. Defaults to false.
-- **uart_client_timeout** (*Optional*, [Time](https://esphome.io/guides/configuration-types/#time)): Maximum idle time for the `uart_client_id` connection. If no request is sent from the UART client for this duration, the component will send a POLLING request to the heatpump. This will (hopefully) prevent the heatpump from becoming unresponsive. This feature can also be disabled by setting this option to `100ms` or lower. Defaults to `10s`.
+* **id** (*Optional*, ID): Manually specify the ID used for actions.
+* **update_interval** (*Optional*, [Time](https://esphome.io/guides/configuration-types/#time)): The interval of the polling request message to get the heatpump values. This time applies only if no `uart_client_id` is set. Defaults to `3s`.
+* **uart_id** (Optional, [ID](https://esphome.io/guides/configuration-types/#id)): Manually specify the UART ID of the Heatpump. Required if multiple UART buses are defined.
+* **uart_client_id** (*Optional*, [ID](https://esphome.io/guides/configuration-types/#id)): Manually specify the UART ID of an additonal UART client like the Panasonic CZ-TAW1. If this ID is not set then your ESP controller will send the polling request messages.
+* **log_uart_msg** (*Optional*, boolean): Shows the raw UART messages in the logs, if set to `true`. The messages will be written to the log level `INFO`. Defaults to false.
+* **uart_client_timeout** (*Optional*, [Time](https://esphome.io/guides/configuration-types/#time)): Maximum idle time for the `uart_client_id` connection. If no request is sent from the UART client for this duration, the component will send a POLLING request to the heatpump. This will (hopefully) prevent the heatpump from becoming unresponsive. This feature can also be disabled by setting this option to `100ms` or lower. Defaults to `10s`.
 
 ### Sensors
 
