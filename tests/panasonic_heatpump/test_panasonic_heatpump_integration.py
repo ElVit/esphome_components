@@ -18,9 +18,9 @@ class TestPanasonicHeatpumpIntegration:
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         return os.path.join(
             base_dir,
-            'tests',
-            'panasonic_heatpump',
-            'test_panasonic_heatpump_esp8266.yaml'
+            "tests",
+            "panasonic_heatpump",
+            "test_panasonic_heatpump_esp8266.yaml",
         )
 
     @pytest.fixture
@@ -28,10 +28,7 @@ class TestPanasonicHeatpumpIntegration:
         """Get the path to the ESP32 test YAML file."""
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         return os.path.join(
-            base_dir,
-            'tests',
-            'panasonic_heatpump',
-            'test_panasonic_heatpump_full.yaml'
+            base_dir, "tests", "panasonic_heatpump", "test_panasonic_heatpump_full.yaml"
         )
 
     @pytest.fixture
@@ -40,9 +37,9 @@ class TestPanasonicHeatpumpIntegration:
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         return os.path.join(
             base_dir,
-            'tests',
-            'panasonic_heatpump',
-            'test_panasonic_heatpump_esp32s2.yaml',
+            "tests",
+            "panasonic_heatpump",
+            "test_panasonic_heatpump_esp32s2.yaml",
         )
 
     @pytest.fixture
@@ -51,9 +48,9 @@ class TestPanasonicHeatpumpIntegration:
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         return os.path.join(
             base_dir,
-            'tests',
-            'panasonic_heatpump',
-            'test_panasonic_heatpump_esp32c3.yaml',
+            "tests",
+            "panasonic_heatpump",
+            "test_panasonic_heatpump_esp32c3.yaml",
         )
 
     @pytest.fixture
@@ -62,9 +59,9 @@ class TestPanasonicHeatpumpIntegration:
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         return os.path.join(
             base_dir,
-            'tests',
-            'panasonic_heatpump',
-            'test_panasonic_heatpump_cztaw1.yaml',
+            "tests",
+            "panasonic_heatpump",
+            "test_panasonic_heatpump_cztaw1.yaml",
         )
 
     def test_validate_esp8266_config(self, test_yaml_esp8266: str):
@@ -74,12 +71,14 @@ class TestPanasonicHeatpumpIntegration:
 
         try:
             result = subprocess.run(
-                ['esphome', 'config', test_yaml_esp8266],
+                ["esphome", "config", test_yaml_esp8266],
                 capture_output=True,
                 text=True,
-                timeout=120
+                timeout=120,
             )
-            assert result.returncode == 0, f"ESP8266 config validation failed: {result.stderr}"
+            assert (
+                result.returncode == 0
+            ), f"ESP8266 config validation failed: {result.stderr}"
         except FileNotFoundError:
             pytest.skip("ESPHome not installed")
         except subprocess.TimeoutExpired:
@@ -92,12 +91,14 @@ class TestPanasonicHeatpumpIntegration:
 
         try:
             result = subprocess.run(
-                ['esphome', 'config', test_yaml_esp32],
+                ["esphome", "config", test_yaml_esp32],
                 capture_output=True,
                 text=True,
-                timeout=120
+                timeout=120,
             )
-            assert result.returncode == 0, f"ESP32 config validation failed: {result.stderr}"
+            assert (
+                result.returncode == 0
+            ), f"ESP32 config validation failed: {result.stderr}"
         except FileNotFoundError:
             pytest.skip("ESPHome not installed")
         except subprocess.TimeoutExpired:
@@ -110,12 +111,14 @@ class TestPanasonicHeatpumpIntegration:
 
         try:
             result = subprocess.run(
-                ['esphome', 'config', test_yaml_esp32s2],
+                ["esphome", "config", test_yaml_esp32s2],
                 capture_output=True,
                 text=True,
-                timeout=120
+                timeout=120,
             )
-            assert result.returncode == 0, f"ESP32-S2 config validation failed: {result.stderr}"
+            assert (
+                result.returncode == 0
+            ), f"ESP32-S2 config validation failed: {result.stderr}"
         except FileNotFoundError:
             pytest.skip("ESPHome not installed")
         except subprocess.TimeoutExpired:
@@ -128,12 +131,14 @@ class TestPanasonicHeatpumpIntegration:
 
         try:
             result = subprocess.run(
-                ['esphome', 'config', test_yaml_esp32c3],
+                ["esphome", "config", test_yaml_esp32c3],
                 capture_output=True,
                 text=True,
-                timeout=120
+                timeout=120,
             )
-            assert result.returncode == 0, f"ESP32-C3 config validation failed: {result.stderr}"
+            assert (
+                result.returncode == 0
+            ), f"ESP32-C3 config validation failed: {result.stderr}"
         except FileNotFoundError:
             pytest.skip("ESPHome not installed")
         except subprocess.TimeoutExpired:
@@ -146,17 +151,19 @@ class TestPanasonicHeatpumpIntegration:
 
         try:
             result = subprocess.run(
-                ['esphome', 'config', test_yaml_cztaw1],
+                ["esphome", "config", test_yaml_cztaw1],
                 capture_output=True,
                 text=True,
-                timeout=120
+                timeout=120,
             )
-            assert result.returncode == 0, f"CZ-TAW1 config validation failed: {result.stderr}"
+            assert (
+                result.returncode == 0
+            ), f"CZ-TAW1 config validation failed: {result.stderr}"
         except FileNotFoundError:
             pytest.skip("ESPHome not installed")
         except subprocess.TimeoutExpired:
             pytest.fail("ESPHome config validation timed out")
 
 
-if __name__ == '__main__':
-    pytest.main([__file__, '-v'])
+if __name__ == "__main__":
+    pytest.main([__file__, "-v"])
