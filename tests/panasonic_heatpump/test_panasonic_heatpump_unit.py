@@ -6,7 +6,6 @@ Tests the Python configuration schema and validation logic.
 
 import pytest
 from unittest.mock import Mock, MagicMock, patch
-import esphome.config_validation as cv
 from esphome.core import CORE
 
 
@@ -44,7 +43,7 @@ class TestPanasonicHeatpumpConfig:
                 os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
-            
+
             import panasonic_heatpump as ph_init
             assert ph_init is not None
         except ImportError as e:
@@ -58,15 +57,15 @@ class TestPanasonicHeatpumpConfig:
             os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
-        
+
         import panasonic_heatpump as ph_init
-        
+
         assert hasattr(ph_init, 'CODEOWNERS')
         assert ph_init.CODEOWNERS == ['@elvit']
-        
+
         assert hasattr(ph_init, 'MULTICONF')
         assert ph_init.MULTICONF is True
-        
+
         assert hasattr(ph_init, 'DEPENDENCIES')
         assert 'uart' in ph_init.DEPENDENCIES
 
@@ -78,15 +77,15 @@ class TestPanasonicHeatpumpConfig:
             os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
-        
+
         import panasonic_heatpump as ph_init
-        
+
         assert hasattr(ph_init, 'CONF_PANASONIC_HEATPUMP_ID')
         assert ph_init.CONF_PANASONIC_HEATPUMP_ID == "panasonic_heatpump"
-        
+
         assert hasattr(ph_init, 'CONF_UART_CLIENT')
         assert ph_init.CONF_UART_CLIENT == "uart_client_id"
-        
+
         assert hasattr(ph_init, 'CONF_LOG_UART_MSG')
         assert ph_init.CONF_LOG_UART_MSG == "log_uart_msg"
 
@@ -100,9 +99,9 @@ class TestPanasonicHeatpumpConfig:
             os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
-        
+
         import panasonic_heatpump as ph_init
-        
+
         assert hasattr(ph_init, 'CONFIG_SCHEMA')
         assert ph_init.CONFIG_SCHEMA is not None
 
@@ -140,9 +139,9 @@ class TestPanasonicHeatpumpConfig:
             os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
-        
+
         import panasonic_heatpump as ph_init
-        
+
         # The default is specified in the schema as False
         # This test verifies the constant exists
         assert ph_init.CONF_LOG_UART_MSG == "log_uart_msg"
@@ -161,9 +160,9 @@ class TestPanasonicHeatpumpConfig:
             os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
-        
+
         import panasonic_heatpump as ph_init
-        
+
         # Verify MULTICONF is True, allowing multiple instances
         assert ph_init.MULTICONF is True
 
@@ -175,9 +174,9 @@ class TestPanasonicHeatpumpConfig:
             os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
-        
+
         import panasonic_heatpump as ph_init
-        
+
         assert 'uart' in ph_init.DEPENDENCIES
 
     def test_namespace_definition(self):
@@ -188,9 +187,9 @@ class TestPanasonicHeatpumpConfig:
             os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
-        
+
         import panasonic_heatpump as ph_init
-        
+
         # Verify namespace constant exists
         assert hasattr(ph_init, 'panasonic_heatpump_ns')
 
@@ -207,7 +206,7 @@ class TestPanasonicHeatpumpPlatforms:
                 os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
-            
+
             from panasonic_heatpump.sensor import __init__ as sensor_init
             assert sensor_init is not None
         except ImportError:
@@ -222,7 +221,7 @@ class TestPanasonicHeatpumpPlatforms:
                 os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
-            
+
             from panasonic_heatpump.binary_sensor import __init__ as bs_init
             assert bs_init is not None
         except ImportError:
@@ -237,7 +236,7 @@ class TestPanasonicHeatpumpPlatforms:
                 os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
-            
+
             from panasonic_heatpump.text_sensor import __init__ as ts_init
             assert ts_init is not None
         except ImportError:
@@ -252,7 +251,7 @@ class TestPanasonicHeatpumpPlatforms:
                 os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
-            
+
             from panasonic_heatpump.number import __init__ as num_init
             assert num_init is not None
         except ImportError:
@@ -267,7 +266,7 @@ class TestPanasonicHeatpumpPlatforms:
                 os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
-            
+
             from panasonic_heatpump.select import __init__ as sel_init
             assert sel_init is not None
         except ImportError:
@@ -282,7 +281,7 @@ class TestPanasonicHeatpumpPlatforms:
                 os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
-            
+
             from panasonic_heatpump.switch import __init__ as sw_init
             assert sw_init is not None
         except ImportError:
@@ -297,7 +296,7 @@ class TestPanasonicHeatpumpPlatforms:
                 os.path.dirname(__file__), '..', '..', 'components'
             )
             sys.path.insert(0, components_path)
-            
+
             from panasonic_heatpump.climate import __init__ as clim_init
             assert clim_init is not None
         except ImportError:
@@ -313,13 +312,13 @@ class TestPanasonicHeatpumpCodeGeneration:
         with patch('esphome.codegen') as mock_cg, \
              patch('esphome.components.uart') as mock_uart, \
              patch('esphome.config_validation'):
-            
+
             mock_cg.new_Pvariable = MagicMock(return_value=Mock())
             mock_cg.register_component = MagicMock()
             mock_uart.register_uart_device = MagicMock()
             mock_cg.get_variable = MagicMock(return_value=Mock())
             mock_cg.add = MagicMock()
-            
+
             yield {
                 'cg': mock_cg,
                 'uart': mock_uart,
@@ -333,9 +332,9 @@ class TestPanasonicHeatpumpCodeGeneration:
             os.path.dirname(__file__), '..', '..', 'components'
         )
         sys.path.insert(0, components_path)
-        
+
         import panasonic_heatpump as ph_init
-        
+
         assert hasattr(ph_init, 'to_code')
         assert callable(ph_init.to_code)
 
