@@ -16,7 +16,7 @@ void PanasonicHeatpumpBinarySensor::publish_new_state(const std::vector<uint8_t>
   bool new_state;
   switch (this->id_) {
   case BinarySensorIds::CONF_UART_CLIENT_TIMED_OUT:
-    new_state = this->parent()->get_uart_client_timeout_exceeded();
+    new_state = this->parent_()->get_uart_client_timeout_exceeded();
     if (this->has_state() && this->state == new_state)
       return;
     break;
