@@ -10,6 +10,7 @@ from .. import (
     panasonic_heatpump_ns,
 )
 
+CONF_UART_CLIENT_TIMED_OUT = "uart_client_timed_out"
 CONF_TOP0 = "top0"  # Heatpump State
 CONF_TOP2 = "top2"  # Force DHW State
 CONF_TOP3 = "top3"  # Quiet Mode Schedule
@@ -35,6 +36,7 @@ CONF_TOP132 = "top132"  # Bivalent Advanced Heat
 CONF_TOP133 = "top133"  # Bivalent Advanced DHW
 
 TYPES = [
+    CONF_UART_CLIENT_TIMED_OUT,
     CONF_TOP0,
     CONF_TOP2,
     CONF_TOP3,
@@ -68,6 +70,9 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_PANASONIC_HEATPUMP_ID): cv.use_id(
             PanasonicHeatpumpComponent
+        ),
+        cv.Optional(CONF_UART_CLIENT_TIMED_OUT): binary_sensor.binary_sensor_schema(
+            PanasonicHeatpumpBinarySensor,
         ),
         cv.Optional(CONF_TOP0): binary_sensor.binary_sensor_schema(
             PanasonicHeatpumpBinarySensor,
