@@ -338,6 +338,8 @@ Here a list of all supported binary sensors:
 ```yaml
 binary_sensor:
   - platform: panasonic_heatpump
+    uart_client_timed_out:
+      name: "UART Client Timed Out"
     top0:
       name: "Heatpump State"
     top2:
