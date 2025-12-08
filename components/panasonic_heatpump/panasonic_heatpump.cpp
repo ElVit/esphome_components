@@ -30,6 +30,7 @@ void PanasonicHeatpumpComponent::loop() {
     uint32_t current_time = millis();
     if (current_time - this->last_request_time_ >= this->uart_client_timeout_) {
       this->next_request_ = RequestType::POLLING;
+      this->uart_client_timeout_exceeded_ = true;
     }
   }
 
@@ -246,6 +247,7 @@ void PanasonicHeatpumpComponent::read_request() {
 
       // Update last request time when request is complete
       this->last_request_time_ = millis();
+      this->uart_client_timeout_exceeded_ = false;
     }
   }
 }
