@@ -12,7 +12,7 @@
 #include "commands.h"
 
 #ifndef PANASONIC_HEATPUMP_VERSION
-#define PANASONIC_HEATPUMP_VERSION "0.0.5-beta.1"
+#define PANASONIC_HEATPUMP_VERSION "0.0.5-beta.2"
 #endif
 
 namespace esphome {
@@ -113,6 +113,9 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   void add_extra_sensor(PanasonicHeatpumpEntity* sensor) {
     extra_sensors_.push_back(sensor);
   }
+  bool get_uart_client_timeout_exceeded() {
+    return this->uart_client_timeout_exceeded_;
+  }
 
  protected:
   // options variables
@@ -133,6 +136,7 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   bool response_receiving_{false};
   bool request_receiving_{false};
   bool send_extra_request_{false};
+  bool uart_client_timeout_exceeded_{false};
   LoopState loop_state_{LoopState::RESTART_LOOP};
   RequestType next_request_{RequestType::INITIAL};
   ResponseType current_response_{ResponseType::UNKNOWN};
