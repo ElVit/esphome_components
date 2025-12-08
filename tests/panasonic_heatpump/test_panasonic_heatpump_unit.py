@@ -22,13 +22,13 @@ class TestPanasonicHeatpumpConfig:
     @pytest.fixture
     def mock_uart(self):
         """Mock UART component."""
-        with patch('esphome.components.uart') as mock:
+        with patch("esphome.components.uart") as mock:
             yield mock
 
     @pytest.fixture
     def mock_cg(self):
         """Mock code generator."""
-        with patch('esphome.codegen') as mock:
+        with patch("esphome.codegen") as mock:
             mock.esphome_ns = MagicMock()
             mock.esphome_ns.namespace.return_value.class_ = MagicMock()
             yield mock
@@ -38,13 +38,15 @@ class TestPanasonicHeatpumpConfig:
         try:
             import sys
             import os
+
             # Add components directory to path
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', '..', 'components'
+                os.path.dirname(__file__), "..", "..", "components"
             )
             sys.path.insert(0, components_path)
 
             import panasonic_heatpump as ph_init
+
             assert ph_init is not None
         except ImportError as e:
             pytest.fail(f"Failed to import panasonic_heatpump: {e}")
@@ -53,90 +55,94 @@ class TestPanasonicHeatpumpConfig:
         """Test component metadata is correctly defined."""
         import sys
         import os
+
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', '..', 'components'
+            os.path.dirname(__file__), "..", "..", "components"
         )
         sys.path.insert(0, components_path)
 
         import panasonic_heatpump as ph_init
 
-        assert hasattr(ph_init, 'CODEOWNERS')
-        assert ph_init.CODEOWNERS == ['@elvit']
+        assert hasattr(ph_init, "CODEOWNERS")
+        assert ph_init.CODEOWNERS == ["@elvit"]
 
-        assert hasattr(ph_init, 'MULTICONF')
+        assert hasattr(ph_init, "MULTICONF")
         assert ph_init.MULTICONF is True
 
-        assert hasattr(ph_init, 'DEPENDENCIES')
-        assert 'uart' in ph_init.DEPENDENCIES
+        assert hasattr(ph_init, "DEPENDENCIES")
+        assert "uart" in ph_init.DEPENDENCIES
 
     def test_config_constants(self):
         """Test that configuration constants are defined."""
         import sys
         import os
+
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', '..', 'components'
+            os.path.dirname(__file__), "..", "..", "components"
         )
         sys.path.insert(0, components_path)
 
         import panasonic_heatpump as ph_init
 
-        assert hasattr(ph_init, 'CONF_PANASONIC_HEATPUMP_ID')
+        assert hasattr(ph_init, "CONF_PANASONIC_HEATPUMP_ID")
         assert ph_init.CONF_PANASONIC_HEATPUMP_ID == "panasonic_heatpump"
 
-        assert hasattr(ph_init, 'CONF_UART_CLIENT')
+        assert hasattr(ph_init, "CONF_UART_CLIENT")
         assert ph_init.CONF_UART_CLIENT == "uart_client_id"
 
-        assert hasattr(ph_init, 'CONF_LOG_UART_MSG')
+        assert hasattr(ph_init, "CONF_LOG_UART_MSG")
         assert ph_init.CONF_LOG_UART_MSG == "log_uart_msg"
 
-    @patch('esphome.components.uart')
-    @patch('esphome.codegen')
+    @patch("esphome.components.uart")
+    @patch("esphome.codegen")
     def test_config_schema_structure(self, mock_cg, mock_uart):
         """Test that CONFIG_SCHEMA has the correct structure."""
         import sys
         import os
+
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', '..', 'components'
+            os.path.dirname(__file__), "..", "..", "components"
         )
         sys.path.insert(0, components_path)
 
         import panasonic_heatpump as ph_init
 
-        assert hasattr(ph_init, 'CONFIG_SCHEMA')
+        assert hasattr(ph_init, "CONFIG_SCHEMA")
         assert ph_init.CONFIG_SCHEMA is not None
 
     def test_valid_minimal_config(self):
         """Test validation of minimal valid configuration."""
         config = {
-            'id': 'my_heatpump',
-            'uart_id': 'uart_bus',
+            "id": "my_heatpump",
+            "uart_id": "uart_bus",
         }
         # This would require full ESPHome environment to validate
         # Just verify the config structure is reasonable
-        assert 'id' in config
-        assert 'uart_id' in config
+        assert "id" in config
+        assert "uart_id" in config
 
     def test_valid_full_config(self):
         """Test validation of full configuration with all options."""
         config = {
-            'id': 'my_heatpump',
-            'uart_id': 'uart_bus',
-            'uart_client_id': 'uart_client',
-            'log_uart_msg': True,
-            'update_interval': '3s',
+            "id": "my_heatpump",
+            "uart_id": "uart_bus",
+            "uart_client_id": "uart_client",
+            "log_uart_msg": True,
+            "update_interval": "3s",
         }
-        assert 'id' in config
-        assert 'uart_id' in config
-        assert 'uart_client_id' in config
-        assert 'log_uart_msg' in config
-        assert 'update_interval' in config
+        assert "id" in config
+        assert "uart_id" in config
+        assert "uart_client_id" in config
+        assert "log_uart_msg" in config
+        assert "update_interval" in config
 
     def test_log_uart_msg_default(self):
         """Test that log_uart_msg defaults to False."""
         import sys
         import os
+
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', '..', 'components'
+            os.path.dirname(__file__), "..", "..", "components"
         )
         sys.path.insert(0, components_path)
 
@@ -156,8 +162,9 @@ class TestPanasonicHeatpumpConfig:
         """Test that component supports multiple instances."""
         import sys
         import os
+
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', '..', 'components'
+            os.path.dirname(__file__), "..", "..", "components"
         )
         sys.path.insert(0, components_path)
 
@@ -170,28 +177,30 @@ class TestPanasonicHeatpumpConfig:
         """Test that UART is listed as a dependency."""
         import sys
         import os
+
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', '..', 'components'
+            os.path.dirname(__file__), "..", "..", "components"
         )
         sys.path.insert(0, components_path)
 
         import panasonic_heatpump as ph_init
 
-        assert 'uart' in ph_init.DEPENDENCIES
+        assert "uart" in ph_init.DEPENDENCIES
 
     def test_namespace_definition(self):
         """Test that component namespace is correctly defined."""
         import sys
         import os
+
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', '..', 'components'
+            os.path.dirname(__file__), "..", "..", "components"
         )
         sys.path.insert(0, components_path)
 
         import panasonic_heatpump as ph_init
 
         # Verify namespace constant exists
-        assert hasattr(ph_init, 'panasonic_heatpump_ns')
+        assert hasattr(ph_init, "panasonic_heatpump_ns")
 
 
 class TestPanasonicHeatpumpPlatforms:
@@ -202,12 +211,14 @@ class TestPanasonicHeatpumpPlatforms:
         try:
             import sys
             import os
+
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', '..', 'components'
+                os.path.dirname(__file__), "..", "..", "components"
             )
             sys.path.insert(0, components_path)
 
             from panasonic_heatpump.sensor import __init__ as sensor_init
+
             assert sensor_init is not None
         except ImportError:
             pytest.skip("Sensor platform not accessible in test environment")
@@ -217,12 +228,14 @@ class TestPanasonicHeatpumpPlatforms:
         try:
             import sys
             import os
+
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', '..', 'components'
+                os.path.dirname(__file__), "..", "..", "components"
             )
             sys.path.insert(0, components_path)
 
             from panasonic_heatpump.binary_sensor import __init__ as bs_init
+
             assert bs_init is not None
         except ImportError:
             pytest.skip("Binary sensor platform not accessible in test environment")
@@ -232,12 +245,14 @@ class TestPanasonicHeatpumpPlatforms:
         try:
             import sys
             import os
+
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', '..', 'components'
+                os.path.dirname(__file__), "..", "..", "components"
             )
             sys.path.insert(0, components_path)
 
             from panasonic_heatpump.text_sensor import __init__ as ts_init
+
             assert ts_init is not None
         except ImportError:
             pytest.skip("Text sensor platform not accessible in test environment")
@@ -247,12 +262,14 @@ class TestPanasonicHeatpumpPlatforms:
         try:
             import sys
             import os
+
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', '..', 'components'
+                os.path.dirname(__file__), "..", "..", "components"
             )
             sys.path.insert(0, components_path)
 
             from panasonic_heatpump.number import __init__ as num_init
+
             assert num_init is not None
         except ImportError:
             pytest.skip("Number platform not accessible in test environment")
@@ -262,12 +279,14 @@ class TestPanasonicHeatpumpPlatforms:
         try:
             import sys
             import os
+
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', '..', 'components'
+                os.path.dirname(__file__), "..", "..", "components"
             )
             sys.path.insert(0, components_path)
 
             from panasonic_heatpump.select import __init__ as sel_init
+
             assert sel_init is not None
         except ImportError:
             pytest.skip("Select platform not accessible in test environment")
@@ -277,12 +296,14 @@ class TestPanasonicHeatpumpPlatforms:
         try:
             import sys
             import os
+
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', '..', 'components'
+                os.path.dirname(__file__), "..", "..", "components"
             )
             sys.path.insert(0, components_path)
 
             from panasonic_heatpump.switch import __init__ as sw_init
+
             assert sw_init is not None
         except ImportError:
             pytest.skip("Switch platform not accessible in test environment")
@@ -292,12 +313,14 @@ class TestPanasonicHeatpumpPlatforms:
         try:
             import sys
             import os
+
             components_path = os.path.join(
-                os.path.dirname(__file__), '..', '..', 'components'
+                os.path.dirname(__file__), "..", "..", "components"
             )
             sys.path.insert(0, components_path)
 
             from panasonic_heatpump.climate import __init__ as clim_init
+
             assert clim_init is not None
         except ImportError:
             pytest.skip("Climate platform not accessible in test environment")
@@ -309,9 +332,9 @@ class TestPanasonicHeatpumpCodeGeneration:
     @pytest.fixture
     def mock_dependencies(self):
         """Mock all ESPHome dependencies."""
-        with patch('esphome.codegen') as mock_cg, \
-             patch('esphome.components.uart') as mock_uart, \
-             patch('esphome.config_validation'):
+        with patch("esphome.codegen") as mock_cg, patch(
+            "esphome.components.uart"
+        ) as mock_uart, patch("esphome.config_validation"):
 
             mock_cg.new_Pvariable = MagicMock(return_value=Mock())
             mock_cg.register_component = MagicMock()
@@ -320,24 +343,25 @@ class TestPanasonicHeatpumpCodeGeneration:
             mock_cg.add = MagicMock()
 
             yield {
-                'cg': mock_cg,
-                'uart': mock_uart,
+                "cg": mock_cg,
+                "uart": mock_uart,
             }
 
     def test_to_code_function_exists(self):
         """Test that to_code function is defined."""
         import sys
         import os
+
         components_path = os.path.join(
-            os.path.dirname(__file__), '..', '..', 'components'
+            os.path.dirname(__file__), "..", "..", "components"
         )
         sys.path.insert(0, components_path)
 
         import panasonic_heatpump as ph_init
 
-        assert hasattr(ph_init, 'to_code')
+        assert hasattr(ph_init, "to_code")
         assert callable(ph_init.to_code)
 
 
-if __name__ == '__main__':
-    pytest.main([__file__, '-v'])
+if __name__ == "__main__":
+    pytest.main([__file__, "-v"])
