@@ -79,6 +79,7 @@ void PanasonicHeatpumpClimate::control(const climate::ClimateCall& call) {
   }
 
   this->publish_state();
+  delay(10);  // NOLINT
   this->keep_state_ = 2;
 }
 
@@ -135,6 +136,7 @@ void PanasonicHeatpumpClimate::publish_new_state(const std::vector<uint8_t>& dat
   }
   this->current_temperature = new_current_temp;
   this->publish_state();
+  delay(10);  // NOLINT
 }
 
 uint8_t PanasonicHeatpumpClimate::getClimateMode(const uint8_t input) {

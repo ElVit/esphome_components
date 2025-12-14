@@ -57,6 +57,7 @@ void PanasonicHeatpumpSwitch::write_state(bool state) {
   };
 
   this->publish_state(state);
+  delay(10);  // NOLINT
   this->keep_state_ = 2;
 }
 
@@ -135,6 +136,7 @@ void PanasonicHeatpumpSwitch::publish_new_state(const std::vector<uint8_t>& data
   };
 
   this->publish_state(new_state);
+  delay(10);  // NOLINT
 }
 }  // namespace panasonic_heatpump
 }  // namespace esphome

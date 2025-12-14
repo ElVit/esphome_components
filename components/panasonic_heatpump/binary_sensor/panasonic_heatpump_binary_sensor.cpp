@@ -135,6 +135,7 @@ void PanasonicHeatpumpBinarySensor::publish_new_state(const std::vector<uint8_t>
   };
 
   this->publish_state(new_state);
+  delay(10);  // NOLINT
 }
 }  // namespace panasonic_heatpump
 }  // namespace esphome
