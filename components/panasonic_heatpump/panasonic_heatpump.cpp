@@ -145,10 +145,10 @@ void PanasonicHeatpumpComponent::read_response() {
       delay(10);  // NOLINT
       continue;
     }
-    // 4. byte shall be 0x10 or 0x21
-    if (this->response_message_.size() == 4 && byte_ != 0x10 && byte_ != 0x21) {
+    // 4. byte shall be 0x01, 0x10 or 0x21
+    if (this->response_message_.size() == 4 && byte_ != 0x01 && byte_ != 0x10 && byte_ != 0x21) {
       this->response_receiving_ = false;
-      ESP_LOGW(TAG, "Invalid response message: 0x%s. Expected last byte to be 0x10 or 0x21",
+      ESP_LOGW(TAG, "Invalid response message: 0x%s. Expected last byte to be 0x01, 0x10 or 0x21",
                PanasonicHelpers::byte_array_to_hex_string(this->response_message_, ',').c_str());
       delay(10);  // NOLINT
       continue;
