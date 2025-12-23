@@ -24,7 +24,7 @@ ICON_PUMP = "mdi:pump"
 ICON_EXTERNAL_PAD_HEATER = "mdi:radiator"
 
 CONF_TOP4 = "top4"  # Operation Mode
-# ToDo: Split up top4 into top4_1 (Heating Mode State) and top4_2 (DHW Mode State)
+# TODO: Split up top4 into top4_1 (Heating Mode State) and top4_2 (DHW Mode State)
 CONF_TOP17 = "top17"  # Powerful Mode Time
 CONF_TOP18 = "top18"  # Quiet Mode Level
 CONF_TOP19 = "top19"  # Holiday Mode State

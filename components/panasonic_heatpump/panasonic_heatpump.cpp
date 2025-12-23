@@ -25,6 +25,15 @@ void PanasonicHeatpumpComponent::update() {
 }
 
 void PanasonicHeatpumpComponent::loop() {
+  // Check if no request was sent for uart_client_timeout when uart_client is configured
+  if (this->uart_client_ != nullptr && this->uart_client_timeout_ > 100) {
+    uint32_t current_time = millis();
+    if (current_time - this->last_request_time_ >= this->uart_client_timeout_) {
+      this->next_request_ = RequestType::POLLING;
+      this->uart_client_timeout_exceeded_ = true;
+    }
+  }
+
   switch (this->loop_state_) {
   case LoopState::READ_RESPONSE:
     this->read_response();
@@ -132,15 +141,15 @@ void PanasonicHeatpumpComponent::read_response() {
     if (this->response_message_.size() == 3 && byte_ != 0x01 && byte_ != 0x10) {
       this->response_receiving_ = false;
       ESP_LOGW(TAG, "Invalid response message: 0x%s. Expected last byte to be 0x01 or 0x10",
-               PanasonicHelpers::byte_array_to_hex_string(this->response_message_, ','));
+               PanasonicHelpers::byte_array_to_hex_string(this->response_message_, ',').c_str());
       delay(10);  // NOLINT
       continue;
     }
-    // 4. byte shall be 0x10 or 0x21
-    if (this->response_message_.size() == 4 && byte_ != 0x10 && byte_ != 0x21) {
+    // 4. byte shall be 0x01, 0x10 or 0x21
+    if (this->response_message_.size() == 4 && byte_ != 0x01 && byte_ != 0x10 && byte_ != 0x21) {
       this->response_receiving_ = false;
-      ESP_LOGW(TAG, "Invalid response message: 0x%s. Expected last byte to be 0x10 or 0x21",
-               PanasonicHelpers::byte_array_to_hex_string(this->response_message_, ','));
+      ESP_LOGW(TAG, "Invalid response message: 0x%s. Expected last byte to be 0x01, 0x10 or 0x21",
+               PanasonicHelpers::byte_array_to_hex_string(this->response_message_, ',').c_str());
       delay(10);  // NOLINT
       continue;
     }
@@ -184,6 +193,9 @@ void PanasonicHeatpumpComponent::send_request(RequestType requestType) {
     break;
   };
 
+  // Update last request time when request was sent
+  this->last_request_time_ = millis();
+
   this->next_request_ = RequestType::NONE;
 }
 
@@ -214,7 +226,7 @@ void PanasonicHeatpumpComponent::read_request() {
     if (this->request_message_.size() == 3 && byte_ != 0x01 && byte_ != 0x10) {
       this->request_receiving_ = false;
       ESP_LOGW(TAG, "Invalid request message: 0x%s. Expected last byte to be 0x01 or 0x10",
-               PanasonicHelpers::byte_array_to_hex_string(this->request_message_, ','));
+               PanasonicHelpers::byte_array_to_hex_string(this->request_message_, ',').c_str());
       delay(10);  // NOLINT
       continue;
     }
@@ -222,7 +234,7 @@ void PanasonicHeatpumpComponent::read_request() {
     if (this->request_message_.size() == 4 && byte_ != 0x10 && byte_ != 0x21) {
       this->request_receiving_ = false;
       ESP_LOGW(TAG, "Invalid request message: 0x%s. Expected last byte to be 0x10 or 0x21",
-               PanasonicHelpers::byte_array_to_hex_string(this->request_message_, ','));
+               PanasonicHelpers::byte_array_to_hex_string(this->request_message_, ',').c_str());
       delay(10);  // NOLINT
       continue;
     }
@@ -232,6 +244,10 @@ void PanasonicHeatpumpComponent::read_request() {
       this->request_receiving_ = false;
       if (this->log_uart_msg_)
         PanasonicHelpers::log_uart_hex(UART_LOG_TX, this->request_message_, ',');
+
+      // Update last request time when request is complete
+      this->last_request_time_ = millis();
+      this->uart_client_timeout_exceeded_ = false;
     }
   }
 }

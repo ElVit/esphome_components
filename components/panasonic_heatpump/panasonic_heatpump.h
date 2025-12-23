@@ -12,7 +12,7 @@
 #include "commands.h"
 
 #ifndef PANASONIC_HEATPUMP_VERSION
-#define PANASONIC_HEATPUMP_VERSION "0.0.5"
+#define PANASONIC_HEATPUMP_VERSION "0.0.5-beta.2"
 #endif
 
 namespace esphome {
@@ -74,6 +74,9 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   void set_uart_client(uart::UARTComponent* uart) {
     this->uart_client_ = uart;
   }
+  void set_uart_client_timeout(uint32_t timeout_ms) {
+    this->uart_client_timeout_ = timeout_ms;
+  }
   void set_log_uart_msg(bool active) {
     this->log_uart_msg_ = active;
   }
@@ -110,11 +113,16 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   void add_extra_sensor(PanasonicHeatpumpEntity* sensor) {
     extra_sensors_.push_back(sensor);
   }
+  bool get_uart_client_timeout_exceeded() {
+    return this->uart_client_timeout_exceeded_;
+  }
 
  protected:
   // options variables
   uart::UARTComponent* uart_client_{nullptr};
   bool log_uart_msg_{false};
+  uint32_t last_request_time_{0};
+  uint32_t uart_client_timeout_{10000};
   // uart message variables
   std::vector<uint8_t> heatpump_default_message_;
   std::vector<uint8_t> heatpump_extra_message_;
@@ -128,6 +136,7 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   bool response_receiving_{false};
   bool request_receiving_{false};
   bool send_extra_request_{false};
+  bool uart_client_timeout_exceeded_{false};
   LoopState loop_state_{LoopState::RESTART_LOOP};
   RequestType next_request_{RequestType::INITIAL};
   ResponseType current_response_{ResponseType::UNKNOWN};

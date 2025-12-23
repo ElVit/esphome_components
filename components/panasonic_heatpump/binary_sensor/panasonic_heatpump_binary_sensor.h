@@ -7,6 +7,7 @@
 namespace esphome {
 namespace panasonic_heatpump {
 enum BinarySensorIds : uint8_t {
+  CONF_UART_CLIENT_TIMED_OUT,
   CONF_TOP0,
   CONF_TOP2,
   CONF_TOP3,
