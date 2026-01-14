@@ -68,7 +68,7 @@ class PanasonicDecode {
   static const constexpr char* const ExtPadHeaterType[] = {"3", "Disabled", "Type-A", "Type-B"};
   static const constexpr char* const BivalentMode[] = {"3", "Alternative", "Parallel", "Advanced Parallel"};
   static const constexpr char* const ModelNames[] = {
-      "55",                                  // string representation of number of known models (last model number + 1)
+      "57",                                  // string representation of number of known models (last model number + 1)
       "WH-MDC05H3E5",                        // 0
       "WH-MDC07H3E5",                        // 1
       "IDU:WH-SXC09H3E5, ODU:WH-UX09HE5",    // 2
@@ -124,6 +124,8 @@ class PanasonicDecode {
       "IDU:WH-SDC0509L3E5, ODU:WH-WDG05LE5",    // 52
       "IDU:WH-ADC0309J3E5C, ODU:WH-UD03JE5",    // 53
       "IDU:WH-ADC0916H9E8, ODU:WH-UX09HE8",     // 54
+      "IDU:WH-ADC0316M9E8AN2, ODU:WH-WXG09ME8", // 55
+      "IDU:WH-SDC0309K3E5, ODU:WH-UDZ07KE5",    // 56
   };
 };
 
