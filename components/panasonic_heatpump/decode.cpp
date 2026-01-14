@@ -162,30 +162,30 @@ int PanasonicDecode::getUintt16(const std::vector<uint8_t>& data, uint8_t index)
 // TOP4 //
 int PanasonicDecode::getOperationMode(uint8_t input) {
   switch ((int)(input & 0b111111)) {
-  case 0b100001:
-    return 0;  // 0x21 = tank
-  case 0b010010:
-    return 1;  // 0x12 = heat
-  case 0b100010:
-    return 2;  // 0x22 = heat+tank
-  case 0b010011:
-    return 3;  // 0x13 = cool
-  case 0b100011:
-    return 4;  // 0x23 = cool+tank
-  case 0b011000:
-    return 5;  // 0x18 = auto
-  case 0b101000:
-    return 6;  // 0x28 = auto-tank
-  case 0b011001:
-    return 7;  // 0x19 = auto-heat
-  case 0b101001:
-    return 8;  // 0x29 = auto-heat+tank
-  case 0b011010:
-    return 9;  // 0x1A = auto-cool
-  case 0b101010:
-    return 10;  // 0x2A = auto-cool+tank
-  default:
-    return -1;  // unknown
+  case 0b100001:  // 0x21 = tank
+    return 0;
+  case 0b010010:  // 0x12 = heat
+    return 1;
+  case 0b100010:  // 0x22 = heat+tank
+    return 2;
+  case 0b010011:  // 0x13 = cool
+    return 3;
+  case 0b100011:  // 0x23 = cool+tank
+    return 4;
+  case 0b011000:  // 0x18 = auto
+    return 5;
+  case 0b101000:  // 0x28 = auto-tank
+    return 6;
+  case 0b011001:  // 0x19 = auto-heat
+    return 7;
+  case 0b101001:  // 0x29 = auto-heat+tank
+    return 8;
+  case 0b011010:  // 0x1A = auto-cool
+    return 9;
+  case 0b101010:  // 0x2A = auto-cool+tank
+    return 10;
+  default:        // unknown
+    return -1;
   }
 }
 
@@ -227,11 +227,11 @@ std::string PanasonicDecode::getErrorInfo(uint8_t errorType, uint8_t errorNumber
   char error_string[10];
 
   switch (error_type) {
-  case 177:  // B1=F type error
-    sprintf(error_string, "F%02X", error_number);
-    break;
-  case 161:  // A1=H type error
+  case 0xA1:  // H type error
     sprintf(error_string, "H%02X", error_number);
+    break;
+  case 0xB1:  // F type error
+    sprintf(error_string, "F%02X", error_number);
     break;
   default:
     sprintf(error_string, "No error");
