@@ -9,6 +9,7 @@
 namespace esphome {
 namespace panasonic_heatpump {
 enum ClimateIds : uint8_t {
+  CONF_CLIMATE_TANK,
   CONF_CLIMATE_ZONE1,
   CONF_CLIMATE_ZONE2,
 };

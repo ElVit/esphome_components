@@ -42,6 +42,9 @@ void PanasonicHeatpumpClimate::control(const climate::ClimateCall& call) {
   if (call.get_target_temperature().has_value()) {
     float new_temp = *call.get_target_temperature();
     switch (this->id_) {
+    case ClimateIds::CONF_CLIMATE_TANK:
+      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp), 42);  // set11
+      break;
     case ClimateIds::CONF_CLIMATE_ZONE1:
       this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp), 38);  // set5
       break;
@@ -94,6 +97,10 @@ void PanasonicHeatpumpClimate::publish_new_state(const std::vector<uint8_t>& dat
 
   new_mode = this->getClimateMode(data[6]);  // set9
   switch (this->id_) {
+  case ClimateIds::CONF_CLIMATE_TANK:
+    new_target_temp_heat = PanasonicDecode::getByteMinus128(data[42]);  // set11
+    new_current_temp = PanasonicDecode::getByteMinus128(data[141]);     // top10
+    break;
   case ClimateIds::CONF_CLIMATE_ZONE1:
     new_target_temp_heat = PanasonicDecode::getByteMinus128(data[38]);  // set5
     new_target_temp_cool = PanasonicDecode::getByteMinus128(data[39]);  // set6
@@ -131,6 +138,15 @@ void PanasonicHeatpumpClimate::publish_new_state(const std::vector<uint8_t>& dat
 
 uint8_t PanasonicHeatpumpClimate::getClimateMode(const uint8_t input) {
   switch (this->id_) {
+  case ClimateIds::CONF_CLIMATE_TANK:
+    switch ((uint8_t)(input & 0b110000)) {
+    case 0b010000:
+      return climate::CLIMATE_MODE_OFF;
+    case 0b100000:
+      return climate::CLIMATE_MODE_HEAT;
+    default:
+      return 255;
+    };
   case ClimateIds::CONF_CLIMATE_ZONE1:
   case ClimateIds::CONF_CLIMATE_ZONE2:
     switch ((uint8_t)(input & 0b1111)) {
@@ -157,6 +173,16 @@ uint8_t PanasonicHeatpumpClimate::getClimateMode(const uint8_t input) {
 uint8_t PanasonicHeatpumpClimate::setClimateMode(const climate::ClimateMode mode, uint8_t byte) {
   uint8_t newByte = byte;
   switch (this->id_) {
+  case ClimateIds::CONF_CLIMATE_TANK:
+    newByte = newByte & 0b11001111;
+    switch (mode) {
+    case climate::CLIMATE_MODE_OFF:
+      return newByte + 0b010000;
+    case climate::CLIMATE_MODE_HEAT:
+      return newByte + 0b100000;
+    default:
+      return 0;
+    };
   case ClimateIds::CONF_CLIMATE_ZONE1:
   case ClimateIds::CONF_CLIMATE_ZONE2:
     newByte = newByte & 0b11110000;

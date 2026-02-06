@@ -9,7 +9,7 @@
 namespace esphome {
 namespace panasonic_heatpump {
 enum WaterHeaterIds : uint8_t {
-  CONF_TANK,
+  CONF_HEATER_TANK,
 };
 
 class PanasonicHeatpumpWaterHeater : public water_heater::WaterHeater,

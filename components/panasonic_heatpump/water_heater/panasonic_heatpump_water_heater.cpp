@@ -33,7 +33,7 @@ void PanasonicHeatpumpWaterHeater::control(const water_heater::WaterHeaterCall& 
 
   float new_temp = call.get_target_temperature();
   switch (this->id_) {
-  case WaterHeaterIds::CONF_TANK:
+  case WaterHeaterIds::CONF_HEATER_TANK:
     this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp), 42);  // set11
     break;
   };
@@ -56,7 +56,7 @@ void PanasonicHeatpumpWaterHeater::publish_new_state(const std::vector<uint8_t>&
 
   new_mode = this->getWaterHeaterMode(data[6]);  // set9
   switch (this->id_) {
-  case WaterHeaterIds::CONF_TANK:
+  case WaterHeaterIds::CONF_HEATER_TANK:
     new_target_temp_heat = PanasonicDecode::getByteMinus128(data[42]);  // set11
     new_current_temp = PanasonicDecode::getByteMinus128(data[141]);     // top10
     break;
@@ -77,7 +77,7 @@ void PanasonicHeatpumpWaterHeater::publish_new_state(const std::vector<uint8_t>&
 
 uint8_t PanasonicHeatpumpWaterHeater::getWaterHeaterMode(const uint8_t input) {
   switch (this->id_) {
-  case WaterHeaterIds::CONF_TANK:
+  case WaterHeaterIds::CONF_HEATER_TANK:
     switch ((uint8_t)(input & 0b110000)) {
     case 0b010000:
       return water_heater::WATER_HEATER_MODE_OFF;
@@ -94,7 +94,7 @@ uint8_t PanasonicHeatpumpWaterHeater::getWaterHeaterMode(const uint8_t input) {
 uint8_t PanasonicHeatpumpWaterHeater::setWaterHeaterMode(const water_heater::WaterHeaterMode mode, const uint8_t byte) {
   uint8_t newByte = byte;
   switch (this->id_) {
-  case WaterHeaterIds::CONF_TANK:
+  case WaterHeaterIds::CONF_HEATER_TANK:
     newByte = newByte & 0b11001111;
     switch (mode) {
     case water_heater::WATER_HEATER_MODE_OFF:

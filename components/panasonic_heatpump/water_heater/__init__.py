@@ -13,10 +13,10 @@ from .. import (
 
 CONF_TARGET_TEMPERATURE_STEP = "target_temperature_step"
 
-CONF_TANK = "tank"
+CONF_HEATER_TANK = "tank"
 
 TYPES = [
-    CONF_TANK,
+    CONF_HEATER_TANK,
 ]
 
 
@@ -40,7 +40,7 @@ CONFIG_SCHEMA = cv.Schema(
         cv.GenerateID(CONF_PANASONIC_HEATPUMP_ID): cv.use_id(
             PanasonicHeatpumpComponent
         ),
-        cv.Optional(CONF_TANK): water_heater.water_heater_schema(
+        cv.Optional(CONF_HEATER_TANK): water_heater.water_heater_schema(
             PanasonicHeatpumpWaterHeater
         ).extend(water_heater_options(20.0, 65.0, 0.5)),
     }

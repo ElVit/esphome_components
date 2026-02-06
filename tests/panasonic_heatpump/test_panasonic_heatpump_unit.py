@@ -355,13 +355,13 @@ class TestPanasonicHeatpumpPlatforms:
 
             from panasonic_heatpump.water_heater import (
                 CONFIG_SCHEMA,
-                CONF_TANK,
+                CONF_HEATER_TANK,
                 TYPES,
             )
 
             assert CONFIG_SCHEMA is not None
-            assert CONF_TANK == "tank"
-            assert CONF_TANK in TYPES
+            assert CONF_HEATER_TANK == "tank"
+            assert CONF_HEATER_TANK in TYPES
         except ImportError:
             pytest.skip("Water heater platform not accessible in test environment")
 
