@@ -99,7 +99,7 @@ uint8_t PanasonicCommand::setOperationMode(size_t input) {
   }
 }
 
-// start of optional pcb commands
+// --- start of optional pcb commands ---
 
 uint8_t PanasonicCommand::temp2hex(float temp) {
   int hextemp = 0;

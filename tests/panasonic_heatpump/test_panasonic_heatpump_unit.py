@@ -325,6 +325,86 @@ class TestPanasonicHeatpumpPlatforms:
         except ImportError:
             pytest.skip("Climate platform not accessible in test environment")
 
+    def test_water_heater_platform_exists(self):
+        """Test that water_heater platform can be imported."""
+        try:
+            import sys
+            import os
+
+            components_path = os.path.join(
+                os.path.dirname(__file__), "..", "..", "components"
+            )
+            sys.path.insert(0, components_path)
+
+            from panasonic_heatpump.water_heater import __init__ as wh_init
+
+            assert wh_init is not None
+        except ImportError:
+            pytest.skip("Water heater platform not accessible in test environment")
+
+    def test_water_heater_platform_metadata(self):
+        """Test that water_heater platform has correct configuration."""
+        try:
+            import sys
+            import os
+
+            components_path = os.path.join(
+                os.path.dirname(__file__), "..", "..", "components"
+            )
+            sys.path.insert(0, components_path)
+
+            from panasonic_heatpump.water_heater import (
+                CONFIG_SCHEMA,
+                CONF_TANK,
+                TYPES,
+            )
+
+            assert CONFIG_SCHEMA is not None
+            assert CONF_TANK == "tank"
+            assert CONF_TANK in TYPES
+        except ImportError:
+            pytest.skip("Water heater platform not accessible in test environment")
+
+    def test_water_heater_platform_options(self):
+        """Test that water_heater_options schema is defined."""
+        try:
+            import sys
+            import os
+
+            components_path = os.path.join(
+                os.path.dirname(__file__), "..", "..", "components"
+            )
+            sys.path.insert(0, components_path)
+
+            from panasonic_heatpump.water_heater import water_heater_options
+
+            # Test default temperature range and step
+            schema = water_heater_options(20.0, 65.0, 0.5)
+            assert schema is not None
+
+            # Verify defaults work
+            schema2 = water_heater_options(15.0, 70.0, 1.0)
+            assert schema2 is not None
+        except ImportError:
+            pytest.skip("Water heater platform not accessible in test environment")
+
+    def test_water_heater_to_code_function(self):
+        """Test that water_heater to_code function is defined."""
+        try:
+            import sys
+            import os
+
+            components_path = os.path.join(
+                os.path.dirname(__file__), "..", "..", "components"
+            )
+            sys.path.insert(0, components_path)
+
+            from panasonic_heatpump.water_heater import to_code
+
+            assert callable(to_code)
+        except ImportError:
+            pytest.skip("Water heater platform not accessible in test environment")
+
 
 class TestPanasonicHeatpumpCodeGeneration:
     """Test suite for code generation logic."""

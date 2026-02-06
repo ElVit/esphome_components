@@ -93,7 +93,13 @@ void PanasonicHeatpumpComponent::loop() {
     for (auto* entity : this->climates_) {
       entity->publish_new_state(this->heatpump_default_message_);
     }
-    this->loop_state_ = LoopState::SEND_REQUEST;
+    this->loop_state_ = LoopState::PUBLISH_WATER_HEATER;
+    break;
+  case LoopState::PUBLISH_WATER_HEATER:
+    for (auto* entity : this->water_heaters_) {
+      entity->publish_new_state(this->heatpump_default_message_);
+    }
+    this->loop_state_ = LoopState::PUBLISH_EXTRA_SENSOR;
     break;
   case LoopState::PUBLISH_EXTRA_SENSOR:
     for (auto* entity : this->extra_sensors_) {

@@ -13,12 +13,10 @@ from .. import (
 )
 
 CONF_COOL_MODE = "cool_mode"
-CONF_CLIMATE_TANK = "tank"
 CONF_CLIMATE_ZONE1 = "zone1"
 CONF_CLIMATE_ZONE2 = "zone2"
 
 TYPES = [
-    CONF_CLIMATE_TANK,
     CONF_CLIMATE_ZONE1,
     CONF_CLIMATE_ZONE2,
 ]
@@ -45,9 +43,6 @@ CONFIG_SCHEMA = cv.Schema(
             PanasonicHeatpumpComponent
         ),
         cv.Optional(CONF_COOL_MODE, default=False): cv.boolean,
-        cv.Optional(CONF_CLIMATE_TANK): climate.climate_schema(
-            PanasonicHeatpumpClimate
-        ).extend(climate_options(20.0, 65.0, 0.5)),
         cv.Optional(CONF_CLIMATE_ZONE1): climate.climate_schema(
             PanasonicHeatpumpClimate
         ).extend(climate_options(-5.0, 5.0, 0.5)),
