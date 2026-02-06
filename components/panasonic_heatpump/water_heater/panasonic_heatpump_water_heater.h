@@ -13,8 +13,8 @@ enum WaterHeaterIds : uint8_t {
 };
 
 class PanasonicHeatpumpWaterHeater : public water_heater::WaterHeater,
-                                      public Parented<PanasonicHeatpumpComponent>,
-                                      public PanasonicHeatpumpEntity {
+                                     public Parented<PanasonicHeatpumpComponent>,
+                                     public PanasonicHeatpumpEntity {
  public:
   PanasonicHeatpumpWaterHeater() = default;
   void dump_config() override;
