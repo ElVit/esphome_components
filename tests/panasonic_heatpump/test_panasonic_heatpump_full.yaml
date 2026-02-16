@@ -472,9 +472,13 @@ switch:
 climate:
   - platform: panasonic_heatpump
     cool_mode: true
+    zone1:
+      name: "Zone 1"
+    zone2:
+      name: "Zone 2"
+
+# Test water_heater platform
+water_heater:
+  - platform: panasonic_heatpump
     tank:
       name: "DHW"
-    zone1:
-      name: "Zone1"
-    zone2:
-      name: "Zone2"

@@ -27,6 +27,7 @@ enum LoopState : uint8_t {
   PUBLISH_SELECT,
   PUBLISH_SWITCH,
   PUBLISH_CLIMATE,
+  PUBLISH_WATER_HEATER,
   PUBLISH_EXTRA_SENSOR,
   SEND_REQUEST,
   READ_REQUEST,
@@ -95,6 +96,9 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   void add_climate(PanasonicHeatpumpEntity* climate) {
     climates_.push_back(climate);
   }
+  void add_water_heater(PanasonicHeatpumpEntity* water_heater) {
+    water_heaters_.push_back(water_heater);
+  }
   void add_number(PanasonicHeatpumpEntity* number) {
     numbers_.push_back(number);
   }
@@ -143,6 +147,7 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   // entity vectors
   std::vector<PanasonicHeatpumpEntity*> binary_sensors_;
   std::vector<PanasonicHeatpumpEntity*> climates_;
+  std::vector<PanasonicHeatpumpEntity*> water_heaters_;
   std::vector<PanasonicHeatpumpEntity*> numbers_;
   std::vector<PanasonicHeatpumpEntity*> selects_;
   std::vector<PanasonicHeatpumpEntity*> sensors_;

@@ -124,9 +124,8 @@ void PanasonicHeatpumpClimate::publish_new_state(const std::vector<uint8_t>& dat
       this->target_temperature_low == new_target_temp_cool && this->current_temperature == new_current_temp)
     return;
 
-  if (new_mode != 255)
+  if (new_mode != 0xFF)
     this->mode = (climate::ClimateMode)new_mode;
-  // this->action = climate::CLIMATE_ACTION_IDLE;
   if (this->get_traits().has_feature_flags(climate::CLIMATE_REQUIRES_TWO_POINT_TARGET_TEMPERATURE)) {
     this->target_temperature_high = new_target_temp_heat;
     this->target_temperature_low = new_target_temp_cool;
@@ -164,10 +163,10 @@ uint8_t PanasonicHeatpumpClimate::getClimateMode(const uint8_t input) {
     case 0b1010:
       return climate::CLIMATE_MODE_AUTO;  // 0x1A = auto-cool
     default:
-      return 255;
+      return 0xFF;
     };
   default:
-    return 255;
+    return 0xFF;
   };
 }
 

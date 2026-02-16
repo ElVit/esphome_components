@@ -71,5 +71,11 @@ switch:
 # Test climate controls - first item only
 climate:
   - platform: panasonic_heatpump
+    zone1:
+      name: "Zone 1"
+
+# Test water_heater controls - first item only
+water_heater:
+  - platform: panasonic_heatpump
     tank:
       name: "DHW"
