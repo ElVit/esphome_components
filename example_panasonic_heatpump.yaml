@@ -504,9 +504,12 @@ select:
 climate:
   - platform: panasonic_heatpump
     cool_mode: true
-    tank:
-      name: "DHW"
     zone1:
       name: "Zone 1"
     zone2:
       name: "Zone 2"
+
+water_heater:
+  - platform: panasonic_heatpump
+    tank:
+      name: "DHW"
