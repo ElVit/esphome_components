@@ -221,7 +221,7 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_SET20): number.number_schema(
             PanasonicHeatpumpNumber,
             unit_of_measurement=UNIT_KELVIN,
-        ).extend(number_options(112.0, -2.0, 1.0)),
+        ).extend(number_options(-12.0, -2.0, 1.0)),
         cv.Optional(CONF_SET21): number.number_schema(
             PanasonicHeatpumpNumber,
             unit_of_measurement=UNIT_MINUTE,
