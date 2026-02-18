@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        board: [esp8266, esp32s2, esp32c3, full]
+        board: [esp32s2, esp32c3, full]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

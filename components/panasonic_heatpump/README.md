@@ -4,7 +4,7 @@
 
 ### What you need
 
-* ESPHome compatible microcontroller (e.g. ESP8266, ESP32, ESP32-S2, ESP32-C3, ...)
+* ESPHome compatible microcontroller (e.g. ESP32, ESP32-S2, ESP32-C3, ...)
 * ADUM1201 Dual Channel Digital Magnetic Isolator  
   (to convert 5V UART signal from the heatpump to 3.3V UART signal of the ESP controller)
 * CN-CNT cable/connectors to Heatpump/CZ-TAW1 (see [Heishamon](https://github.com/Egyras/HeishaMon) github site for more information)
