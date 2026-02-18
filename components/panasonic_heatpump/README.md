@@ -108,6 +108,9 @@ climate:
       temperature_step: 0.5
 ```
 
+Thanks to [oxyde42](https://github.com/oxyde42) there is also an exmaple yaml code for the HeishaMon Large Board:
+- [example_heishamon_large.yaml](../../prototypes/panasonic_heatpump/example_heishamon_large.yaml)
+
 ## Configuration variables
 
 * **id** (*Optional*, ID): Manually specify the ID used for actions.

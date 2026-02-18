@@ -1,0 +1,115 @@
+substitutions:
+  S0_PIN_1: GPIO1
+  S0_PIN_2: GPIO2
+  ONE_WIRE_BUS: GPIO3
+
+  PIN_TXtoRXhp: GPIO17      # heatpump reads data (RX) on this pin  3-(green)
+  PIN_RXtoTXhp: GPIO18      # heatpump sends data (TX) on this pin  2-(yellow)
+  PIN_PROXYRXtoTXcz: GPIO9  # WiFi module sends data (TX) on this pin  (blue)
+  PIN_PROXYTXtoRXcz: GPIO8  # WiFi module reads data (RX) on this pin  (white)
+
+  # Other documentations
+  # CN-CNT Pinout (from top to bottom)
+  # RD    1 - +5V (250mA)
+  # WH/GN 2 - 0-5V (from heatpump TX) GPIO18  <-
+  # GN/WH 3 - 0-5V (to heatpump RX)   GPIO17  ->
+  # YE    4 - +12V (250mA)
+  # BK    5 - GND
+
+  # CN-NMODE Pinout (from top to bottom)
+  # RD    1 - +5V (250mA)
+  # WH/GN 2 - 0-5V (to cz RX )  GPIO8 ->
+  # GN/WH 3 - 0-5V (from cz TX) GPIO9 <-
+  # YE    4 - +12V (250mA)
+  # BK    5 - GND
+
+  PIN_RGB_LED:      GPIO42
+  PIN_relayOne:     GPIO21
+  PIN_relayTwo:     GPIO47
+  PIN_TX_enable:    GPIO5   # for Proxy-Mode HIGH; listen only: LOW
+  PIN_OT_enable:    GPIO4   # OpenTherm modul
+
+esp32:
+  variant: ESP32S3
+  framework:
+    type: esp-idf
+    advanced:
+      execute_from_psram: True
+
+# S. 3, ESP32-S3-MINI-1 & MINI-1U Datasheet v1.6
+psram:
+  mode: quad  # 2 MB: quad mode
+  speed: 80MHz
+
+panasonic_heatpump:
+  id: my_heatpump
+  uart_id: uart_hp
+  uart_client_id: uart_cz
+  # log_uart_msg: True
+  update_interval: 15s
+  uart_client_timeout: 20s
+
+uart:
+  - id: uart_hp
+    # switch rx and tx to read what the heatpump is sending
+    tx_pin: $PIN_TXtoRXhp
+    rx_pin: $PIN_RXtoTXhp
+    baud_rate: 9600
+    data_bits: 8
+    parity: EVEN
+    stop_bits: 1
+
+  - id: uart_cz
+    # switch rx and tx to read what the WiFi module is sending
+    tx_pin: $PIN_PROXYTXtoRXcz
+    rx_pin: $PIN_PROXYRXtoTXcz
+    baud_rate: 9600
+    data_bits: 8
+    parity: EVEN
+    stop_bits: 1
+
+debug:
+  update_interval: 5s
+
+light:
+  - platform: esp32_rmt_led_strip
+    chipset: WS2812
+    pin: $PIN_RGB_LED
+    name: "RGB Light"
+    disabled_by_default: True
+    num_leds: 1
+    id: rgb_led
+    rgb_order: GRB
+
+script:
+  - id: flash_green
+    then:
+      - light.turn_on:
+          id: rgb_led
+          flash_length: 50ms
+          brightness: 30%
+          green: 1
+          blue: 0
+          red: 0
+
+output:
+  - platform: template
+    type: binary
+    id: green_pulse
+    write_action:
+      then:
+        - light.turn_on:
+            id: rgb_led
+            flash_length: 50ms
+            brightness: 20%
+            green: 1
+            red: 0
+            blue: 0
+
+  - platform: gpio  # enable proxy to transmit via TXD
+    id: uart_tx_enable
+    pin: $PIN_TX_enable
+
+  - platform: gpio  # enable/disable open therm module
+    id: open_therm_enable
+    pin: $PIN_OT_enable
