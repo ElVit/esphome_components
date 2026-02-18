@@ -18,8 +18,8 @@ enum UartLogDirection : uint8_t {
 
 class PanasonicHelpers {
  public:
-  static void log_uart_hex(UartLogDirection direction, const std::vector<uint8_t>& data, const char separator);
-  static void log_uart_hex(UartLogDirection direction, const uint8_t* data, const size_t length, const char separator);
+  static void write_uart_log(UartLogDirection direction, const std::vector<uint8_t>& data, const char separator, bool logBytes);
+  static void write_uart_log(UartLogDirection direction, const uint8_t* data, const size_t length, const char separator, bool logBytes);
   static std::string byte_array_to_hex_string(const std::vector<uint8_t>& data, const char separator);
   static std::string byte_array_to_hex_string(const uint8_t* data, const size_t length, const char separator);
 };
