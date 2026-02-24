@@ -31,7 +31,7 @@ climate::ClimateTraits PanasonicHeatpumpClimate::traits() {
 
 void PanasonicHeatpumpClimate::control(const climate::ClimateCall& call) {
   if (call.get_mode().has_value()) {
-    int byte6 = this->parent_->getResponseByte(6);
+    int byte6 = this->parent_->get_response_byte(6);
     if (byte6 >= 0) {
       climate::ClimateMode new_mode = *call.get_mode();
       uint8_t newByte6 = this->setClimateMode(new_mode, (uint8_t)byte6);

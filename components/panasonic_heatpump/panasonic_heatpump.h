@@ -18,7 +18,7 @@
 namespace esphome {
 namespace panasonic_heatpump {
 enum LoopState : uint8_t {
-  PROCESS_RESPONSE,
+  READ_RESPONSE,
   PUBLISH_SENSOR,
   PUBLISH_BINARY_SENSOR,
   PUBLISH_TEXT_SENSOR,
@@ -80,8 +80,8 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
     this->log_uart_msg_ = active;
   }
   // functions to use in esphome lambda
-  int getResponseByte(const int index);
-  int getExtraResponseByte(const int index);
+  int get_response_byte(const int index);
+  int get_extra_response_byte(const int index);
   // command functions
   void set_command_high_nibble(const uint8_t value, const uint8_t index);
   void set_command_low_nibble(const uint8_t value, const uint8_t index);
@@ -123,9 +123,9 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   // options variables
   bool log_uart_msg_{false};
   uint32_t last_client_request_time_{0};
-  const uint32_t REQUEST_SEND_INTERVAL{250};  // 250ms = 0.25s
-  uint32_t request_send_time_{5000};          // transmit first request 5000ms = 5s after startup
-  uint32_t uart_client_timeout_{10000};       // 10000ms = 10s
+  uint32_t uart_client_timeout_{10000};              // 10 sec
+  uint32_t request_send_time_{5000};                 // 5 sec --> default is 5 sec so first request is not sent too fast after startup
+  static const uint32_t REQUEST_SEND_INTERVAL{250};  // 250 ms
   static const size_t HEADER_SIZE = 4;
 
   // uart message variables, process in main loop
@@ -158,13 +158,13 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
 
   void send_request();
   void queue_request(const std::vector<uint8_t>& message);
-  ResponseType process_response();
-  ResponseType check_response(const std::vector<uint8_t>& data);
-  static bool is_valid_header(const std::vector<uint8_t>& frame);
-  static uint8_t get_packet_size(const std::vector<uint8_t>& frame);
+  ResponseType read_response();
+  static bool check_response_length(const std::vector<uint8_t>& message);
+  static bool verify_message_header(const std::vector<uint8_t>& message, bool reading_succeeded);
+  static bool verify_message_checksum(const std::vector<uint8_t>& message);
 
   template <size_t N>
-  static std::vector<uint8_t> message_build(const uint8_t (&msg)[N]) {
+  static std::vector<uint8_t> build_message(const uint8_t (&msg)[N]) {
     return std::vector<uint8_t>(msg, msg + N);
   }
 };
