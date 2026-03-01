@@ -326,6 +326,8 @@ sensor:
       name: "Bivalent Advanced Stop Delay"
     top138:
       name: "Bivalent Advanced DHW Delay"
+    top142:
+      name: "Expansion Valve"
 
     xtop0:
       name: "Heat Power Consumption Extra"

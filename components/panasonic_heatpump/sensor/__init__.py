@@ -129,6 +129,7 @@ CONF_TOP135 = "top135"  # Bivalent Advanced Stop Temp
 CONF_TOP136 = "top136"  # Bivalent Advanced Start Delay
 CONF_TOP137 = "top137"  # Bivalent Advanced Stop Delay
 CONF_TOP138 = "top138"  # Bivalent Advanced DHW Delay
+CONF_TOP142 = "top142"  # Expansion Valve
 
 CONF_XTOP0 = "xtop0"  # Heat Power Consumption Extra
 CONF_XTOP1 = "xtop1"  # Cool Power Consumption Extra
@@ -233,6 +234,8 @@ TYPES = [
     CONF_TOP136,
     CONF_TOP137,
     CONF_TOP138,
+    CONF_TOP142,
+
     CONF_XTOP0,
     CONF_XTOP1,
     CONF_XTOP2,
@@ -910,6 +913,13 @@ CONFIG_SCHEMA = cv.Schema(
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_MINUTE,
         ),
+        cv.Optional(CONF_TOP142): sensor.sensor_schema(
+            PanasonicHeatpumpSensor,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            unit_of_measurement=UNIT_EMPTY,
+        ),
+
         cv.Optional(CONF_XTOP0): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
             accuracy_decimals=0,
