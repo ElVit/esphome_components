@@ -17,7 +17,7 @@ class PanasonicHeatpumpWaterHeater : public water_heater::WaterHeater,
                                      public PanasonicHeatpumpEntity {
  public:
   PanasonicHeatpumpWaterHeater() = default;
-  void dump_config() override;
+  // void dump_config() override;
   water_heater::WaterHeaterTraits traits() override;
   void publish_new_state(const std::vector<uint8_t>& data) override;
 
