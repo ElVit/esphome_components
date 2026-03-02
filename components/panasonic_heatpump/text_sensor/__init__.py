@@ -22,6 +22,8 @@ ICON_LIQUID = "mdi:water"
 ICON_VALVE = "mdi:pipe-valve"
 ICON_PUMP = "mdi:pump"
 ICON_EXTERNAL_PAD_HEATER = "mdi:radiator"
+ICON_THERMOMETER = "mdi:thermometer"
+ICON_BIVALENT = "mdi:vector-combine"
 
 CONF_TOP4 = "top4"  # Operation Mode
 # TODO: Split up top4 into top4_1 (Heating Mode State) and top4_2 (DHW Mode State)
@@ -141,9 +143,11 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_TOP111): text_sensor.text_sensor_schema(
             PanasonicHeatpumpTextSensor,
+            icon=ICON_THERMOMETER,
         ),
         cv.Optional(CONF_TOP112): text_sensor.text_sensor_schema(
             PanasonicHeatpumpTextSensor,
+            icon=ICON_THERMOMETER,
         ),
         cv.Optional(CONF_TOP114): text_sensor.text_sensor_schema(
             PanasonicHeatpumpTextSensor,
@@ -159,6 +163,7 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_TOP130): text_sensor.text_sensor_schema(
             PanasonicHeatpumpTextSensor,
+            icon=ICON_BIVALENT,
         ),
     }
 ).extend(cv.COMPONENT_SCHEMA)

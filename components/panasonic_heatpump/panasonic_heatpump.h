@@ -12,7 +12,7 @@
 #include "commands.h"
 
 #ifndef PANASONIC_HEATPUMP_VERSION
-#define PANASONIC_HEATPUMP_VERSION "0.0.5-beta.2"
+#define PANASONIC_HEATPUMP_VERSION "0.0.7"
 #endif
 
 namespace esphome {
