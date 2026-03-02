@@ -21,6 +21,7 @@ from esphome.const import (
     STATE_CLASS_MEASUREMENT,
     STATE_CLASS_TOTAL_INCREASING,
     ICON_COUNTER,
+    ICON_FAN,
 )
 from .. import (
     CONF_PANASONIC_HEATPUMP_ID,
@@ -32,7 +33,7 @@ UNIT_LITRE_PER_MINUTE = "L/min"
 UNIT_ROTATIONS_PER_MINUTE = "r/min"
 UNIT_PRESSURE_KGFCM2 = "kgf/cm²"
 UNIT_BAR = "bar"
-ICON_FAN_SPEED = "mdi:fan"
+ICON_VALVE = "mdi:pipe-valve"
 
 CONF_TOP1 = "top1"  # Pump Flow
 CONF_TOP5 = "top5"  # Main Inlet Temp
@@ -583,14 +584,14 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_TOP62): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
             accuracy_decimals=2,
-            icon=ICON_FAN_SPEED,
+            icon=ICON_FAN,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_ROTATIONS_PER_MINUTE,
         ),
         cv.Optional(CONF_TOP63): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
             accuracy_decimals=2,
-            icon=ICON_FAN_SPEED,
+            icon=ICON_FAN,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_ROTATIONS_PER_MINUTE,
         ),
@@ -914,6 +915,7 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_TOP142): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
             accuracy_decimals=0,
+            icon=ICON_VALVE,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_EMPTY,
         ),
