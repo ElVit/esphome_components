@@ -38,39 +38,39 @@ uint8_t PanasonicCommand::calcChecksum(std::vector<uint8_t>& data, int length) {
   return checksum;
 }
 
-uint8_t PanasonicCommand::setMultiply2(size_t input) {
-  return input * 0b10;
+uint8_t PanasonicCommand::setMultiply2(int input) {
+  return input * 2;
 }
 
-uint8_t PanasonicCommand::setMultiply4(size_t input) {
-  return input * 0b100;
+uint8_t PanasonicCommand::setMultiply4(int input) {
+  return input * 4;
 }
 
-uint8_t PanasonicCommand::setPlus1Multiply4(size_t input) {
-  return (input + 1) * 0b100;
+uint8_t PanasonicCommand::setPlus1Multiply4(int input) {
+  return (input + 1) * 4;
 }
 
-uint8_t PanasonicCommand::setPlus1Multiply8(size_t input) {
-  return (input + 1) * 0b1000;
+uint8_t PanasonicCommand::setPlus1Multiply8(int input) {
+  return (input + 1) * 8;
 }
 
-uint8_t PanasonicCommand::setPlus1Multiply16(size_t input) {
-  return (input + 1) * 0b10000;
+uint8_t PanasonicCommand::setPlus1Multiply16(int input) {
+  return (input + 1) * 16;
 }
 
-uint8_t PanasonicCommand::setPlus1Multiply64(size_t input) {
-  return (input + 1) * 0b1000000;
+uint8_t PanasonicCommand::setPlus1Multiply64(int input) {
+  return (input + 1) * 64;
 }
 
-uint8_t PanasonicCommand::setPlus1(size_t input) {
+uint8_t PanasonicCommand::setPlus1(int input) {
   return input + 1;
 }
 
-uint8_t PanasonicCommand::setPlus128(size_t input) {
-  return input + 0b10000000;
+uint8_t PanasonicCommand::setPlus128(int input) {
+  return input + 128;
 }
 
-uint8_t PanasonicCommand::setOperationMode(size_t input) {
+uint8_t PanasonicCommand::setOperationMode(int input) {
   switch (input) {
   case 0:
     return 0b100001;  // 0x21 = tank

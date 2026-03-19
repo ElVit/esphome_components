@@ -10,105 +10,106 @@ void PanasonicHeatpumpNumber::dump_config() {
 }
 
 void PanasonicHeatpumpNumber::control(float value) {
+  int value_int = static_cast<int>(round(value));
   switch (this->id_) {
   case NumberIds::CONF_SET5:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 38);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 38);
     break;
   case NumberIds::CONF_SET6:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 39);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 39);
     break;
   case NumberIds::CONF_SET7:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 40);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 40);
     break;
   case NumberIds::CONF_SET8:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 41);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 41);
     break;
   case NumberIds::CONF_SET11:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 42);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 42);
     break;
   case NumberIds::CONF_SET15:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus1(value), 45);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus1(value_int), 45);
     break;
   case NumberIds::CONF_SET16_01:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 75);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 75);
     break;
   case NumberIds::CONF_SET16_02:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 76);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 76);
     break;
   case NumberIds::CONF_SET16_03:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 77);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 77);
     break;
   case NumberIds::CONF_SET16_04:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 78);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 78);
     break;
   case NumberIds::CONF_SET16_05:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 79);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 79);
     break;
   case NumberIds::CONF_SET16_06:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 80);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 80);
     break;
   case NumberIds::CONF_SET16_07:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 81);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 81);
     break;
   case NumberIds::CONF_SET16_08:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 82);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 82);
     break;
   case NumberIds::CONF_SET16_09:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 86);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 86);
     break;
   case NumberIds::CONF_SET16_10:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 87);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 87);
     break;
   case NumberIds::CONF_SET16_11:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 88);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 88);
     break;
   case NumberIds::CONF_SET16_12:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 89);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 89);
     break;
   case NumberIds::CONF_SET16_13:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 90);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 90);
     break;
   case NumberIds::CONF_SET16_14:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 91);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 91);
     break;
   case NumberIds::CONF_SET16_15:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 92);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 92);
     break;
   case NumberIds::CONF_SET16_16:
-    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value), 93);
+    this->parent_->set_command_curve(PanasonicCommand::setPlus128(value_int), 93);
     break;
   case NumberIds::CONF_SET18:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 84);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 84);
     break;
   case NumberIds::CONF_SET19:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 94);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 94);
     break;
   case NumberIds::CONF_SET20:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 99);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 99);
     break;
   case NumberIds::CONF_SET21:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus1(value), 104);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus1(value_int), 104);
     break;
   case NumberIds::CONF_SET22:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 105);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 105);
     break;
   case NumberIds::CONF_SET23:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 106);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 106);
     break;
   case NumberIds::CONF_SET27:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 59);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 59);
     break;
   case NumberIds::CONF_SET29:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 83);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 83);
     break;
   case NumberIds::CONF_SET36:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 65);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 65);
     break;
   case NumberIds::CONF_SET37:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 66);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 66);
     break;
   case NumberIds::CONF_SET38:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value), 68);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 68);
     break;
   default:
     return;
