@@ -6,7 +6,20 @@ namespace panasonic_heatpump {
 static const char* const TAG = "panasonic_heatpump";
 
 void PanasonicHeatpumpComponent::dump_config() {
-  ESP_LOGW(TAG, "*** Panasonic Heatpump Component v%s ***", PANASONIC_HEATPUMP_VERSION);
+  size_t version_len = strlen(PANASONIC_HEATPUMP_VERSION);
+  size_t line_width = 38 + version_len;
+  std::string border(line_width, '*');
+
+  if (strstr(PANASONIC_HEATPUMP_VERSION, "beta") != nullptr) {
+    ESP_LOGE(TAG, "%s", border.c_str());
+    ESP_LOGE(TAG, "*** Panasonic Heatpump Component v%s ***", PANASONIC_HEATPUMP_VERSION);
+    ESP_LOGE(TAG, "%s", border.c_str());
+  } else {
+    ESP_LOGW(TAG, "%s", border.c_str());
+    ESP_LOGW(TAG, "*** Panasonic Heatpump Component v%s ***", PANASONIC_HEATPUMP_VERSION);
+    ESP_LOGW(TAG, "%s", border.c_str());
+  }
+
   delay(10);  // NOLINT
 }
 
