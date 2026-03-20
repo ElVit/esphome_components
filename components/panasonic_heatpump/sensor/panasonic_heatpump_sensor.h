@@ -102,6 +102,7 @@ enum SensorIds : uint8_t {
   CONF_TOP136,
   CONF_TOP137,
   CONF_TOP138,
+  CONF_TOP142,
 
   CONF_XTOP0,
   CONF_XTOP1,

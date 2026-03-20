@@ -101,12 +101,23 @@ switch:
 climate:
   - platform: panasonic_heatpump
     cool_mode: true
-    tank:
-      name: "DHW"
+    zone1:
+      name: "Zone 1"
       min_temperature: -5.0
       max_temperature: 5.0
-      temperature_step: 0.5
+      temperature_step: 1.0
+
+water_heater:
+  - platform: panasonic_heatpump
+    tank:
+      name: "DHW"
+      min_temperature: 40.0
+      max_temperature: 65.0
+      target_temperature_step: 1.0
 ```
+
+Thanks to [oxyde42](https://github.com/oxyde42) there is also an exmaple yaml code for the HeishaMon Large Board:
+- [example_heishamon_large.yaml](../../prototypes/panasonic_heatpump/example_heishamon_large.yaml)
 
 ## Configuration variables
 
@@ -315,6 +326,8 @@ sensor:
       name: "Bivalent Advanced Stop Delay"
     top138:
       name: "Bivalent Advanced DHW Delay"
+    top142:
+      name: "Expansion Valve"
 
     xtop0:
       name: "Heat Power Consumption Extra"
@@ -594,12 +607,22 @@ Here a list of all supported climates:
 climate:
   - platform: panasonic_heatpump
     cool_mode: false
-    tank:
-      name: "DHW"
     zone1:
       name: "Zone 1"
     zone2:
       name: "Zone 2"
+```
+
+### Water Heater
+
+All water_heater are optional and all options from [water_heater component](https://esphome.io/components/water_heater/) can be applied.  
+Here a list of all supported water_heater:
+
+```yaml
+water_heater:
+  - platform: panasonic_heatpump
+    tank:
+      name: "DHW"
 ```
 
 ## Custom Entities (For Advanced Users)

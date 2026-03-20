@@ -490,6 +490,11 @@ void PanasonicHeatpumpSensor::publish_new_state(const std::vector<uint8_t>& data
     if (this->has_state() && this->get_state() == new_state)
       return;
     break;
+  case SensorIds::CONF_TOP142:
+    new_state = PanasonicDecode::getByteMinus1(data[175]);
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
 
   case SensorIds::CONF_XTOP0:
     new_state = PanasonicDecode::getWordMinus1(data, 14);

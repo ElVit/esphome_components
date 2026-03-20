@@ -5,9 +5,9 @@ namespace esphome {
 namespace panasonic_heatpump {
 static const char* const TAG = "panasonic_heatpump.water_heater";
 
-void PanasonicHeatpumpWaterHeater::dump_config() {
-  LOG_WATER_HEATER("", "Panasonic Heatpump Water Heater", this);
-}
+// void PanasonicHeatpumpWaterHeater::dump_config() {
+//   LOG_WATER_HEATER("", "Panasonic Heatpump Water Heater", this);
+// }
 
 water_heater::WaterHeaterTraits PanasonicHeatpumpWaterHeater::traits() {
   auto traits = water_heater::WaterHeaterTraits();

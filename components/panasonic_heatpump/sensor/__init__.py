@@ -21,6 +21,7 @@ from esphome.const import (
     STATE_CLASS_MEASUREMENT,
     STATE_CLASS_TOTAL_INCREASING,
     ICON_COUNTER,
+    ICON_FAN,
 )
 from .. import (
     CONF_PANASONIC_HEATPUMP_ID,
@@ -32,7 +33,7 @@ UNIT_LITRE_PER_MINUTE = "L/min"
 UNIT_ROTATIONS_PER_MINUTE = "r/min"
 UNIT_PRESSURE_KGFCM2 = "kgf/cm²"
 UNIT_BAR = "bar"
-ICON_FAN_SPEED = "mdi:fan"
+ICON_VALVE = "mdi:pipe-valve"
 
 CONF_TOP1 = "top1"  # Pump Flow
 CONF_TOP5 = "top5"  # Main Inlet Temp
@@ -129,7 +130,7 @@ CONF_TOP135 = "top135"  # Bivalent Advanced Stop Temp
 CONF_TOP136 = "top136"  # Bivalent Advanced Start Delay
 CONF_TOP137 = "top137"  # Bivalent Advanced Stop Delay
 CONF_TOP138 = "top138"  # Bivalent Advanced DHW Delay
-
+CONF_TOP142 = "top142"  # Expansion Valve
 CONF_XTOP0 = "xtop0"  # Heat Power Consumption Extra
 CONF_XTOP1 = "xtop1"  # Cool Power Consumption Extra
 CONF_XTOP2 = "xtop2"  # DHW Power Consumption Extra
@@ -233,6 +234,7 @@ TYPES = [
     CONF_TOP136,
     CONF_TOP137,
     CONF_TOP138,
+    CONF_TOP142,
     CONF_XTOP0,
     CONF_XTOP1,
     CONF_XTOP2,
@@ -582,14 +584,14 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_TOP62): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
             accuracy_decimals=2,
-            icon=ICON_FAN_SPEED,
+            icon=ICON_FAN,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_ROTATIONS_PER_MINUTE,
         ),
         cv.Optional(CONF_TOP63): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
             accuracy_decimals=2,
-            icon=ICON_FAN_SPEED,
+            icon=ICON_FAN,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_ROTATIONS_PER_MINUTE,
         ),
@@ -909,6 +911,13 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_DURATION,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_MINUTE,
+        ),
+        cv.Optional(CONF_TOP142): sensor.sensor_schema(
+            PanasonicHeatpumpSensor,
+            accuracy_decimals=0,
+            icon=ICON_VALVE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            unit_of_measurement=UNIT_EMPTY,
         ),
         cv.Optional(CONF_XTOP0): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
