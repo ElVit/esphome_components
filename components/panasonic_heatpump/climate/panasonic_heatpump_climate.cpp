@@ -41,39 +41,42 @@ void PanasonicHeatpumpClimate::control(const climate::ClimateCall& call) {
 
   if (call.get_target_temperature().has_value()) {
     float new_temp = *call.get_target_temperature();
+    int new_temp_int = static_cast<int>(round(new_temp));
     switch (this->id_) {
     case ClimateIds::CONF_CLIMATE_TANK:
-      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp), 42);  // set11
+      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp_int), 42);  // set11
       break;
     case ClimateIds::CONF_CLIMATE_ZONE1:
-      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp), 38);  // set5
+      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp_int), 38);  // set5
       break;
     case ClimateIds::CONF_CLIMATE_ZONE2:
-      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp), 40);  // set7
+      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp_int), 40);  // set7
       break;
     };
   }
 
   if (call.get_target_temperature_high().has_value()) {
     float new_temp = *call.get_target_temperature_high();
+    int new_temp_int = static_cast<int>(round(new_temp));
     switch (this->id_) {
     case ClimateIds::CONF_CLIMATE_ZONE1:
-      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp), 38);  // set5
+      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp_int), 38);  // set5
       break;
     case ClimateIds::CONF_CLIMATE_ZONE2:
-      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp), 40);  // set7
+      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp_int), 40);  // set7
       break;
     };
   }
 
   if (call.get_target_temperature_low().has_value()) {
     float new_temp = *call.get_target_temperature_low();
+    int new_temp_int = static_cast<int>(round(new_temp));
     switch (this->id_) {
     case ClimateIds::CONF_CLIMATE_ZONE1:
-      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp), 39);  // set6
+      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp_int), 39);  // set6
       break;
     case ClimateIds::CONF_CLIMATE_ZONE2:
-      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp), 41);  // set8
+      this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp_int), 41);  // set8
       break;
     };
   }

@@ -32,9 +32,10 @@ void PanasonicHeatpumpWaterHeater::control(const water_heater::WaterHeaterCall& 
   }
 
   float new_temp = call.get_target_temperature();
+  int new_temp_int = static_cast<int>(round(new_temp));
   switch (this->id_) {
   case WaterHeaterIds::CONF_HEATER_TANK:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp), 42);  // set11
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(new_temp_int), 42);  // set11
     break;
   };
 

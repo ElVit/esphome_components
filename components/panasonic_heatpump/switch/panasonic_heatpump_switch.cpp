@@ -10,7 +10,7 @@ void PanasonicHeatpumpSwitch::dump_config() {
 }
 
 void PanasonicHeatpumpSwitch::write_state(bool state) {
-  size_t value = state ? 1 : 0;
+  int value = state ? 1 : 0;
 
   switch (this->id_) {
   case SwitchIds::CONF_SET1:

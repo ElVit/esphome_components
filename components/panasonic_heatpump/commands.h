@@ -22,15 +22,15 @@ class PanasonicCommand {
   PanasonicCommand() = delete;
 
   static uint8_t calcChecksum(std::vector<uint8_t>& data, int length);
-  static uint8_t setMultiply2(size_t input);
-  static uint8_t setMultiply4(size_t input);
-  static uint8_t setPlus1Multiply4(size_t input);
-  static uint8_t setPlus1Multiply8(size_t input);
-  static uint8_t setPlus1Multiply16(size_t input);
-  static uint8_t setPlus1Multiply64(size_t input);
-  static uint8_t setPlus1(size_t input);
-  static uint8_t setPlus128(size_t input);
-  static uint8_t setOperationMode(size_t input);
+  static uint8_t setMultiply2(int input);
+  static uint8_t setMultiply4(int input);
+  static uint8_t setPlus1Multiply4(int input);
+  static uint8_t setPlus1Multiply8(int input);
+  static uint8_t setPlus1Multiply16(int input);
+  static uint8_t setPlus1Multiply64(int input);
+  static uint8_t setPlus1(int input);
+  static uint8_t setPlus128(int input);
+  static uint8_t setOperationMode(int input);
   static uint8_t temp2hex(float temp);
   static uint8_t setByte6(uint8_t byte6, int val, int base, int bit);
   static uint8_t setDemandControl(size_t input);
