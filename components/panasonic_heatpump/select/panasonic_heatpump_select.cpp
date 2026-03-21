@@ -38,16 +38,16 @@ void PanasonicHeatpumpSelect::control(const std::string& value) {
     this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply4(index), 26);
     break;
   case SelectIds::CONF_SET39:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply4(value), 30);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply4(index), 30);
     break;
   case SelectIds::CONF_SET40:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply64(value), 24);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply64(index), 24);
     break;
   case SelectIds::CONF_SET41:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply16(value), 11);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply16(index), 11);
     break;
   case SelectIds::CONF_SET42:
-    this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply16(value), 29);
+    this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply16(index), 29);
     break;
   default:
     return;
@@ -115,12 +115,14 @@ void PanasonicHeatpumpSelect::publish_new_state(const std::vector<uint8_t>& data
       return;
     break;
   case SelectIds::CONF_SET41:
-    new_state = PanasonicDecode::getTextState(PanasonicDecode::QuietModePriority, PanasonicDecode::getBit3and4(data[11]));
+    new_state =
+        PanasonicDecode::getTextState(PanasonicDecode::QuietModePriority, PanasonicDecode::getBit3and4(data[11]));
     if (this->has_state() && this->current_option() == new_state)
       return;
     break;
   case SelectIds::CONF_SET42:
-    new_state = PanasonicDecode::getTextState(PanasonicDecode::PumpFlowRateMode, PanasonicDecode::getBit3and4(data[29]));
+    new_state =
+        PanasonicDecode::getTextState(PanasonicDecode::PumpFlowRateMode, PanasonicDecode::getBit3and4(data[29]));
     if (this->has_state() && this->current_option() == new_state)
       return;
     break;

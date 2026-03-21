@@ -138,7 +138,8 @@ void PanasonicHeatpumpTextSensor::publish_new_state(const std::vector<uint8_t>& 
       return;
     break;
   case TextSensorIds::CONF_TOP141:
-    new_state = PanasonicDecode::getTextState(PanasonicDecode::QuietModePriority, PanasonicDecode::getBit3and4(data[11]));
+    new_state =
+        PanasonicDecode::getTextState(PanasonicDecode::QuietModePriority, PanasonicDecode::getBit3and4(data[11]));
     if (this->has_state() && this->get_state() == new_state)
       return;
     break;

@@ -172,13 +172,13 @@ CONFIG_SCHEMA = cv.Schema(
             icon=ICON_BIVALENT,
         ),
         cv.Optional(CONF_TOP139): text_sensor.text_sensor_schema(
-          PanasonicHeatpumpTextSensor,
+            PanasonicHeatpumpTextSensor,
         ),
         cv.Optional(CONF_TOP140): text_sensor.text_sensor_schema(
-          PanasonicHeatpumpTextSensor,
+            PanasonicHeatpumpTextSensor,
         ),
         cv.Optional(CONF_TOP141): text_sensor.text_sensor_schema(
-          PanasonicHeatpumpTextSensor,
+            PanasonicHeatpumpTextSensor,
         ),
     }
 ).extend(cv.COMPONENT_SCHEMA)
