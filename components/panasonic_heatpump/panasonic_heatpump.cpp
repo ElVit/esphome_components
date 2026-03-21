@@ -6,7 +6,20 @@ namespace panasonic_heatpump {
 static const char* const TAG = "panasonic_heatpump";
 
 void PanasonicHeatpumpComponent::dump_config() {
-  ESP_LOGW(TAG, "*** Panasonic Heatpump Component v%s ***", PANASONIC_HEATPUMP_VERSION);
+  size_t version_len = strlen(PANASONIC_HEATPUMP_VERSION);
+  size_t line_width = 38 + version_len;
+  std::string border(line_width, '*');
+
+  if (strstr(PANASONIC_HEATPUMP_VERSION, "beta") != nullptr) {
+    ESP_LOGE(TAG, "%s", border.c_str());
+    ESP_LOGE(TAG, "*** Panasonic Heatpump Component v%s ***", PANASONIC_HEATPUMP_VERSION);
+    ESP_LOGE(TAG, "%s", border.c_str());
+  } else {
+    ESP_LOGW(TAG, "%s", border.c_str());
+    ESP_LOGW(TAG, "*** Panasonic Heatpump Component v%s ***", PANASONIC_HEATPUMP_VERSION);
+    ESP_LOGW(TAG, "%s", border.c_str());
+  }
+
   delay(10);  // NOLINT
 }
 
@@ -43,6 +56,10 @@ void PanasonicHeatpumpComponent::loop() {
     this->current_response_ = this->check_response(this->response_message_);
     switch (this->current_response_) {
     case ResponseType::UNKNOWN:
+      this->response_message_.clear();
+      this->loop_state_ = LoopState::SEND_REQUEST;
+      break;
+    case ResponseType::RECEIVING:
       this->loop_state_ = LoopState::SEND_REQUEST;
       break;
     case ResponseType::STANDARD:
@@ -285,7 +302,7 @@ ResponseType PanasonicHeatpumpComponent::check_response(const std::vector<uint8_
   if (data[0] != 0x71)
     return ResponseType::UNKNOWN;
   if (this->response_receiving_)
-    return ResponseType::UNKNOWN;
+    return ResponseType::RECEIVING;
   if (data.size() != RESPONSE_MSG_SIZE) {
     ESP_LOGW(TAG, "Invalid response message length: recieved %d - expected %d", data.size(), RESPONSE_MSG_SIZE);
     delay(10);  // NOLINT
