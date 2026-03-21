@@ -123,8 +123,8 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   // options variables
   bool log_uart_msg_{false};
   uint32_t last_client_request_time_{0};
-  uint32_t uart_client_timeout_{10000};              // 10 sec
-  uint32_t request_send_time_{5000};                 // 5 sec --> default is 5 sec so first request is not sent too fast after startup
+  uint32_t uart_client_timeout_{10000};  // 10 sec
+  uint32_t request_send_time_{5000};  // 5 sec --> default is 5 sec so first request is not sent too fast after startup
   static const uint32_t REQUEST_SEND_INTERVAL{250};  // 250 ms
   static const size_t HEADER_SIZE = 4;
 
