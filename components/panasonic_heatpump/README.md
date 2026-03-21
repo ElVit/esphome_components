@@ -4,7 +4,7 @@
 
 ### What you need
 
-* ESPHome compatible microcontroller (e.g. ESP8266, ESP32, ESP32-S2, ESP32-C3, ...)
+* ESPHome compatible microcontroller (e.g. ESP32, ESP32-S2, ESP32-C3, ...)
 * ADUM1201 Dual Channel Digital Magnetic Isolator  
   (to convert 5V UART signal from the heatpump to 3.3V UART signal of the ESP controller)
 * CN-CNT cable/connectors to Heatpump/CZ-TAW1 (see [Heishamon](https://github.com/Egyras/HeishaMon) github site for more information)
@@ -647,7 +647,7 @@ sensor:
     unit_of_measurement: °C
     lambda: |-
       // get the requried byte
-      int byte = my_heatpump->getResponseByte(46);
+      int byte = my_heatpump->get_response_byte(46);
       // a valid byte range is 0x00-0xFF
       // do not update if the byte is invalid
       if (byte < 0) return {};
@@ -661,7 +661,7 @@ text_sensor:
     update_interval: 3s
     lambda: |-
       // get the requried byte
-      int byte = my_heatpump->getResponseByte(9);
+      int byte = my_heatpump->get_response_byte(9);
       // a valid byte range is 0x00-0xFF
       // do not update if the byte is invalid
       if (byte < 0) return {};
