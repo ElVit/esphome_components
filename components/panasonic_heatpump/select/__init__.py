@@ -16,6 +16,10 @@ CONF_SET9 = "set9"  # Set Operation Mode
 CONF_SET17 = "set17"  # Set Zones
 CONF_SET26 = "set26"  # Set External PadHeater
 CONF_SET35 = "set35"  # Set Bivalent Mode
+CONF_SET39 = "set39"  # Set Heating Control
+CONF_SET40 = "set40"  # Set Smart DHW
+CONF_SET41 = "set41"  # Set Quiet Mode Priority
+CONF_SET42 = "set42"  # Set Pump Flow Rate Mode
 
 TYPES = [
     CONF_SET2,
@@ -25,6 +29,10 @@ TYPES = [
     CONF_SET17,
     CONF_SET26,
     CONF_SET35,
+    CONF_SET39,
+    CONF_SET40,
+    CONF_SET41,
+    CONF_SET42,
 ]
 
 CONF_SELECTS = [
@@ -57,6 +65,22 @@ CONF_SELECTS = [
     ],
     ["Disabled", "Type-A", "Type-B"],
     ["Alternative", "Parallel", "Advanced Parallel"],
+    [
+        "Comfort,",
+        "Efficiency",
+    ],
+    [
+        "Variable",
+        "Standard",
+    ],
+    [
+        "Sound",
+        "Capacity",
+    ],
+    [
+        "DeltaT",
+        "Max. Duty",
+    ],
 ]
 
 CONF_SELECT_COOL_MODE = [
@@ -98,6 +122,18 @@ CONFIG_SCHEMA = cv.Schema(
             PanasonicHeatpumpSelect,
         ),
         cv.Optional(CONF_SET35): select.select_schema(
+            PanasonicHeatpumpSelect,
+        ),
+        cv.Optional(CONF_SET39): select.select_schema(
+            PanasonicHeatpumpSelect,
+        ),
+        cv.Optional(CONF_SET40): select.select_schema(
+            PanasonicHeatpumpSelect,
+        ),
+        cv.Optional(CONF_SET41): select.select_schema(
+            PanasonicHeatpumpSelect,
+        ),
+        cv.Optional(CONF_SET42): select.select_schema(
             PanasonicHeatpumpSelect,
         ),
     }

@@ -47,6 +47,9 @@ CONF_TOP114 = "top114"  # External Pad Heater
 CONF_TOP125 = "top125"  # TwoWay Valve State
 CONF_TOP126 = "top126"  # ThreeWay Valve State2
 CONF_TOP130 = "top130"  # Bivalent Mode
+CONF_TOP139 = "top139"  # HeatingControl
+CONF_TOP140 = "top140"  # SmartDHW
+CONF_TOP141 = "top141"  # Quiet Mode Priority
 
 TYPES = [
     CONF_TOP4,
@@ -70,6 +73,9 @@ TYPES = [
     CONF_TOP125,
     CONF_TOP126,
     CONF_TOP130,
+    CONF_TOP139,
+    CONF_TOP140,
+    CONF_TOP141,
 ]
 
 PanasonicHeatpumpTextSensor = panasonic_heatpump_ns.class_(
@@ -164,6 +170,15 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_TOP130): text_sensor.text_sensor_schema(
             PanasonicHeatpumpTextSensor,
             icon=ICON_BIVALENT,
+        ),
+        cv.Optional(CONF_TOP139): text_sensor.text_sensor_schema(
+          PanasonicHeatpumpTextSensor,
+        ),
+        cv.Optional(CONF_TOP140): text_sensor.text_sensor_schema(
+          PanasonicHeatpumpTextSensor,
+        ),
+        cv.Optional(CONF_TOP141): text_sensor.text_sensor_schema(
+          PanasonicHeatpumpTextSensor,
         ),
     }
 ).extend(cv.COMPONENT_SCHEMA)

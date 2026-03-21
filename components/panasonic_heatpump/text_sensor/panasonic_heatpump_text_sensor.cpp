@@ -127,6 +127,21 @@ void PanasonicHeatpumpTextSensor::publish_new_state(const std::vector<uint8_t>& 
     if (this->has_state() && this->get_state() == new_state)
       return;
     break;
+  case TextSensorIds::CONF_TOP139:
+    new_state = PanasonicDecode::getTextState(PanasonicDecode::HeatingControl, PanasonicDecode::getBit5and6(data[30]));
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
+  case TextSensorIds::CONF_TOP140:
+    new_state = PanasonicDecode::getTextState(PanasonicDecode::SmartDHW, PanasonicDecode::getBit1and2(data[24]));
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
+  case TextSensorIds::CONF_TOP141:
+    new_state = PanasonicDecode::getTextState(PanasonicDecode::QuietModePriority, PanasonicDecode::getBit3and4(data[11]));
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
   default:
     return;
   };

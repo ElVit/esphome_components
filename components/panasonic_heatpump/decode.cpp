@@ -21,6 +21,9 @@ constexpr const char* const PanasonicDecode::ZoneSensorType[];
 constexpr const char* const PanasonicDecode::LiquidType[];
 constexpr const char* const PanasonicDecode::ExtPadHeaterType[];
 constexpr const char* const PanasonicDecode::BivalentMode[];
+constexpr const char* const PanasonicDecode::HeatingControl[];
+constexpr const char* const PanasonicDecode::SmartDHW[];
+constexpr const char* const PanasonicDecode::QuietModePriority[];
 constexpr const char* const PanasonicDecode::ModelNames[];
 
 constexpr const uint8_t KnownModels[NUMBER_OF_MODELS][10] = {
