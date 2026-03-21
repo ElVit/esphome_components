@@ -201,29 +201,33 @@ bool PanasonicHeatpumpComponent::receive_from_uart(uart::UARTComponent* uartComp
 
   // Message shall start with 0x31, 0x71 or 0xF1, if not skip this byte
   if (start_byte != 0x31 && start_byte != 0x71 && start_byte != 0xF1) {
+    ESP_LOGW(TAG, "Invalid start byte: 0x%x", start_byte);
     return false;
   }
 
-  // Prepare buffer for header reading, header is 4 bytes long and first byte is already read.
-  // Message may be up to 256 bytes long, so reserve enough space to avoid dynamic resizing during reading.
+  // Prepare buffer for header reading.
+  // Header is 4 bytes long and first byte is already read.
+  // Message may be up to 256 bytes long,
+  // so reserve enough space to avoid dynamic resizing during reading.
   buffer.clear();
   buffer.reserve(256);
   buffer.resize(HEADER_SIZE);
   buffer[0] = start_byte;
 
-  // Read the rest of the header
+  // Wait for header
   if (uartComp->available() < HEADER_SIZE - 1)
     vTaskDelay(pdMS_TO_TICKS(5));
+  // Write header to buffer
   auto succeed = uartComp->read_array(&buffer[1], HEADER_SIZE - 1);
 
   // Verify header (start byte, message type and length)
   if (!verify_message_header(buffer, succeed))
     return false;
 
-  // Read the rest of the message according to the length specified in the header
+  // Calculate total message length
   size_t total_expected = buffer[1] + 3;
   size_t remaining = total_expected - buffer.size();
-
+  // Write rest of the message to buffer
   while (remaining > 0) {
     size_t current_size = buffer.size();
     size_t to_read = std::min((size_t)8, remaining);
@@ -237,12 +241,12 @@ bool PanasonicHeatpumpComponent::receive_from_uart(uart::UARTComponent* uartComp
     remaining -= to_read;
   }
 
-  // Verify checksum (should be 0 if all bytes are summed up)
+  // Verify checksum
   if (!verify_message_checksum(buffer)) {
     return false;
   }
 
-  // message is complete
+  // Message is complete
   return true;
 }
 
@@ -272,6 +276,8 @@ bool PanasonicHeatpumpComponent::verify_message_checksum(const std::vector<uint8
   for (const auto b : message)
     checksum += b;
 
+  // Last byte contains chechsum.
+  // Only if the sum of all bytes & 0xFF is 0, the message is valid.
   if (checksum != 0) {
     ESP_LOGW(TAG, "Invalid message checksum: 0x%02X. Last byte: 0x%02X", checksum, message.back());
     return false;
@@ -280,10 +286,9 @@ bool PanasonicHeatpumpComponent::verify_message_checksum(const std::vector<uint8
 }
 
 ResponseType PanasonicHeatpumpComponent::read_response() {
-  // Get message from queue
   std::vector<uint8_t>* message{nullptr};
   if (xQueueReceive(this->response_queue_handle_, &message, 0) != pdPASS || message == nullptr) {
-    return ResponseType::UNKNOWN; // nothing queued
+    return ResponseType::UNKNOWN;
   }
   PanasonicHelpers::write_uart_log(UART_LOG_RX, *message, ',', this->log_uart_msg_);
 
@@ -294,18 +299,22 @@ ResponseType PanasonicHeatpumpComponent::read_response() {
 
   // Get response type and save the response
   auto responseType = ResponseType::UNKNOWN;
-  if (message->at(3) == 0x10) {
+  const uint8_t type = (*message)[3];
+  if (type == 0x10) {
     responseType = ResponseType::STANDARD;
     this->heatpump_default_message_ = std::move(*message);
 
     // Is an extra request required?
-    if (message->at(199) > 0x02) {
+    if (this->heatpump_default_message_.size() > 199 && this->heatpump_default_message_[199] > 0x02) {
       ESP_LOGD(TAG, "Queue extra polling request");
       this->queue_request(build_message(PanasonicCommand::PollingExtraMessage));
     }
-  } else if (message->at(3) == 0x21) {
+  } else if (type == 0x21) {
     responseType = ResponseType::EXTRA;
     this->heatpump_extra_message_ = std::move(*message);
+  } else {
+    ESP_LOGW(TAG, "Unknown response type in byte 3: 0x%02X", type);
+    responseType = ResponseType::UNKNOWN;
   }
 
   delete message;
@@ -320,7 +329,7 @@ bool PanasonicHeatpumpComponent::check_response_length(const std::vector<uint8_t
   if (message.size() == RESPONSE_MSG_SIZE)
     return true;
 
-  ESP_LOGW(TAG, "Invalid response message length: recieved %d - expected %d", message.size(), RESPONSE_MSG_SIZE);
+  ESP_LOGW(TAG, "Response message too short: received %u - expected %u", message.size(), RESPONSE_MSG_SIZE);
   return false;
 }
 
