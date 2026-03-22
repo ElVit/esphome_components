@@ -16,15 +16,15 @@
 > Since v0.0.8 this component uses threads to process the UART communication.
 > But if you still want to use an ESP8266 controller or the arduino framework,
 > please use the branch "heatpump/esp8266".
-
-```yaml
-external_components:
- - source:
-     type: git
-     url: https://github.com/ElVit/esphome_components
-     ref: 'heatpump/esp8266'
-   components: [ panasonic_heatpump ]
-```
+>
+> ```yaml
+> external_components:
+>  - source:
+>      type: git
+>      url: https://github.com/ElVit/esphome_components
+>      ref: 'heatpump/esp8266'
+>    components: [ panasonic_heatpump ]
+> ```
 
 ### Wiring
 
