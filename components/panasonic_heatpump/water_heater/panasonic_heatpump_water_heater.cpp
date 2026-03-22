@@ -40,7 +40,7 @@ void PanasonicHeatpumpWaterHeater::control(const water_heater::WaterHeaterCall& 
   };
 
   this->publish_state();
-  this->keep_state_ = 2;
+  this->keep_state_ = KEEP_STATE;
 }
 
 void PanasonicHeatpumpWaterHeater::publish_new_state(const std::vector<uint8_t>& data) {

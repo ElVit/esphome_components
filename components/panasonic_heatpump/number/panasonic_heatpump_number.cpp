@@ -116,7 +116,7 @@ void PanasonicHeatpumpNumber::control(float value) {
   };
 
   this->publish_state(state);
-  this->keep_state_ = 2;
+  this->keep_state_ = KEEP_STATE;
 }
 
 void PanasonicHeatpumpNumber::publish_new_state(const std::vector<uint8_t>& data) {
