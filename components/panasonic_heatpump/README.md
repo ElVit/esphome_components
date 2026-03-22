@@ -7,9 +7,24 @@
 * ESPHome compatible microcontroller (e.g. ESP32, ESP32-S2, ESP32-C3, ...)
 * ADUM1201 Dual Channel Digital Magnetic Isolator  
   (to convert 5V UART signal from the heatpump to 3.3V UART signal of the ESP controller)
-* CN-CNT cable/connectors to Heatpump/CZ-TAW1 (see [Heishamon](https://github.com/Egyras/HeishaMon) github site for more information)
+* CN-CNT cable/connectors to Heatpump/CZ-TAW1 (see [Heishamon](https://github.com/heishamon/HeishaMon) github site for more information)
   * For example: [S05B-XASK-1 JST Connector](https://a.aliexpress.com/_EvkmGVo)
   * For example: [XAP-05V-1 5Pin Cable with Female to Female Connector](https://a.aliexpress.com/_ExPT82E)
+
+> [!IMPORTANT]
+> The support for ESP8266 and the aruino framework is deprecated for this component.
+> Since v0.0.8 this component uses threads to process the UART communication.
+> But if you still want to use an ESP8266 controller or the arduino framework,
+> please use the branch "heatpump/esp8266".
+
+```yaml
+external_components:
+ - source:
+     type: git
+     url: https://github.com/ElVit/esphome_components
+     ref: 'heatpump/esp8266'
+   components: [ panasonic_heatpump ]
+```
 
 ### Wiring
 
@@ -629,7 +644,7 @@ water_heater:
 
 ## Custom Entities (For Advanced Users)
 
-If you review the [ProtocolByteDecrypt.md](https://github.com/Egyras/HeishaMon/blob/master/ProtocolByteDecrypt.md) file you will find also some TOPs and SETs which are not implemented yet in heishamon.  
+If you review the [ProtocolByteDecrypt.md](https://github.com/heishamon/HeishaMon/blob/main/ProtocolByteDecrypt.md) file you will find also some TOPs and SETs which are not implemented yet in heishamon.  
 They are usually marked as TOP (without a number).  
 The nice part of ESPHome is that it is so highly customizeable.  
 So if you want some additional TOP or SET entities you can easily create your own.  
@@ -688,5 +703,5 @@ After a power on the heatpump should respond to the requests.
 
 ## Sources
 
-:heart: A big THANKS to [Egyras](https://github.com/Egyras) and the work done on the repository [HeishaMon](https://github.com/Egyras/HeishaMon) for decoding the panasonic uart protocol and providing information to build hardware based on an ESP Chip.  
+:heart: A big THANKS to [Egyras](https://github.com/Egyras), [IgorYbema](https://github.com/IgorYbema) and the work done on the repository [HeishaMon](https://github.com/heishamon/HeishaMon) for decoding the panasonic uart protocol and providing information to build hardware based on an ESP Chip.  
 :heart: Thanks to the whole home assistant community for sharing their knowlege and helping me to create this ESPHome component!  
