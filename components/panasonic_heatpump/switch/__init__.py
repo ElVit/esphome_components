@@ -20,7 +20,7 @@ CONF_SET31 = "set31"  # Set External Error
 CONF_SET32 = "set32"  # Set External Compressor Control
 CONF_SET33 = "set33"  # Set External Heat Cool Control
 CONF_SET34 = "set34"  # Set Bivalent Control
-CONF_ERROR = "error_reset"  # Error Reset (Restart)
+CONF_ERROR = "error_reset"  # Error Reset (Restart Heatpump)
 
 TYPES = [
     CONF_SET1,
