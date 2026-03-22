@@ -32,11 +32,7 @@ void PanasonicHelpers::log_uart_hex(UartLogDirection direction, const uint8_t* d
   delay(10);
 
   logStr += byte_array_to_hex_string(data, length, separator);
-
-  for (size_t i = 0; i < logStr.length(); i += UART_LOG_CHUNK_SIZE) {
-    ESP_LOGI(TAG, "%s %s", msgDir.c_str(), logStr.substr(i, UART_LOG_CHUNK_SIZE).c_str());
-    delay(10);
-  }
+  ESP_LOGI(TAG, "%s %s", msgDir.c_str(), logStr.c_str());
 }
 
 std::string PanasonicHelpers::byte_array_to_hex_string(const std::vector<uint8_t>& data, const char separator) {
