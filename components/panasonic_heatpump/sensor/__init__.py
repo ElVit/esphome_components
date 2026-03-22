@@ -33,7 +33,10 @@ UNIT_LITRE_PER_MINUTE = "L/min"
 UNIT_ROTATIONS_PER_MINUTE = "r/min"
 UNIT_PRESSURE_KGFCM2 = "kgf/cm²"
 UNIT_BAR = "bar"
+ICON_PUMP = "mdi:pump"
 ICON_VALVE = "mdi:pipe-valve"
+ICON_DUTY = "mdi:speedometer"
+ICON_GAUGE = "mdi:gauge"
 
 CONF_TOP1 = "top1"  # Pump Flow
 CONF_TOP5 = "top5"  # Main Inlet Temp
@@ -258,6 +261,7 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_VOLUME_FLOW_RATE,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_LITRE_PER_MINUTE,
+            icon=ICON_PUMP,
         ),
         cv.Optional(CONF_TOP5): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
@@ -607,6 +611,7 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=2,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_ROTATIONS_PER_MINUTE,
+            icon=ICON_PUMP,
         ),
         cv.Optional(CONF_TOP66): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
@@ -767,12 +772,14 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=0,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_EMPTY,
+            icon=ICON_PUMP,
         ),
         cv.Optional(CONF_TOP95): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
             accuracy_decimals=0,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_EMPTY,
+            icon=ICON_DUTY,
         ),
         cv.Optional(CONF_TOP96): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
@@ -863,12 +870,14 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=2,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_PERCENT,
+            icon=ICON_GAUGE,
         ),
         cv.Optional(CONF_TOP128): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
             accuracy_decimals=2,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_PERCENT,
+            icon=ICON_GAUGE,
         ),
         cv.Optional(CONF_TOP131): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
