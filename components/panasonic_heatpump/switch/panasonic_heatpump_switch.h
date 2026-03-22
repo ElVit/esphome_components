@@ -21,6 +21,7 @@ enum SwitchIds : uint8_t {
   CONF_SET32,
   CONF_SET33,
   CONF_SET34,
+  CONF_ERROR,
 };
 
 class PanasonicHeatpumpSwitch : public switch_::Switch,

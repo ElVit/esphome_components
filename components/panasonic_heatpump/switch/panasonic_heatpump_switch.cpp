@@ -52,12 +52,15 @@ void PanasonicHeatpumpSwitch::write_state(bool state) {
   case SwitchIds::CONF_SET34:
     this->parent_->set_command_byte(PanasonicCommand::setPlus1(value), 26);
     break;
+  case SwitchIds::CONF_ERROR:
+    this->parent_->set_command_byte(value, 8);
+    break;
   default:
     return;
   };
 
   this->publish_state(state);
-  this->keep_state_ = 2;
+  this->keep_state_ = KEEP_STATE;
 }
 
 void PanasonicHeatpumpSwitch::publish_new_state(const std::vector<uint8_t>& data) {
@@ -127,6 +130,11 @@ void PanasonicHeatpumpSwitch::publish_new_state(const std::vector<uint8_t>& data
     break;
   case SwitchIds::CONF_SET34:
     new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit7and8(data[26]));
+    if (this->state == new_state)
+      return;
+    break;
+  case SwitchIds::CONF_ERROR:
+    new_state = PanasonicDecode::getBinaryState(data[8]);
     if (this->state == new_state)
       return;
     break;

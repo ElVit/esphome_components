@@ -572,6 +572,8 @@ switch:
       name: "Set External Heat Cool Control"
     set34:
       name: "Set Bivalent Control"
+    error_reset:
+      name: "Error Reset (Restart Heatpump)"
 ```
 
 ### Selects
