@@ -15,6 +15,10 @@
 #define PANASONIC_HEATPUMP_VERSION "0.0.8"
 #endif
 
+#ifndef KEEP_STATE
+#define KEEP_STATE 1
+#endif
+
 namespace esphome {
 namespace panasonic_heatpump {
 enum LoopState : uint8_t {

@@ -42,7 +42,7 @@ void PanasonicHeatpumpSelect::control(const std::string& value) {
   };
 
   this->publish_state(value);
-  this->keep_state_ = 2;
+  this->keep_state_ = KEEP_STATE;
 }
 
 void PanasonicHeatpumpSelect::publish_new_state(const std::vector<uint8_t>& data) {
