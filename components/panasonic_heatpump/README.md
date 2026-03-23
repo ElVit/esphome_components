@@ -12,7 +12,7 @@
   * For example: [XAP-05V-1 5Pin Cable with Female to Female Connector](https://a.aliexpress.com/_ExPT82E)
 
 > [!IMPORTANT]
-> The support for ESP8266 and the aruino framework is deprecated for this component.
+> The support for ESP8266 and the arduino framework is deprecated for this component.
 > Since v0.0.8 this component uses threads to process the UART communication.
 > But if you still want to use an ESP8266 controller or the arduino framework,
 > please use the branch "heatpump/esp8266".
