@@ -33,6 +33,8 @@ void PanasonicHelpers::log_uart_hex(UartLogDirection direction, const uint8_t* d
 
   logStr += byte_array_to_hex_string(data, length, separator);
 
+  // Log in chunks to avoid ESP_LOG buffer overflow (https://developers.esphome.io/architecture/logging/).
+  // The default log buffer is 512 bytes but UART messages can be larger (203 * 3 = 609 characters + log header).
   for (size_t i = 0; i < logStr.length(); i += UART_LOG_CHUNK_SIZE) {
     ESP_LOGI(TAG, "%s %s", msgDir.c_str(), logStr.substr(i, UART_LOG_CHUNK_SIZE).c_str());
     delay(10);
