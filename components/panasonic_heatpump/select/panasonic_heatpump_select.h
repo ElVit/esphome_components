@@ -15,6 +15,10 @@ enum SelectIds : uint8_t {
   CONF_SET17,
   CONF_SET26,
   CONF_SET35,
+  CONF_SET39,
+  CONF_SET40,
+  CONF_SET41,
+  CONF_SET42,
 };
 
 class PanasonicHeatpumpSelect : public select::Select,

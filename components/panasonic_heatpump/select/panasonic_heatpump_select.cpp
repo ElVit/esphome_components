@@ -37,6 +37,18 @@ void PanasonicHeatpumpSelect::control(const std::string& value) {
   case SelectIds::CONF_SET35:
     this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply4(index), 26);
     break;
+  case SelectIds::CONF_SET39:
+    this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply4(index), 30);
+    break;
+  case SelectIds::CONF_SET40:
+    this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply64(index), 24);
+    break;
+  case SelectIds::CONF_SET41:
+    this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply16(index), 11);
+    break;
+  case SelectIds::CONF_SET42:
+    this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply16(index), 29);
+    break;
   default:
     return;
   };
@@ -89,6 +101,28 @@ void PanasonicHeatpumpSelect::publish_new_state(const std::vector<uint8_t>& data
     break;
   case SelectIds::CONF_SET35:
     new_state = PanasonicDecode::getTextState(PanasonicDecode::BivalentMode, PanasonicDecode::getBit5and6(data[26]));
+    if (this->has_state() && this->current_option() == new_state)
+      return;
+    break;
+  case SelectIds::CONF_SET39:
+    new_state = PanasonicDecode::getTextState(PanasonicDecode::HeatingControl, PanasonicDecode::getBit5and6(data[30]));
+    if (this->has_state() && this->current_option() == new_state)
+      return;
+    break;
+  case SelectIds::CONF_SET40:
+    new_state = PanasonicDecode::getTextState(PanasonicDecode::SmartDHW, PanasonicDecode::getBit1and2(data[24]));
+    if (this->has_state() && this->current_option() == new_state)
+      return;
+    break;
+  case SelectIds::CONF_SET41:
+    new_state =
+        PanasonicDecode::getTextState(PanasonicDecode::QuietModePriority, PanasonicDecode::getBit3and4(data[11]));
+    if (this->has_state() && this->current_option() == new_state)
+      return;
+    break;
+  case SelectIds::CONF_SET42:
+    new_state =
+        PanasonicDecode::getTextState(PanasonicDecode::PumpFlowRateMode, PanasonicDecode::getBit3and4(data[29]));
     if (this->has_state() && this->current_option() == new_state)
       return;
     break;
