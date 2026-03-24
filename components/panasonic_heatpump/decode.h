@@ -49,7 +49,7 @@ class PanasonicDecode {
   static const constexpr char* const BlockedFree[] = {"2", "Blocked", "Free"};
   static const constexpr char* const OffOn[] = {"2", "Off", "On"};
   static const constexpr char* const InactiveActive[] = {"2", "Inactive", "Active"};
-  static const constexpr char* const PumpFlowRateMode[] = {"2", "DeltaT", "Max flow"};
+  static const constexpr char* const PumpFlowRateMode[] = {"2", "DeltaT", "Max. Duty"};
   static const constexpr char* const ThreeWayValve[] = {"2", "Buffer Tank", "DHW Tank"};
   static const constexpr char* const TwoWayValve[] = {"2", "Cool", "Heat"};
   static const constexpr char* const WaterTempControl[] = {"2", "Comp. Curve", "Direct"};

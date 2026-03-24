@@ -66,7 +66,7 @@ CONF_SELECTS = [
     ["Disabled", "Type-A", "Type-B"],
     ["Alternative", "Parallel", "Advanced Parallel"],
     [
-        "Comfort,",
+        "Comfort",
         "Efficiency",
     ],
     [
