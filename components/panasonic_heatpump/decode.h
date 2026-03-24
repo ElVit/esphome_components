@@ -49,7 +49,7 @@ class PanasonicDecode {
   static const constexpr char* const BlockedFree[] = {"2", "Blocked", "Free"};
   static const constexpr char* const OffOn[] = {"2", "Off", "On"};
   static const constexpr char* const InactiveActive[] = {"2", "Inactive", "Active"};
-  static const constexpr char* const PumpFlowRateMode[] = {"2", "DeltaT", "Max flow"};
+  static const constexpr char* const PumpFlowRateMode[] = {"2", "DeltaT", "Max. Duty"};
   static const constexpr char* const ThreeWayValve[] = {"2", "Buffer Tank", "DHW Tank"};
   static const constexpr char* const TwoWayValve[] = {"2", "Cool", "Heat"};
   static const constexpr char* const WaterTempControl[] = {"2", "Comp. Curve", "Direct"};
@@ -67,6 +67,9 @@ class PanasonicDecode {
   static const constexpr char* const ZoneState[] = {"3", "Zone 1", "Zone 2", "Zone 1 & 2"};
   static const constexpr char* const ExtPadHeaterType[] = {"3", "Disabled", "Type-A", "Type-B"};
   static const constexpr char* const BivalentMode[] = {"3", "Alternative", "Parallel", "Advanced Parallel"};
+  static const constexpr char* const HeatingControl[] = {"2", "Comfort", "Efficiency"};
+  static const constexpr char* const SmartDHW[] = {"2", "Variable", "Standard"};
+  static const constexpr char* const QuietModePriority[] = {"2", "Sound", "Capacity"};
   static const constexpr char* const ModelNames[] = {
       "58",                                  // string representation of number of known models (last model number + 1)
       "WH-MDC05H3E5",                        // 0

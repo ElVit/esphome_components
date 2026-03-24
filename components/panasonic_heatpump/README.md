@@ -132,7 +132,8 @@ water_heater:
 ```
 
 Thanks to [oxyde42](https://github.com/oxyde42) there is also an exmaple yaml code for the HeishaMon Large Board:
-- [example_heishamon_large.yaml](../../prototypes/panasonic_heatpump/example_heishamon_large.yaml)
+
+* [example_heishamon_large.yaml](../../prototypes/panasonic_heatpump/example_heishamon_large.yaml)
 
 ## Configuration variables
 
@@ -466,6 +467,12 @@ text_sensor:
       name: "ThreeWay Valve State2"
     top130:
       name: "Bivalent Mode"
+    top139:
+      name: "HeatingControl"
+    top140:
+      name: "SmartDHW"
+    top141:
+      name: "Quiet Mode Priority"
 ```
 
 ### Numbers
@@ -609,6 +616,14 @@ select:
       name: "Set External PadHeater"
     set35:
       name: "Set Bivalent Mode"
+    set39:
+      name: "Set Heating Control"
+    set40:
+      name: "Set Smart DHW"
+    set41:
+      name: "Set Quiet Mode Priority"
+    set42:
+      name: "Set Pump Flow Rate Mode"
 ```
 
 ### Climates
