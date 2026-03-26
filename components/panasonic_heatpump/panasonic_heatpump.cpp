@@ -181,8 +181,7 @@ void PanasonicHeatpumpComponent::read_response() {
     if (this->response_message_.size() > 2 && this->response_message_.size() == this->payload_length_ + 3) {
       this->response_receiving_ = false;
       this->current_response_count_++;
-      if (this->log_uart_msg_)
-        PanasonicHelpers::log_uart_hex(UART_LOG_RX, this->response_message_, ',');
+      PanasonicHelpers::write_uart_log(UART_LOG_RX, this->response_message_, ',', this->log_uart_msg_);
     }
   }
 }
@@ -190,27 +189,23 @@ void PanasonicHeatpumpComponent::read_response() {
 void PanasonicHeatpumpComponent::send_request(RequestType requestType) {
   switch (requestType) {
   case RequestType::COMMAND:
-    if (this->log_uart_msg_)
-      PanasonicHelpers::log_uart_hex(UART_LOG_TX, this->command_message_, ',');
+    PanasonicHelpers::write_uart_log(UART_LOG_TX, this->command_message_, ',', this->log_uart_msg_);
     this->write_array(this->command_message_);
     this->flush();
     break;
   case RequestType::INITIAL:
     // Probably not necessary but CZ-TAW1 sends this query on boot
-    if (this->log_uart_msg_)
-      PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE, ',');
+    PanasonicHelpers::write_uart_log(UART_LOG_TX, PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE, ',', this->log_uart_msg_);
     this->write_array(PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE);
     this->flush();
     break;
   case RequestType::POLLING:
-    if (this->log_uart_msg_)
-      PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE, ',');
+    PanasonicHelpers::write_uart_log(UART_LOG_TX, PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE, ',', this->log_uart_msg_);
     this->write_array(PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE);
     this->flush();
     break;
   case RequestType::POLLING_EXTRA:
-    if (this->log_uart_msg_)
-      PanasonicHelpers::log_uart_hex(UART_LOG_TX, PanasonicCommand::PollingExtraMessage, DATA_MESSAGE_SIZE, ',');
+    PanasonicHelpers::write_uart_log(UART_LOG_TX, PanasonicCommand::PollingExtraMessage, DATA_MESSAGE_SIZE, ',', this->log_uart_msg_);
     this->write_array(PanasonicCommand::PollingExtraMessage, DATA_MESSAGE_SIZE);
     this->flush();
     break;
@@ -267,8 +262,7 @@ void PanasonicHeatpumpComponent::read_request() {
     // Check if message is complete
     if (this->request_message_.size() > 2 && this->request_message_.size() == this->payload_length_ + 3) {
       this->request_receiving_ = false;
-      if (this->log_uart_msg_)
-        PanasonicHelpers::log_uart_hex(UART_LOG_TX, this->request_message_, ',');
+      PanasonicHelpers::write_uart_log(UART_LOG_TX, this->request_message_, ',', this->log_uart_msg_);
 
       if (this->request_message_[0] != 0x31) {
         // Update last request time when request is complete
