@@ -15,7 +15,7 @@
 > The support for ESP8266 and the arduino framework is deprecated for this component.  
 > Since v0.0.8 this component uses threads to process the UART communication.  
 > But if you still want to use an ESP8266 controller or the arduino framework,  
-> please use the branch "heatpump/arduino".  
+> please use the branch `heatpump/arduino`.  
 >
 > ```yaml
 > external_components:
