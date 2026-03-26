@@ -195,17 +195,20 @@ void PanasonicHeatpumpComponent::send_request(RequestType requestType) {
     break;
   case RequestType::INITIAL:
     // Probably not necessary but CZ-TAW1 sends this query on boot
-    PanasonicHelpers::write_uart_log(UART_LOG_TX, PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE, ',', this->log_uart_msg_);
+    PanasonicHelpers::write_uart_log(UART_LOG_TX, PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE, ',',
+                                     this->log_uart_msg_);
     this->write_array(PanasonicCommand::InitialRequest, INIT_REQUEST_SIZE);
     this->flush();
     break;
   case RequestType::POLLING:
-    PanasonicHelpers::write_uart_log(UART_LOG_TX, PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE, ',', this->log_uart_msg_);
+    PanasonicHelpers::write_uart_log(UART_LOG_TX, PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE, ',',
+                                     this->log_uart_msg_);
     this->write_array(PanasonicCommand::PollingMessage, DATA_MESSAGE_SIZE);
     this->flush();
     break;
   case RequestType::POLLING_EXTRA:
-    PanasonicHelpers::write_uart_log(UART_LOG_TX, PanasonicCommand::PollingExtraMessage, DATA_MESSAGE_SIZE, ',', this->log_uart_msg_);
+    PanasonicHelpers::write_uart_log(UART_LOG_TX, PanasonicCommand::PollingExtraMessage, DATA_MESSAGE_SIZE, ',',
+                                     this->log_uart_msg_);
     this->write_array(PanasonicCommand::PollingExtraMessage, DATA_MESSAGE_SIZE);
     this->flush();
     break;
@@ -315,7 +318,8 @@ ResponseType PanasonicHeatpumpComponent::check_response(const std::vector<uint8_
     return ResponseType::UNKNOWN;
   }
 
-  this->send_extra_request_ = message[3] == 0x10 && message[199] > 0x02 && this->send_extra_request_ == false ? true : false;
+  this->send_extra_request_ =
+      message[3] == 0x10 && message[199] > 0x02 && this->send_extra_request_ == false ? true : false;
 
   // Get response type and save the response
   auto responseType = ResponseType::UNKNOWN;

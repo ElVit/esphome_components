@@ -5,12 +5,12 @@ namespace panasonic_heatpump {
 static const char* const TAG = "panasonic_heatpump";
 
 void PanasonicHelpers::write_uart_log(UartLogDirection direction, const std::vector<uint8_t>& data,
-                                    const char separator, bool logBytes) {
+                                      const char separator, bool logBytes) {
   PanasonicHelpers::write_uart_log(direction, &data[0], data.size(), separator, logBytes);
 }
 
 void PanasonicHelpers::write_uart_log(UartLogDirection direction, const uint8_t* data, const size_t length,
-                                    const char separator, bool logBytes) {
+                                      const char separator, bool logBytes) {
   std::string logStr = "";
   std::string msgDir = direction == UART_LOG_TX ? ">>>" : "<<<";
   std::string msgType = direction == UART_LOG_TX ? "request" : "response";
