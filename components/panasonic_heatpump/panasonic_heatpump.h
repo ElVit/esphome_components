@@ -87,8 +87,8 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
     this->log_uart_msg_ = active;
   }
   // uart message variables to use in lambda functions
-  int getResponseByte(const int index);
-  int getExtraResponseByte(const int index);
+  int get_response_byte(const int index);
+  int get_extra_response_byte(const int index);
   // command functions
   void set_command_high_nibble(const uint8_t value, const uint8_t index);
   void set_command_low_nibble(const uint8_t value, const uint8_t index);

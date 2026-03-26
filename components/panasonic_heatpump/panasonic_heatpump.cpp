@@ -273,13 +273,13 @@ void PanasonicHeatpumpComponent::read_request() {
   }
 }
 
-int PanasonicHeatpumpComponent::getResponseByte(const int index) {
+int PanasonicHeatpumpComponent::get_response_byte(const int index) {
   if (this->heatpump_default_message_.size() > index)
     return this->heatpump_default_message_[index];
   return -1;
 }
 
-int PanasonicHeatpumpComponent::getExtraResponseByte(const int index) {
+int PanasonicHeatpumpComponent::get_extra_response_byte(const int index) {
   if (this->heatpump_extra_message_.size() > index)
     return this->heatpump_extra_message_[index];
   return -1;
