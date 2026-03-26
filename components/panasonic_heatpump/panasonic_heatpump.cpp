@@ -285,49 +285,49 @@ int PanasonicHeatpumpComponent::get_extra_response_byte(const int index) {
   return -1;
 }
 
-ResponseType PanasonicHeatpumpComponent::check_response(const std::vector<uint8_t>& data) {
+ResponseType PanasonicHeatpumpComponent::check_response(const std::vector<uint8_t>& message) {
   // Read response message:
   // format:          0x71 [payload_length] 0x01 [0x10 || 0x21] [[TOP0 - TOP114] ...] 0x00 [checksum]
   // payload_length:  payload_length + 3 = packet_length
   // checksum:        if (sum(all bytes) & 0xFF == 0) ==> valid packet
 
-  if (data.empty())
+  if (message.empty())
     return ResponseType::UNKNOWN;
-  if (data[0] != 0x71)
+  if (message[0] != 0x71)
     return ResponseType::UNKNOWN;
   if (this->response_receiving_)
     return ResponseType::RECEIVING;
-  if (data.size() != RESPONSE_MSG_SIZE) {
-    ESP_LOGW(TAG, "Invalid response message length: recieved %d - expected %d", data.size(), RESPONSE_MSG_SIZE);
+  if (message.size() != RESPONSE_MSG_SIZE) {
+    ESP_LOGW(TAG, "Response message too short: received %u - expected %u", message.size(), RESPONSE_MSG_SIZE);
     delay(10);  // NOLINT
     return ResponseType::UNKNOWN;
   }
 
   // Verify checksum
   uint8_t checksum = 0;
-  for (int i = 0; i < data.size(); i++) {
-    checksum += data[i];
+  for (int i = 0; i < message.size(); i++) {
+    checksum += message[i];
   }
   // all bytes (including checksum byte) shall be 0x00
   if (checksum != 0) {
-    ESP_LOGW(TAG, "Invalid response message: checksum = 0x%02X, last_byte = 0x%02X", checksum, data[202]);
+    ESP_LOGW(TAG, "Invalid response message: checksum = 0x%02X, last_byte = 0x%02X", checksum, message[202]);
     delay(10);  // NOLINT
     return ResponseType::UNKNOWN;
   }
 
-  this->send_extra_request_ = data[3] == 0x10 && data[199] > 0x02 && this->send_extra_request_ == false ? true : false;
+  this->send_extra_request_ = message[3] == 0x10 && message[199] > 0x02 && this->send_extra_request_ == false ? true : false;
 
   // Get response type and save the response
   auto responseType = ResponseType::UNKNOWN;
-  if (data[3] == 0x10) {
+  if (message[3] == 0x10) {
     responseType = ResponseType::STANDARD;
-    this->heatpump_default_message_ = data;
-  } else if (data[3] == 0x21) {
+    this->heatpump_default_message_ = message;
+  } else if (message[3] == 0x21) {
     responseType = ResponseType::EXTRA;
-    this->heatpump_extra_message_ = data;
+    this->heatpump_extra_message_ = message;
   }
   if (responseType == ResponseType::UNKNOWN) {
-    ESP_LOGW(TAG, "Unknown response type (4. byte): 0x%02X. Expected 0x10 or 0x21.", data[3]);
+    ESP_LOGW(TAG, "Unknown response type (4. byte): 0x%02X. Expected 0x10 or 0x21.", message[3]);
     delay(10);  // NOLINT
     return responseType;
   }
