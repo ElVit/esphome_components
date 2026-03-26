@@ -6,7 +6,7 @@
 
 ### What you need
 
-* ESPHome compatible microcontroller (e.g. ESP8266, ESP32, ESP32-S2, ESP32-C3, ...)
+* ESPHome compatible microcontroller (e.g. ESP32, ESP32-S2, ESP32-C3, ...)
 * RJ12 cable (phone cable, RJ11 may also work)
 
 ### Wiring

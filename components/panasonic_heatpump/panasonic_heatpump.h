@@ -23,7 +23,6 @@ namespace esphome {
 namespace panasonic_heatpump {
 enum LoopState : uint8_t {
   READ_RESPONSE,
-  CHECK_RESPONSE,
   PUBLISH_SENSOR,
   PUBLISH_BINARY_SENSOR,
   PUBLISH_TEXT_SENSOR,
@@ -34,7 +33,6 @@ enum LoopState : uint8_t {
   PUBLISH_WATER_HEATER,
   PUBLISH_EXTRA_SENSOR,
   SEND_REQUEST,
-  READ_REQUEST,
   RESTART_LOOP,
 };
 
@@ -48,7 +46,6 @@ enum RequestType : uint8_t {
 
 enum ResponseType : uint8_t {
   UNKNOWN,
-  RECEIVING,
   STANDARD,
   EXTRA,
 };
@@ -86,9 +83,9 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   void set_log_uart_msg(bool active) {
     this->log_uart_msg_ = active;
   }
-  // uart message variables to use in lambda functions
-  int getResponseByte(const int index);
-  int getExtraResponseByte(const int index);
+  // functions to use in esphome lambda
+  int get_response_byte(const int index);
+  int get_extra_response_byte(const int index);
   // command functions
   void set_command_high_nibble(const uint8_t value, const uint8_t index);
   void set_command_low_nibble(const uint8_t value, const uint8_t index);
@@ -128,27 +125,25 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
 
  protected:
   // options variables
-  uart::UARTComponent* uart_client_{nullptr};
   bool log_uart_msg_{false};
-  uint32_t last_request_time_{0};
-  uint32_t uart_client_timeout_{10000};
-  // uart message variables
+  uint32_t last_client_request_time_{0};
+  uint32_t uart_client_timeout_{10000};  // 10 sec
+  uint32_t request_send_time_{5000};  // 5 sec --> default is 5 sec so first request is not sent too fast after startup
+  static const uint32_t REQUEST_SEND_INTERVAL{250};  // 250 ms
+  static const size_t HEADER_SIZE = 4;
+
+  // uart message variables, process in main loop
+  TaskHandle_t uart_task_handle_{nullptr};
+  TaskHandle_t uart_client_task_handle_{nullptr};
+  QueueHandle_t response_queue_handle_{nullptr};
+  QueueHandle_t request_queue_handle_{nullptr};
+  uart::UARTComponent* uart_client_{nullptr};
   std::vector<uint8_t> heatpump_default_message_;
   std::vector<uint8_t> heatpump_extra_message_;
-  std::vector<uint8_t> response_message_;
-  std::vector<uint8_t> request_message_;
   std::vector<uint8_t> command_message_;
-  uint8_t payload_length_;
-  uint8_t byte_;
-  uint8_t current_response_count_{0};
-  uint8_t last_response_count_{0};
-  bool response_receiving_{false};
-  bool request_receiving_{false};
-  bool send_extra_request_{false};
   bool uart_client_timeout_exceeded_{false};
   LoopState loop_state_{LoopState::RESTART_LOOP};
-  RequestType next_request_{RequestType::INITIAL};
-  ResponseType current_response_{ResponseType::UNKNOWN};
+
   // entity vectors
   std::vector<PanasonicHeatpumpEntity*> binary_sensors_;
   std::vector<PanasonicHeatpumpEntity*> climates_;
@@ -161,10 +156,21 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   std::vector<PanasonicHeatpumpEntity*> extra_sensors_;
 
   // uart message functions
-  void read_response();
-  void send_request(RequestType requestType);
-  void read_request();
-  ResponseType check_response(const std::vector<uint8_t>& data);
+  static void uart_task(void* pvParameters);
+  static void uart_client_task(void* pvParameters);
+  bool receive_from_uart(uart::UARTComponent* src, std::vector<uint8_t>& buffer);
+
+  void send_request();
+  void queue_request(const std::vector<uint8_t>& message);
+  ResponseType read_response();
+  static bool check_response_length(const std::vector<uint8_t>& message);
+  static bool verify_message_header(const std::vector<uint8_t>& message, bool reading_succeeded);
+  static bool verify_message_checksum(const std::vector<uint8_t>& message);
+
+  template <size_t N>
+  static std::vector<uint8_t> build_message(const uint8_t (&msg)[N]) {
+    return std::vector<uint8_t>(msg, msg + N);
+  }
 };
 }  // namespace panasonic_heatpump
 }  // namespace esphome

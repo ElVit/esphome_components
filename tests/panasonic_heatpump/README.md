@@ -14,13 +14,11 @@ This directory contains comprehensive tests for the `panasonic_heatpump` ESPHome
 ### Integration Tests (`test_panasonic_heatpump_integration.py`)
 - Tests minimal feature configuration on ESP32 board
 - Tests full feature configuration on ESP32 board
-- Tests configuration on ESP8266 board
 - Tests configuration on ESP32-S2 board
 - Tests configuration on ESP32-C3 board
 - Tests configuration with CZ-TAW1 (UART-proxy)
 
 ### Test Configuration Files
-- `test_panasonic_heatpump_esp8266.yaml` - ESP8266 Wemos D1 Mini
 - `test_panasonic_heatpump_esp32s2.yaml` - ESP32-S2 Wemos S2 Mini
 - `test_panasonic_heatpump_esp32c3.yaml` - ESP32-C3 mini (RISC-V)
 - `test_panasonic_heatpump_cztaw1.yaml` - UART proxy setup for CZ-TAW1 client support
@@ -68,7 +66,7 @@ The GitHub Actions workflow (`.github/workflows/test_panasonic_heatpump.yml`) in
 ### Jobs
 
 1. **test-build**: Validates and compiles the component
-   - Tests on multiple board types: ESP8266, ESP32 (full), ESP32-S2, ESP32-C3 and with CZ-TAW1 (UART-proxy)
+   - Tests on multiple board types: ESP32 (full), ESP32-S2, ESP32-C3 and with CZ-TAW1 (UART-proxy)
    - Uses esphome/build-action for firmware compilation
 
 2. **lint-code**: Runs clang-format on C++ code
@@ -196,7 +194,7 @@ All tests must pass before merging to main branch. The GitHub Actions workflow e
 - Code follows formatting standards
 - All unit and integration tests pass
 - Latest ESPHome versions is supported
-- ESP8266 and ESP32 boards are supported
+- Only ESP32 boards are supported
 
 ## Contributing
 

@@ -13,17 +13,6 @@ class TestPanasonicHeatpumpIntegration:
     """Integration tests using ESPHome CLI."""
 
     @pytest.fixture
-    def test_yaml_esp8266(self):
-        """Get the path to the ESP8266 test YAML file."""
-        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        return os.path.join(
-            base_dir,
-            "tests",
-            "panasonic_heatpump",
-            "test_panasonic_heatpump_esp8266.yaml",
-        )
-
-    @pytest.fixture
     def test_yaml_esp32(self):
         """Get the path to the ESP32 test YAML file."""
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
@@ -63,26 +52,6 @@ class TestPanasonicHeatpumpIntegration:
             "panasonic_heatpump",
             "test_panasonic_heatpump_cztaw1.yaml",
         )
-
-    def test_validate_esp8266_config(self, test_yaml_esp8266: str):
-        """Test that the ESP8266 configuration is valid."""
-        if not os.path.exists(test_yaml_esp8266):
-            pytest.skip(f"Test file not found: {test_yaml_esp8266}")
-
-        try:
-            result = subprocess.run(
-                ["esphome", "config", test_yaml_esp8266],
-                capture_output=True,
-                text=True,
-                timeout=120,
-            )
-            assert (
-                result.returncode == 0
-            ), f"ESP8266 config validation failed: {result.stderr}"
-        except FileNotFoundError:
-            pytest.skip("ESPHome not installed")
-        except subprocess.TimeoutExpired:
-            pytest.fail("ESPHome config validation timed out")
 
     def test_validate_esp32_config(self, test_yaml_esp32: str):
         """Test that the ESP32 configuration is valid."""
