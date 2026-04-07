@@ -716,6 +716,7 @@ These are initial request messages.
 To fix this problem you can try:  
 - enable the switch `error_reset`
 - turn off and on the power of the heatpump (switching the heatpump off is not enough)
+
 The heatpump will restart and should respond to the requests.
 
 ## Sources
