@@ -7,7 +7,7 @@
 #define RESPONSE_MSG_SIZE 203
 #endif
 #ifndef NUMBER_OF_MODELS
-#define NUMBER_OF_MODELS 68
+#define NUMBER_OF_MODELS 67
 #endif
 
 namespace esphome {
