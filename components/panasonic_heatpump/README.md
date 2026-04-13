@@ -344,6 +344,8 @@ sensor:
       name: "Bivalent Advanced DHW Delay"
     top142:
       name: "Expansion Valve"
+    top143:
+      name: ""DHW Sensor Selection"
 
     xtop0:
       name: "Heat Power Consumption Extra"
@@ -551,6 +553,8 @@ number:
       name: "Set Bivalent AP Start Temp"
     set38:
       name: "Set Bivalent AP Stop Temp"
+    set46:
+      name: ""Set Heater On Outdoor Temp"
 ```
 
 ### Switches
@@ -624,6 +628,12 @@ select:
       name: "Set Quiet Mode Priority"
     set42:
       name: "Set Pump Flow Rate Mode"
+    set43:
+      name: ""Set DHW Sensor Selection"
+    set44:
+      name: ""Set DHW Heater State"
+    set45:
+      name: ""Set Room Heater State"
 ```
 
 ### Climates
@@ -714,8 +724,8 @@ the heatpump may not respond to any request messages.
 If the CZ-TAW1 is also connected to the ESP controller you will probably see some requests like 0x31 05 10 01 ...  
 These are initial request messages.  
 To fix this problem you can try:  
-- enable the switch `error_reset`
-- turn off and on the power of the heatpump (switching the heatpump off is not enough)
+* enable the switch `error_reset`
+* turn off and on the power of the heatpump (switching the heatpump off is not enough)
 
 The heatpump will restart and should respond to the requests.
 
