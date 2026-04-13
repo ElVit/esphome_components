@@ -297,8 +297,8 @@ void PanasonicHeatpumpNumber::publish_new_state(const std::vector<uint8_t>& data
     if (this->has_state() && this->state == new_state)
       return;
     break;
-  case NumberIds::CONF_SET43:
-    new_state = PanasonicDecode::getBit7and8(data[11]);
+  case NumberIds::CONF_SET46:
+    new_state = PanasonicDecode::getByteMinus128(data[85]);
     if (this->has_state() && this->state == new_state)
       return;
     break;

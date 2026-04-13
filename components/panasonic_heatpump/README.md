@@ -344,8 +344,6 @@ sensor:
       name: "Bivalent Advanced DHW Delay"
     top142:
       name: "Expansion Valve"
-    top143:
-      name: ""DHW Sensor Selection"
 
     xtop0:
       name: "Heat Power Consumption Extra"
@@ -475,6 +473,8 @@ text_sensor:
       name: "SmartDHW"
     top141:
       name: "Quiet Mode Priority"
+    top143:
+      name: "DHW Sensor Selection"
 ```
 
 ### Numbers
@@ -554,7 +554,7 @@ number:
     set38:
       name: "Set Bivalent AP Stop Temp"
     set46:
-      name: ""Set Heater On Outdoor Temp"
+      name: "Set Heater On Outdoor Temp"
 ```
 
 ### Switches
@@ -629,11 +629,11 @@ select:
     set42:
       name: "Set Pump Flow Rate Mode"
     set43:
-      name: ""Set DHW Sensor Selection"
+      name: "Set DHW Sensor Selection"
     set44:
-      name: ""Set DHW Heater State"
+      name: "Set DHW Heater State"
     set45:
-      name: ""Set Room Heater State"
+      name: "Set Room Heater State"
 ```
 
 ### Climates
