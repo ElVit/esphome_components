@@ -144,7 +144,8 @@ void PanasonicHeatpumpTextSensor::publish_new_state(const std::vector<uint8_t>& 
       return;
     break;
   case TextSensorIds::CONF_TOP143:
-    new_state = PanasonicDecode::getTextState(PanasonicDecode::DHWSensorSelection, PanasonicDecode::getBit7and8(data[11]));
+    new_state =
+        PanasonicDecode::getTextState(PanasonicDecode::DHWSensorSelection, PanasonicDecode::getBit7and8(data[11]));
     if (this->has_state() && this->get_state() == new_state)
       return;
     break;
