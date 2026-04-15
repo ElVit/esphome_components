@@ -723,7 +723,7 @@ When the ESP controller is connected initially to the heatpump (and the heatpump
 the heatpump may not respond to any request messages.  
 If the CZ-TAW1 is also connected to the ESP controller you will probably see some requests like 0x31 05 10 01 ...  
 These are initial request messages.  
-To fix this problem you can try:
+To solve this problem you can try one of the follwing:
 
 * enable the switch `error_reset`
 * turn off and on the power of the heatpump (switching the heatpump off is not enough)
