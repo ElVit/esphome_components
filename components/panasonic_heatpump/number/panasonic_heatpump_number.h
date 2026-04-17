@@ -41,6 +41,7 @@ enum NumberIds : uint8_t {
   CONF_SET36,
   CONF_SET37,
   CONF_SET38,
+  CONF_SET46,
 };
 
 class PanasonicHeatpumpNumber : public number::Number,

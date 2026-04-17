@@ -83,11 +83,6 @@ void PanasonicHeatpumpSwitch::publish_new_state(const std::vector<uint8_t>& data
     if (this->state == new_state)
       return;
     break;
-  case SwitchIds::CONF_SET24:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit1and2(data[5]));
-    if (this->state == new_state)
-      return;
-    break;
   case SwitchIds::CONF_SET12:
     new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[111]));
     if (this->state == new_state)
@@ -98,8 +93,8 @@ void PanasonicHeatpumpSwitch::publish_new_state(const std::vector<uint8_t>& data
     if (this->state == new_state)
       return;
     break;
-  case SwitchIds::CONF_SET28:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[24]));
+  case SwitchIds::CONF_SET24:
+    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit1and2(data[5]));
     if (this->state == new_state)
       return;
     break;
@@ -108,13 +103,13 @@ void PanasonicHeatpumpSwitch::publish_new_state(const std::vector<uint8_t>& data
     if (this->state == new_state)
       return;
     break;
-  case SwitchIds::CONF_SET30:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit7and8(data[23]));
+  case SwitchIds::CONF_SET28:
+    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[24]));
     if (this->state == new_state)
       return;
     break;
-  case SwitchIds::CONF_SET33:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[23]));
+  case SwitchIds::CONF_SET30:
+    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit7and8(data[23]));
     if (this->state == new_state)
       return;
     break;
@@ -125,6 +120,11 @@ void PanasonicHeatpumpSwitch::publish_new_state(const std::vector<uint8_t>& data
     break;
   case SwitchIds::CONF_SET32:
     new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit1and2(data[23]));
+    if (this->state == new_state)
+      return;
+    break;
+  case SwitchIds::CONF_SET33:
+    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[23]));
     if (this->state == new_state)
       return;
     break;

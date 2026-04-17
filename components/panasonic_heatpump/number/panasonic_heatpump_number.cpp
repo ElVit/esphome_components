@@ -111,6 +111,9 @@ void PanasonicHeatpumpNumber::control(float value) {
   case NumberIds::CONF_SET38:
     this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 68);
     break;
+  case NumberIds::CONF_SET46:
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 85);
+    break;
   default:
     return;
   };
@@ -129,26 +132,6 @@ void PanasonicHeatpumpNumber::publish_new_state(const std::vector<uint8_t>& data
 
   float new_state;
   switch (this->id_) {
-  case NumberIds::CONF_SET11:
-    new_state = PanasonicDecode::getByteMinus128(data[42]);
-    if (this->has_state() && this->state == new_state)
-      return;
-    break;
-  case NumberIds::CONF_SET20:
-    new_state = PanasonicDecode::getByteMinus128(data[99]);
-    if (this->has_state() && this->state == new_state)
-      return;
-    break;
-  case NumberIds::CONF_SET18:
-    new_state = PanasonicDecode::getByteMinus128(data[84]);
-    if (this->has_state() && this->state == new_state)
-      return;
-    break;
-  case NumberIds::CONF_SET19:
-    new_state = PanasonicDecode::getByteMinus128(data[94]);
-    if (this->has_state() && this->state == new_state)
-      return;
-    break;
   case NumberIds::CONF_SET5:
     new_state = PanasonicDecode::getByteMinus128(data[38]);
     if (this->has_state() && this->state == new_state)
@@ -156,26 +139,6 @@ void PanasonicHeatpumpNumber::publish_new_state(const std::vector<uint8_t>& data
     break;
   case NumberIds::CONF_SET6:
     new_state = PanasonicDecode::getByteMinus128(data[39]);
-    if (this->has_state() && this->state == new_state)
-      return;
-    break;
-  case NumberIds::CONF_SET16_01:
-    new_state = PanasonicDecode::getByteMinus128(data[75]);
-    if (this->has_state() && this->state == new_state)
-      return;
-    break;
-  case NumberIds::CONF_SET16_02:
-    new_state = PanasonicDecode::getByteMinus128(data[76]);
-    if (this->has_state() && this->state == new_state)
-      return;
-    break;
-  case NumberIds::CONF_SET16_04:
-    new_state = PanasonicDecode::getByteMinus128(data[78]);
-    if (this->has_state() && this->state == new_state)
-      return;
-    break;
-  case NumberIds::CONF_SET16_03:
-    new_state = PanasonicDecode::getByteMinus128(data[77]);
     if (this->has_state() && this->state == new_state)
       return;
     break;
@@ -189,28 +152,33 @@ void PanasonicHeatpumpNumber::publish_new_state(const std::vector<uint8_t>& data
     if (this->has_state() && this->state == new_state)
       return;
     break;
-  case NumberIds::CONF_SET16_09:
-    new_state = PanasonicDecode::getByteMinus128(data[86]);
+  case NumberIds::CONF_SET11:
+    new_state = PanasonicDecode::getByteMinus128(data[42]);
     if (this->has_state() && this->state == new_state)
       return;
     break;
-  case NumberIds::CONF_SET16_10:
-    new_state = PanasonicDecode::getByteMinus128(data[87]);
+  case NumberIds::CONF_SET15:
+    new_state = PanasonicDecode::getByteMinus1(data[45]);
     if (this->has_state() && this->state == new_state)
       return;
     break;
-  case NumberIds::CONF_SET16_12:
-    new_state = PanasonicDecode::getByteMinus128(data[89]);
+  case NumberIds::CONF_SET16_01:
+    new_state = PanasonicDecode::getByteMinus128(data[75]);
     if (this->has_state() && this->state == new_state)
       return;
     break;
-  case NumberIds::CONF_SET16_11:
-    new_state = PanasonicDecode::getByteMinus128(data[88]);
+  case NumberIds::CONF_SET16_02:
+    new_state = PanasonicDecode::getByteMinus128(data[76]);
     if (this->has_state() && this->state == new_state)
       return;
     break;
-  case NumberIds::CONF_SET29:
-    new_state = PanasonicDecode::getByteMinus128(data[83]);
+  case NumberIds::CONF_SET16_03:
+    new_state = PanasonicDecode::getByteMinus128(data[77]);
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case NumberIds::CONF_SET16_04:
+    new_state = PanasonicDecode::getByteMinus128(data[78]);
     if (this->has_state() && this->state == new_state)
       return;
     break;
@@ -224,13 +192,33 @@ void PanasonicHeatpumpNumber::publish_new_state(const std::vector<uint8_t>& data
     if (this->has_state() && this->state == new_state)
       return;
     break;
+  case NumberIds::CONF_SET16_07:
+    new_state = PanasonicDecode::getByteMinus128(data[81]);
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
   case NumberIds::CONF_SET16_08:
     new_state = PanasonicDecode::getByteMinus128(data[82]);
     if (this->has_state() && this->state == new_state)
       return;
     break;
-  case NumberIds::CONF_SET16_07:
-    new_state = PanasonicDecode::getByteMinus128(data[81]);
+  case NumberIds::CONF_SET16_09:
+    new_state = PanasonicDecode::getByteMinus128(data[86]);
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case NumberIds::CONF_SET16_10:
+    new_state = PanasonicDecode::getByteMinus128(data[87]);
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case NumberIds::CONF_SET16_11:
+    new_state = PanasonicDecode::getByteMinus128(data[88]);
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case NumberIds::CONF_SET16_12:
+    new_state = PanasonicDecode::getByteMinus128(data[89]);
     if (this->has_state() && this->state == new_state)
       return;
     break;
@@ -244,18 +232,28 @@ void PanasonicHeatpumpNumber::publish_new_state(const std::vector<uint8_t>& data
     if (this->has_state() && this->state == new_state)
       return;
     break;
-  case NumberIds::CONF_SET16_16:
-    new_state = PanasonicDecode::getByteMinus128(data[93]);
-    if (this->has_state() && this->state == new_state)
-      return;
-    break;
   case NumberIds::CONF_SET16_15:
     new_state = PanasonicDecode::getByteMinus128(data[92]);
     if (this->has_state() && this->state == new_state)
       return;
     break;
-  case NumberIds::CONF_SET15:
-    new_state = PanasonicDecode::getByteMinus1(data[45]);
+  case NumberIds::CONF_SET16_16:
+    new_state = PanasonicDecode::getByteMinus128(data[93]);
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case NumberIds::CONF_SET18:
+    new_state = PanasonicDecode::getByteMinus128(data[84]);
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case NumberIds::CONF_SET19:
+    new_state = PanasonicDecode::getByteMinus128(data[94]);
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case NumberIds::CONF_SET20:
+    new_state = PanasonicDecode::getByteMinus128(data[99]);
     if (this->has_state() && this->state == new_state)
       return;
     break;
@@ -279,6 +277,11 @@ void PanasonicHeatpumpNumber::publish_new_state(const std::vector<uint8_t>& data
     if (this->has_state() && this->state == new_state)
       return;
     break;
+  case NumberIds::CONF_SET29:
+    new_state = PanasonicDecode::getByteMinus128(data[83]);
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
   case NumberIds::CONF_SET36:
     new_state = PanasonicDecode::getByteMinus128(data[65]);
     if (this->has_state() && this->state == new_state)
@@ -291,6 +294,11 @@ void PanasonicHeatpumpNumber::publish_new_state(const std::vector<uint8_t>& data
     break;
   case NumberIds::CONF_SET38:
     new_state = PanasonicDecode::getByteMinus128(data[68]);
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case NumberIds::CONF_SET46:
+    new_state = PanasonicDecode::getByteMinus128(data[85]);
     if (this->has_state() && this->state == new_state)
       return;
     break;

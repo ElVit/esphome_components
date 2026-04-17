@@ -31,6 +31,7 @@ enum TextSensorIds : uint8_t {
   CONF_TOP139,
   CONF_TOP140,
   CONF_TOP141,
+  CONF_TOP143,
 };
 
 class PanasonicHeatpumpTextSensor : public text_sensor::TextSensor,

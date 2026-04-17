@@ -588,16 +588,16 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_TOP62): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
             accuracy_decimals=2,
-            icon=ICON_FAN,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_ROTATIONS_PER_MINUTE,
+            icon=ICON_FAN,
         ),
         cv.Optional(CONF_TOP63): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
             accuracy_decimals=2,
-            icon=ICON_FAN,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_ROTATIONS_PER_MINUTE,
+            icon=ICON_FAN,
         ),
         cv.Optional(CONF_TOP64): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
@@ -924,9 +924,9 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_TOP142): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
             accuracy_decimals=0,
-            icon=ICON_VALVE,
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_EMPTY,
+            icon=ICON_VALVE,
         ),
         cv.Optional(CONF_XTOP0): sensor.sensor_schema(
             PanasonicHeatpumpSensor,
