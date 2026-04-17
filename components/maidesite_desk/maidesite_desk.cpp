@@ -98,17 +98,25 @@ void MaidesiteDeskComponent::decode_response(std::vector<uint8_t> message) {
     if (new_height == this->current_height_)
       return;
     this->current_height_ = new_height;
+#ifdef USE_SENSOR
     if (this->height_abs_sensor_ != nullptr)
       this->height_abs_sensor_->publish_state(this->current_height_);
+#endif
+#ifdef USE_NUMBER
     if (this->height_abs_number_ != nullptr)
       this->height_abs_number_->publish_state(this->current_height_);
+#endif
 
+#ifdef USE_SENSOR
     if (this->height_pct_sensor_ != nullptr && limit_max_ != 0)
       this->height_pct_sensor_->publish_state((this->current_height_ - this->limit_min_) /
                                               (this->limit_max_ - this->limit_min_) * 100);
+#endif
+#ifdef USE_NUMBER
     if (this->height_pct_number_ != nullptr && limit_max_ != 0)
       this->height_pct_number_->publish_state(
           roundf((this->current_height_ - this->limit_min_) / (this->limit_max_ - this->limit_min_) * 1000) / 10);
+#endif
     break;
 
   case 0x20:
@@ -117,17 +125,25 @@ void MaidesiteDeskComponent::decode_response(std::vector<uint8_t> message) {
 
     if ((message[4] & 1) == 0) {  // low nibble 0 -> no max limit, use physical_max_
       this->limit_max_ = this->physical_max_;
+#ifdef USE_SENSOR
       if (this->height_max_sensor_ != nullptr)
         this->height_max_sensor_->publish_state(this->limit_max_);
+#endif
+#ifdef USE_NUMBER
       if (height_abs_number_ != nullptr)
         this->height_abs_number_->traits.set_max_value(this->limit_max_);
+#endif
     }
     if ((message[4] >> 4) == 0) {  // high nibble 0 -> no min limit, use physical_min_
       this->limit_min_ = this->physical_min_;
+#ifdef USE_SENSOR
       if (this->height_min_sensor_ != nullptr)
         this->height_min_sensor_->publish_state(limit_min_);
+#endif
+#ifdef USE_NUMBER
       if (height_abs_number_ != nullptr)
         this->height_abs_number_->traits.set_min_value(limit_min_);
+#endif
     }
     break;
 
@@ -145,10 +161,14 @@ void MaidesiteDeskComponent::decode_response(std::vector<uint8_t> message) {
     delay(10);
 
     this->limit_max_ = this->byte2float(message[4], message[5]);
+#ifdef USE_SENSOR
     if (this->height_max_sensor_ != nullptr)
       this->height_max_sensor_->publish_state(limit_max_);
+#endif
+#ifdef USE_NUMBER
     if (height_abs_number_ != nullptr)
       this->height_abs_number_->traits.set_max_value(limit_max_);
+#endif
     break;
 
   case 0x22:
@@ -156,42 +176,54 @@ void MaidesiteDeskComponent::decode_response(std::vector<uint8_t> message) {
     delay(10);
 
     this->limit_min_ = this->byte2float(message[4], message[5]);
+#ifdef USE_SENSOR
     if (this->height_min_sensor_ != nullptr)
       this->height_min_sensor_->publish_state(limit_min_);
+#endif
+#ifdef USE_NUMBER
     if (height_abs_number_ != nullptr)
       this->height_abs_number_->traits.set_min_value(limit_min_);
+#endif
     break;
 
   case 0x25:
     ESP_LOGI(TAG, "Set position m1 to 0x%02X%02X", message[4], message[5]);
     delay(10);
 
+#ifdef USE_SENSOR
     if (this->position_m1_sensor_ != nullptr)
       this->position_m1_sensor_->publish_state(this->byte2float(message[4], message[5]));
+#endif
     break;
 
   case 0x26:
     ESP_LOGI(TAG, "Set position m2 to 0x%02X%02X", message[4], message[5]);
     delay(10);
 
+#ifdef USE_SENSOR
     if (this->position_m2_sensor_ != nullptr)
       this->position_m2_sensor_->publish_state(this->byte2float(message[4], message[5]));
+#endif
     break;
 
   case 0x27:
     ESP_LOGI(TAG, "Set position m3 to 0x%02X%02X", message[4], message[5]);
     delay(10);
 
+#ifdef USE_SENSOR
     if (this->position_m3_sensor_ != nullptr)
       this->position_m3_sensor_->publish_state(this->byte2float(message[4], message[5]));
+#endif
     break;
 
   case 0x28:
     ESP_LOGI(TAG, "Set position m4 to 0x%02X%02X", message[4], message[5]);
     delay(10);
 
+#ifdef USE_SENSOR
     if (this->position_m4_sensor_ != nullptr)
       this->position_m4_sensor_->publish_state(this->byte2float(message[4], message[5]));
+#endif
     break;
 
     // case 0x0E:
