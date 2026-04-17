@@ -7,7 +7,7 @@
 #define RESPONSE_MSG_SIZE 203
 #endif
 #ifndef NUMBER_OF_MODELS
-#define NUMBER_OF_MODELS 68
+#define NUMBER_OF_MODELS 67
 #endif
 
 namespace esphome {
@@ -70,8 +70,9 @@ class PanasonicDecode {
   static const constexpr char* const HeatingControl[] = {"2", "Comfort", "Efficiency"};
   static const constexpr char* const SmartDHW[] = {"2", "Variable", "Standard"};
   static const constexpr char* const QuietModePriority[] = {"2", "Sound", "Capacity"};
+  static const constexpr char* const DHWSensorSelection[] = {"2", "Top", "Center"};
   static const constexpr char* const ModelNames[] = {
-      "58",                                  // string representation of number of known models (last model number + 1)
+      "67",                                  // string representation of number of known models (last model number + 1)
       "WH-MDC05H3E5",                        // 0
       "WH-MDC07H3E5",                        // 1
       "IDU:WH-SXC09H3E5, ODU:WH-UX09HE5",    // 2
@@ -130,16 +131,15 @@ class PanasonicDecode {
       "IDU:WH-ADC0316M9E8AN2, ODU:WH-WXG09ME8",  // 55
       "IDU:WH-SDC0309K3E5, ODU:WH-UDZ07KE5",     // 56
       "IDU:WH-ADC0309K3E5AN, ODU:WH-UDZ05KE5",   // 57
-      "IDU:WH-SQC16H9E8, ODU:WH-UQ16HE8",        // 58
+      "IDU:WH-ADC0309K3E5, ODU:WH-UDZ09KE5",     // 58
       "IDU:WH-ADC0509L3E5AN, ODU:WH-WDG07LE5",   // 59
-      "IDU:WH-ADC0509L3E5AN, ODU:WH-WDG09LE5",   // 60
-      "IDU:WH-SDC0309K3E5, ODU:WH-UDZ07KE5",     // 61
+      "IDU:WH-SXC12H9E8, ODU:WH-UX12HE8",        // 60
+      "IDU:WH-SDC0316M9E8, ODU:WH-WXG09ME8",     // 61
       "IDU:WH-SDC0309K3E5, ODU:WH-UDZ07KE5",     // 62
-      "IDU:WH-SDC0309K3E5, ODU:WH-UDZ07KE5",     // 63
-      "IDU:WH-SDC0309K3E5, ODU:WH-UDZ05KE5",     // 64
-      "IDU:WH-SDC0309K3E5, ODU:WH-UDZ09KE5",     // 65
-      "IDU:WH-SDC09H3E8, ODU:WH-UD09HE8",        // 66
-      "WH-WXG12ME8",                             // 67
+      "WH-MDC09J3E5-1",                          // 63
+      "IDU:WH-ADC0509L3E5, ODU:WH-WDG09LE5",     // 64
+      "IDU:WH-ADC0309J3E5, ODU:WH-UD09JE5-1",    // 65
+      "IDU:WH-SDC12H6E5, ODU:WH-UD12HE5",        // 66
   };
 };
 

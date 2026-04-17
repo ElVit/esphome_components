@@ -20,6 +20,9 @@ CONF_SET39 = "set39"  # Set Heating Control
 CONF_SET40 = "set40"  # Set Smart DHW
 CONF_SET41 = "set41"  # Set Quiet Mode Priority
 CONF_SET42 = "set42"  # Set Pump Flow Rate Mode
+CONF_SET43 = "set43"  # Set DHW Sensor Selection
+CONF_SET44 = "set44"  # Set DHW Heater State
+CONF_SET45 = "set45"  # Set Room Heater State
 
 TYPES = [
     CONF_SET2,
@@ -33,6 +36,9 @@ TYPES = [
     CONF_SET40,
     CONF_SET41,
     CONF_SET42,
+    CONF_SET43,
+    CONF_SET44,
+    CONF_SET45,
 ]
 
 CONF_SELECTS = [
@@ -80,6 +86,18 @@ CONF_SELECTS = [
     [
         "DeltaT",
         "Max. Duty",
+    ],
+    [
+        "Top",
+        "Center",
+    ],
+    [
+        "Blocked",
+        "Free",
+    ],
+    [
+        "Blocked",
+        "Free",
     ],
 ]
 
@@ -134,6 +152,15 @@ CONFIG_SCHEMA = cv.Schema(
             PanasonicHeatpumpSelect,
         ),
         cv.Optional(CONF_SET42): select.select_schema(
+            PanasonicHeatpumpSelect,
+        ),
+        cv.Optional(CONF_SET43): select.select_schema(
+            PanasonicHeatpumpSelect,
+        ),
+        cv.Optional(CONF_SET44): select.select_schema(
+            PanasonicHeatpumpSelect,
+        ),
+        cv.Optional(CONF_SET45): select.select_schema(
             PanasonicHeatpumpSelect,
         ),
     }

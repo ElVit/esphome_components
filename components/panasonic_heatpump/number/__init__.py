@@ -9,6 +9,7 @@ from esphome.const import (
     CONF_MIN_VALUE,
     CONF_MAX_VALUE,
     CONF_STEP,
+    CONF_MODE,
 )
 from .. import (
     CONF_PANASONIC_HEATPUMP_ID,
@@ -49,6 +50,7 @@ CONF_SET29 = "set29"  # Set Heating Off Outdoor Temp
 CONF_SET36 = "set36"  # Set Bivalent Start Temp
 CONF_SET37 = "set37"  # Set Bivalent AP Start Temp
 CONF_SET38 = "set38"  # Set Bivalent AP Stop Temp
+CONF_SET46 = "set46"  # Set Heater On Outdoor Temp
 
 TYPES = [
     CONF_SET5,
@@ -84,6 +86,7 @@ TYPES = [
     CONF_SET36,
     CONF_SET37,
     CONF_SET38,
+    CONF_SET46,
 ]
 
 
@@ -93,6 +96,9 @@ def number_options(min_val, max_val, step) -> cv.Schema:
             cv.Optional(CONF_MIN_VALUE, default=min_val): cv.float_,
             cv.Optional(CONF_MAX_VALUE, default=max_val): cv.float_,
             cv.Optional(CONF_STEP, default=step): cv.float_range(min=1.0, max=10.0),
+            cv.Optional(CONF_MODE, default="BOX"): cv.enum(
+                number.NUMBER_MODES, upper=True
+            ),
         }
     )
     return schema
@@ -254,6 +260,10 @@ CONFIG_SCHEMA = cv.Schema(
             PanasonicHeatpumpNumber,
             unit_of_measurement=UNIT_CELSIUS,
         ).extend(number_options(-10.0, 0.0, 1.0)),
+        cv.Optional(CONF_SET46): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+        ).extend(number_options(-15.0, 20.0, 1.0)),
     }
 ).extend(cv.COMPONENT_SCHEMA)
 

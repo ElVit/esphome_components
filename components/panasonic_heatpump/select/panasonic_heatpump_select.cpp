@@ -49,6 +49,15 @@ void PanasonicHeatpumpSelect::control(const std::string& value) {
   case SelectIds::CONF_SET42:
     this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply16(index), 29);
     break;
+  case SelectIds::CONF_SET43:
+    this->parent_->set_command_byte(PanasonicCommand::setPlus1(index), 11);
+    break;
+  case SelectIds::CONF_SET44:
+    this->parent_->set_command_byte(PanasonicCommand::setPlus1Multiply4(index), 9);
+    break;
+  case SelectIds::CONF_SET45:
+    this->parent_->set_command_byte(PanasonicCommand::setPlus1(index), 9);
+    break;
   default:
     return;
   };
@@ -67,14 +76,8 @@ void PanasonicHeatpumpSelect::publish_new_state(const std::vector<uint8_t>& data
 
   std::string new_state;
   switch (this->id_) {
-  case SelectIds::CONF_SET9:
-    new_state =
-        PanasonicDecode::getTextState(PanasonicDecode::OperationMode, PanasonicDecode::getOperationMode(data[6]));
-    if (this->has_state() && this->current_option() == new_state)
-      return;
-    break;
-  case SelectIds::CONF_SET4:
-    new_state = PanasonicDecode::getTextState(PanasonicDecode::PowerfulMode, PanasonicDecode::getBit6and7and8(data[7]));
+  case SelectIds::CONF_SET2:
+    new_state = PanasonicDecode::getTextState(PanasonicDecode::HolidayState, PanasonicDecode::getBit3and4(data[5]));
     if (this->has_state() && this->current_option() == new_state)
       return;
     break;
@@ -83,8 +86,14 @@ void PanasonicHeatpumpSelect::publish_new_state(const std::vector<uint8_t>& data
     if (this->has_state() && this->current_option() == new_state)
       return;
     break;
-  case SelectIds::CONF_SET2:
-    new_state = PanasonicDecode::getTextState(PanasonicDecode::HolidayState, PanasonicDecode::getBit3and4(data[5]));
+  case SelectIds::CONF_SET4:
+    new_state = PanasonicDecode::getTextState(PanasonicDecode::PowerfulMode, PanasonicDecode::getBit6and7and8(data[7]));
+    if (this->has_state() && this->current_option() == new_state)
+      return;
+    break;
+  case SelectIds::CONF_SET9:
+    new_state =
+        PanasonicDecode::getTextState(PanasonicDecode::OperationMode, PanasonicDecode::getOperationMode(data[6]));
     if (this->has_state() && this->current_option() == new_state)
       return;
     break;
@@ -123,6 +132,22 @@ void PanasonicHeatpumpSelect::publish_new_state(const std::vector<uint8_t>& data
   case SelectIds::CONF_SET42:
     new_state =
         PanasonicDecode::getTextState(PanasonicDecode::PumpFlowRateMode, PanasonicDecode::getBit3and4(data[29]));
+    if (this->has_state() && this->current_option() == new_state)
+      return;
+    break;
+  case SelectIds::CONF_SET43:
+    new_state =
+        PanasonicDecode::getTextState(PanasonicDecode::DHWSensorSelection, PanasonicDecode::getBit7and8(data[11]));
+    if (this->has_state() && this->current_option() == new_state)
+      return;
+    break;
+  case SelectIds::CONF_SET44:
+    new_state = PanasonicDecode::getTextState(PanasonicDecode::BlockedFree, PanasonicDecode::getBit5and6(data[9]));
+    if (this->has_state() && this->current_option() == new_state)
+      return;
+    break;
+  case SelectIds::CONF_SET45:
+    new_state = PanasonicDecode::getTextState(PanasonicDecode::BlockedFree, PanasonicDecode::getBit7and8(data[9]));
     if (this->has_state() && this->current_option() == new_state)
       return;
     break;

@@ -26,6 +26,7 @@ ICON_THERMOMETER = "mdi:thermometer"
 ICON_BIVALENT = "mdi:vector-combine"
 ICON_HEATING_CONTROL = "mdi:thermostat-auto"
 ICON_SMART_DHW = "mdi:water-boiler-auto"
+ICON_DHW = "mdi:water-boiler"
 
 CONF_TOP4 = "top4"  # Operation Mode
 # TODO: Split up top4 into top4_1 (Heating Mode State) and top4_2 (DHW Mode State)
@@ -52,6 +53,7 @@ CONF_TOP130 = "top130"  # Bivalent Mode
 CONF_TOP139 = "top139"  # HeatingControl
 CONF_TOP140 = "top140"  # SmartDHW
 CONF_TOP141 = "top141"  # Quiet Mode Priority
+CONF_TOP143 = "top143"  # DHW Sensor Selection
 
 TYPES = [
     CONF_TOP4,
@@ -78,6 +80,7 @@ TYPES = [
     CONF_TOP139,
     CONF_TOP140,
     CONF_TOP141,
+    CONF_TOP143,
 ]
 
 PanasonicHeatpumpTextSensor = panasonic_heatpump_ns.class_(
@@ -184,6 +187,10 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_TOP141): text_sensor.text_sensor_schema(
             PanasonicHeatpumpTextSensor,
             icon=ICON_QUIET_MODE,
+        ),
+        cv.Optional(CONF_TOP143): text_sensor.text_sensor_schema(
+            PanasonicHeatpumpTextSensor,
+            icon=ICON_DHW,
         ),
     }
 ).extend(cv.COMPONENT_SCHEMA)
