@@ -96,7 +96,9 @@ def number_options(min_val, max_val, step) -> cv.Schema:
             cv.Optional(CONF_MIN_VALUE, default=min_val): cv.float_,
             cv.Optional(CONF_MAX_VALUE, default=max_val): cv.float_,
             cv.Optional(CONF_STEP, default=step): cv.float_range(min=1.0, max=10.0),
-            cv.Optional(CONF_MODE, default="BOX"): cv.enum(number.NUMBER_MODES, upper=True),
+            cv.Optional(CONF_MODE, default="BOX"): cv.enum(
+                number.NUMBER_MODES, upper=True
+            ),
         }
     )
     return schema
