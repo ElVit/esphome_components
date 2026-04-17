@@ -31,7 +31,6 @@ maidesite_desk:
   id: my_desk
   uart_id: uart_desk
   log_uart_msg: true
-  update_interval: 1s
 
 # Test all sensor types
 sensor:
