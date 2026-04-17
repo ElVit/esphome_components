@@ -1,5 +1,9 @@
 name: Test Maidesite Desk Component
 
+permissions:
+  contents: read
+  packages: read
+
 on:
   push:
     branches:
