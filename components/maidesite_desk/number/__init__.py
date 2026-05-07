@@ -7,6 +7,8 @@ from esphome.const import (
 )
 from .. import CONF_MAIDESITE_DESK_ID, MaidesiteDeskComponent, maidesite_desk_ns
 
+ICON_HEIGHT = "mdi:human-male-height"
+
 CONF_HEIGHT_ABS = "height_abs"
 CONF_HEIGHT_PCT = "height_pct"
 
@@ -38,10 +40,12 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_HEIGHT_ABS): number.number_schema(
             MaidesiteDeskNumber,
             unit_of_measurement=UNIT_CENTIMETER,
+            icon=ICON_HEIGHT,
         ),
         cv.Optional(CONF_HEIGHT_PCT): number.number_schema(
             MaidesiteDeskNumber,
             unit_of_measurement=UNIT_PERCENT,
+            icon=ICON_HEIGHT,
         ),
     }
 ).extend(cv.COMPONENT_SCHEMA)

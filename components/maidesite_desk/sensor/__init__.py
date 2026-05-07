@@ -7,6 +7,14 @@ from esphome.const import (
 )
 from .. import CONF_MAIDESITE_DESK_ID, MaidesiteDeskComponent, maidesite_desk_ns
 
+ICON_HEIGHT = "mdi:human-male-height"
+ICON_HEIGHT_MIN = "mdi:border-bottom-variant"
+ICON_HEIGHT_MAX = "mdi:border-top-variant"
+ICON_POSITION_M1 = "mdi:numeric-1-box-outline"
+ICON_POSITION_M2 = "mdi:numeric-2-box-outline"
+ICON_POSITION_M3 = "mdi:numeric-3-box-outline"
+ICON_POSITION_M4 = "mdi:numeric-4-box-outline"
+
 CONF_UNIT = "unit"
 CONF_HEIGHT_ABS = "height_abs"
 CONF_HEIGHT_PCT = "height_pct"
@@ -41,41 +49,49 @@ CONFIG_SCHEMA = cv.Schema(
             MaidesiteDeskSensor,
             accuracy_decimals=2,
             unit_of_measurement=UNIT_CENTIMETER,
+            icon=ICON_HEIGHT,
         ),
         cv.Optional(CONF_HEIGHT_PCT): sensor.sensor_schema(
             MaidesiteDeskSensor,
             accuracy_decimals=2,
             unit_of_measurement=UNIT_PERCENT,
+            icon=ICON_HEIGHT,
         ),
         cv.Optional(CONF_HEIGHT_MIN): sensor.sensor_schema(
             MaidesiteDeskSensor,
             accuracy_decimals=2,
             unit_of_measurement=UNIT_CENTIMETER,
+            icon=ICON_HEIGHT_MIN,
         ),
         cv.Optional(CONF_HEIGHT_MAX): sensor.sensor_schema(
             MaidesiteDeskSensor,
             accuracy_decimals=2,
             unit_of_measurement=UNIT_CENTIMETER,
+            icon=ICON_HEIGHT_MAX,
         ),
         cv.Optional(CONF_POSITION_M1): sensor.sensor_schema(
             MaidesiteDeskSensor,
             accuracy_decimals=2,
             unit_of_measurement=UNIT_CENTIMETER,
+            icon=ICON_POSITION_M1,
         ),
         cv.Optional(CONF_POSITION_M2): sensor.sensor_schema(
             MaidesiteDeskSensor,
             accuracy_decimals=2,
             unit_of_measurement=UNIT_CENTIMETER,
+            icon=ICON_POSITION_M2,
         ),
         cv.Optional(CONF_POSITION_M3): sensor.sensor_schema(
             MaidesiteDeskSensor,
             accuracy_decimals=2,
             unit_of_measurement=UNIT_CENTIMETER,
+            icon=ICON_POSITION_M3,
         ),
         cv.Optional(CONF_POSITION_M4): sensor.sensor_schema(
             MaidesiteDeskSensor,
             accuracy_decimals=2,
             unit_of_measurement=UNIT_CENTIMETER,
+            icon=ICON_POSITION_M4,
         ),
     }
 ).extend(cv.COMPONENT_SCHEMA)

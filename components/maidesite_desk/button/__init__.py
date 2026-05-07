@@ -6,6 +6,20 @@ from esphome.const import (
 )
 from .. import CONF_MAIDESITE_DESK_ID, MaidesiteDeskComponent, maidesite_desk_ns
 
+ICON_STEP_UP = "mdi:arrow-up-drop-circle-outline"
+ICON_STEP_DOWN = "mdi:arrow-down-drop-circle-outline"
+ICON_STOP = "mdi:stop-circle-outline"
+ICON_GOTO_MIN = "mdi:format-vertical-align-bottom"
+ICON_GOTO_MAX = "mdi:format-vertical-align-top"
+ICON_GOTO_M1 = "mdi:numeric-1-circle-outline"
+ICON_GOTO_M2 = "mdi:numeric-2-circle-outline"
+ICON_GOTO_M3 = "mdi:numeric-3-circle-outline"
+ICON_GOTO_M4 = "mdi:numeric-4-circle-outline"
+ICON_SAFE_M1 = "mdi:numeric-1-circle"
+ICON_SAFE_M2 = "mdi:numeric-2-circle"
+ICON_SAFE_M3 = "mdi:numeric-3-circle"
+ICON_SAFE_M4 = "mdi:numeric-4-circle"
+
 CONF_STEP_UP = "step_up"
 CONF_STEP_DOWN = "step_down"
 CONF_STOP = "stop"
@@ -45,45 +59,58 @@ CONFIG_SCHEMA = cv.Schema(
         cv.GenerateID(CONF_MAIDESITE_DESK_ID): cv.use_id(MaidesiteDeskComponent),
         cv.Optional(CONF_STEP_UP): button.button_schema(
             MaidesiteDeskButton,
+            icon=ICON_STEP_UP,
         ),
         cv.Optional(CONF_STEP_DOWN): button.button_schema(
             MaidesiteDeskButton,
+            icon=ICON_STEP_DOWN,
         ),
         cv.Optional(CONF_STOP): button.button_schema(
             MaidesiteDeskButton,
+            icon=ICON_STOP,
         ),
         cv.Optional(CONF_GOTO_MAX): button.button_schema(
             MaidesiteDeskButton,
+            icon=ICON_GOTO_MAX,
         ),
         cv.Optional(CONF_GOTO_MIN): button.button_schema(
             MaidesiteDeskButton,
+            icon=ICON_GOTO_MIN,
         ),
         cv.Optional(CONF_GOTO_M1): button.button_schema(
             MaidesiteDeskButton,
+            icon=ICON_GOTO_M1,
         ),
         cv.Optional(CONF_GOTO_M2): button.button_schema(
             MaidesiteDeskButton,
+            icon=ICON_GOTO_M2,
         ),
         cv.Optional(CONF_GOTO_M3): button.button_schema(
             MaidesiteDeskButton,
+            icon=ICON_GOTO_M3,
         ),
         cv.Optional(CONF_GOTO_M4): button.button_schema(
             MaidesiteDeskButton,
+            icon=ICON_GOTO_M4,
         ),
         cv.Optional(CONF_SAVE_M1): button.button_schema(
             MaidesiteDeskButton,
+            icon=ICON_SAFE_M1,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_SAVE_M2): button.button_schema(
             MaidesiteDeskButton,
+            icon=ICON_SAFE_M2,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_SAVE_M3): button.button_schema(
             MaidesiteDeskButton,
+            icon=ICON_SAFE_M3,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_SAVE_M4): button.button_schema(
             MaidesiteDeskButton,
+            icon=ICON_SAFE_M4,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
     }
