@@ -26,6 +26,10 @@ CONFIG_SCHEMA = (
     .extend(cv.COMPONENT_SCHEMA)
 )
 
+FINAL_VALIDATE_SCHEMA = uart.final_validate_device_schema(
+    "maidesite_desk", baud_rate=9600
+)
+
 
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])

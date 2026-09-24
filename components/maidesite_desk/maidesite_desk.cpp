@@ -12,7 +12,6 @@ void MaidesiteDeskComponent::dump_config() {
 void MaidesiteDeskComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up Maidesite Desk ...");
   delay(10);
-  this->check_uart_settings(9600);
   this->request_physical_limits();
   this->request_limits();
   this->request_settings();

@@ -25,7 +25,6 @@ void PanasonicHeatpumpComponent::dump_config() {
 
 void PanasonicHeatpumpComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up Panasonic Heatpump ...");
-  this->check_uart_settings(9600, 1, uart::UART_CONFIG_PARITY_EVEN, 8);
 
   this->response_queue_handle_ = xQueueCreate(8, sizeof(std::vector<uint8_t>*));
   if (this->response_queue_handle_ == nullptr) {
