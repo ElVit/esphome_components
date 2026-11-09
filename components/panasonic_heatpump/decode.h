@@ -25,12 +25,15 @@ class PanasonicDecode {
   static int getBit6and7and8(uint8_t input);
   static int getByteMinus1(uint8_t input);
   static int getByteMinus128(uint8_t input);
+  static int getBit5and6Times3(uint8_t input);
   static float getByteMinus1Div2(uint8_t input);
   static float getByteMinus1Div5(uint8_t input);
   static float getByteMinus1Div50(uint8_t input);
   static int getByteMinus1Times10(uint8_t input);
+  static int getByteMinus1Times30(uint8_t input);
   static int getByteMinus1Times50(uint8_t input);
   static int getByteMinus1Times200(uint8_t input);
+  static float getKgfCm2ToBar(float input);
   static int getHighNibbleMinus1(uint8_t input);
   static int getLowNibbleMinus1(uint8_t input);
   static int getWordMinus1(const std::vector<uint8_t>& data, uint8_t index);
@@ -40,6 +43,9 @@ class PanasonicDecode {
   static int getModel(const std::vector<uint8_t>& data, uint8_t index);
   static float getPumpFlow(const std::vector<uint8_t>& data, uint8_t index);
   static float getFractional(uint8_t input, uint8_t shift);
+  static float getFractionalTemperature(uint8_t input, uint8_t fractional, uint8_t shift);
+  static int getZone2Active(uint8_t input);
+  static int getZone1Active(uint8_t input);
   static std::string getErrorInfo(uint8_t errorType, uint8_t errorNumber);
 
   static bool getBinaryState(uint8_t input);
@@ -71,6 +77,9 @@ class PanasonicDecode {
   static const constexpr char* const SmartDHW[] = {"2", "Variable", "Standard"};
   static const constexpr char* const QuietModePriority[] = {"2", "Sound", "Capacity"};
   static const constexpr char* const DHWSensorSelection[] = {"2", "Top", "Center"};
+  static const constexpr char* const DHWCapacityMode[] = {"2", "Standard", "Variable"};
+  static const constexpr char* const DHWHeaterType[] = {"2", "Internal", "External"};
+  static const constexpr char* const HeatCoolSwitch[] = {"2", "Heat", "Cool"};
   static const constexpr char* const ModelNames[] = {
       "73",                                  // string representation of number of known models (last model number + 1)
       "WH-MDC05H3E5",                        // 0

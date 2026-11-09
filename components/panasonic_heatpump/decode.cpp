@@ -24,7 +24,11 @@ constexpr const char* const PanasonicDecode::BivalentMode[];
 constexpr const char* const PanasonicDecode::HeatingControl[];
 constexpr const char* const PanasonicDecode::SmartDHW[];
 constexpr const char* const PanasonicDecode::QuietModePriority[];
+constexpr const char* const PanasonicDecode::DHWCapacityMode[];
+constexpr const char* const PanasonicDecode::DHWHeaterType[];
+constexpr const char* const PanasonicDecode::HeatCoolSwitch[];
 constexpr const char* const PanasonicDecode::ModelNames[];
+static constexpr float KGF_CM2_TO_BAR = 0.980665f;
 
 constexpr const uint8_t KnownModels[NUMBER_OF_MODELS][10] = {
     {0xE2, 0xCF, 0x0B, 0x13, 0x33, 0x32, 0xD1, 0x0C, 0x16, 0x33},  // 0
@@ -138,6 +142,11 @@ int PanasonicDecode::getByteMinus128(uint8_t input) {
   return (int)input - 128;
 }
 
+int PanasonicDecode::getBit5and6Times3(uint8_t input) {
+  int encoded = (input >> 2) & 0b11;
+  return encoded == 0 ? -1 : encoded * 3;
+}
+
 float PanasonicDecode::getByteMinus1Div2(uint8_t input) {
   return ((float)input - 1) / 2;
 }
@@ -154,12 +163,20 @@ int PanasonicDecode::getByteMinus1Times10(uint8_t input) {
   return ((int)input - 1) * 10;
 }
 
+int PanasonicDecode::getByteMinus1Times30(uint8_t input) {
+  return ((int)input - 1) * 30;
+}
+
 int PanasonicDecode::getByteMinus1Times50(uint8_t input) {
   return ((int)input - 1) * 50;
 }
 
 int PanasonicDecode::getByteMinus1Times200(uint8_t input) {
   return ((int)input - 1) * 200;
+}
+
+float PanasonicDecode::getKgfCm2ToBar(float input) {
+  return input * KGF_CM2_TO_BAR;
 }
 
 int PanasonicDecode::getHighNibbleMinus1(uint8_t input) {
@@ -235,6 +252,18 @@ float PanasonicDecode::getPumpFlow(const std::vector<uint8_t>& data, uint8_t ind
 // TOP5, TOP6 //
 float PanasonicDecode::getFractional(uint8_t input, uint8_t shift) {
   return ((int)((input >> shift) & 0b111) - 1) * 0.25;
+}
+
+float PanasonicDecode::getFractionalTemperature(uint8_t input, uint8_t fractional, uint8_t shift) {
+  return getByteMinus128(input) + getFractional(fractional, shift);
+}
+
+int PanasonicDecode::getZone2Active(uint8_t input) {
+  return (input >> 1) & 1;
+}
+
+int PanasonicDecode::getZone1Active(uint8_t input) {
+  return input & 1;
 }
 
 // TOP44 //

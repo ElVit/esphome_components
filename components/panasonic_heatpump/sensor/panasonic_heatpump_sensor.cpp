@@ -3,8 +3,6 @@
 namespace esphome {
 namespace panasonic_heatpump {
 static const char* const TAG = "panasonic_heatpump.sensor";
-static constexpr float KGF_CM2_TO_BAR = 0.980665f;  // 1 kgf/cm² = 0.980665 bar
-
 void PanasonicHeatpumpSensor::dump_config() {
   LOG_SENSOR("", "Panasonic Heatpump Sensor", this);
   delay(10);
@@ -22,12 +20,12 @@ void PanasonicHeatpumpSensor::publish_new_state(const std::vector<uint8_t>& data
       return;
     break;
   case SensorIds::CONF_TOP5:
-    new_state = PanasonicDecode::getByteMinus128(data[143]) + PanasonicDecode::getFractional(data[118], 0);
+    new_state = PanasonicDecode::getFractionalTemperature(data[143], data[118], 0);
     if (this->has_state() && this->get_state() == new_state)
       return;
     break;
   case SensorIds::CONF_TOP6:
-    new_state = PanasonicDecode::getByteMinus128(data[144]) + PanasonicDecode::getFractional(data[118], 3);
+    new_state = PanasonicDecode::getFractionalTemperature(data[144], data[118], 3);
     if (this->has_state() && this->get_state() == new_state)
       return;
     break;
@@ -262,7 +260,7 @@ void PanasonicHeatpumpSensor::publish_new_state(const std::vector<uint8_t>& data
       return;
     break;
   case SensorIds::CONF_TOP64:
-    new_state = PanasonicDecode::getByteMinus1Div5(data[163]) * KGF_CM2_TO_BAR;
+    new_state = PanasonicDecode::getKgfCm2ToBar(PanasonicDecode::getByteMinus1Div5(data[163]));
     if (this->has_state() && this->get_state() == new_state)
       return;
     break;
@@ -272,7 +270,7 @@ void PanasonicHeatpumpSensor::publish_new_state(const std::vector<uint8_t>& data
       return;
     break;
   case SensorIds::CONF_TOP66:
-    new_state = PanasonicDecode::getByteMinus1Times50(data[164]) * KGF_CM2_TO_BAR;
+    new_state = PanasonicDecode::getKgfCm2ToBar(PanasonicDecode::getByteMinus1Times50(data[164]));
     if (this->has_state() && this->get_state() == new_state)
       return;
     break;
@@ -493,6 +491,61 @@ void PanasonicHeatpumpSensor::publish_new_state(const std::vector<uint8_t>& data
     break;
   case SensorIds::CONF_TOP142:
     new_state = PanasonicDecode::getByteMinus1(data[175]);
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
+  case SensorIds::CONF_TOP146:
+    new_state = data[21];
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
+  case SensorIds::CONF_TOP147:
+    new_state = PanasonicDecode::getBit5and6Times3(data[25]);
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
+  case SensorIds::CONF_TOP152:
+    new_state = PanasonicDecode::getByteMinus128(data[46]);
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
+  case SensorIds::CONF_TOP153:
+    new_state = PanasonicDecode::getByteMinus128(data[58]);
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
+  case SensorIds::CONF_TOP154:
+    new_state = PanasonicDecode::getByteMinus1(data[71]);
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
+  case SensorIds::CONF_TOP155:
+    new_state = PanasonicDecode::getByteMinus1(data[72]);
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
+  case SensorIds::CONF_TOP156:
+    new_state = PanasonicDecode::getByteMinus1(data[73]);
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
+  case SensorIds::CONF_TOP157:
+    new_state = PanasonicDecode::getByteMinus1(data[74]);
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
+  case SensorIds::CONF_TOP158:
+    new_state = PanasonicDecode::getByteMinus1Times30(data[97]);
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
+  case SensorIds::CONF_TOP159:
+    new_state = PanasonicDecode::getByteMinus1(data[98]);
+    if (this->has_state() && this->get_state() == new_state)
+      return;
+    break;
+  case SensorIds::CONF_TOP169:
+    new_state = PanasonicDecode::getByteMinus128(data[152]);
     if (this->has_state() && this->get_state() == new_state)
       return;
     break;
