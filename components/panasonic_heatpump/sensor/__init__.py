@@ -133,6 +133,17 @@ CONF_TOP136 = "top136"  # Bivalent Advanced Start Delay
 CONF_TOP137 = "top137"  # Bivalent Advanced Stop Delay
 CONF_TOP138 = "top138"  # Bivalent Advanced DHW Delay
 CONF_TOP142 = "top142"  # Expansion Valve
+CONF_TOP146 = "top146"  # Zone Configuration
+CONF_TOP147 = "top147"  # Internal Heater Capacity
+CONF_TOP152 = "top152"  # Dry Concrete Target Temp
+CONF_TOP153 = "top153"  # Pool Delta
+CONF_TOP154 = "top154"  # SG Ready 1 Heat Capacity
+CONF_TOP155 = "top155"  # SG Ready 1 DHW Capacity
+CONF_TOP156 = "top156"  # SG Ready 2 Heat Capacity
+CONF_TOP157 = "top157"  # SG Ready 2 DHW Capacity
+CONF_TOP158 = "top158"  # Room Operation Max Time
+CONF_TOP159 = "top159"  # DHW Heatup Max Time
+CONF_TOP169 = "top169"  # Heat Request Temp With Buffer
 CONF_XTOP0 = "xtop0"  # Heat Power Consumption Extra
 CONF_XTOP1 = "xtop1"  # Cool Power Consumption Extra
 CONF_XTOP2 = "xtop2"  # DHW Power Consumption Extra
@@ -237,6 +248,17 @@ TYPES = [
     CONF_TOP137,
     CONF_TOP138,
     CONF_TOP142,
+    CONF_TOP146,
+    CONF_TOP147,
+    CONF_TOP152,
+    CONF_TOP153,
+    CONF_TOP154,
+    CONF_TOP155,
+    CONF_TOP156,
+    CONF_TOP157,
+    CONF_TOP158,
+    CONF_TOP159,
+    CONF_TOP169,
     CONF_XTOP0,
     CONF_XTOP1,
     CONF_XTOP2,
@@ -926,6 +948,70 @@ CONFIG_SCHEMA = cv.Schema(
             state_class=STATE_CLASS_MEASUREMENT,
             unit_of_measurement=UNIT_EMPTY,
             icon=ICON_VALVE,
+        ),
+        cv.Optional(CONF_TOP146): sensor.sensor_schema(
+            PanasonicHeatpumpSensor,
+            accuracy_decimals=0,
+        ),
+        cv.Optional(CONF_TOP147): sensor.sensor_schema(
+            PanasonicHeatpumpSensor,
+            accuracy_decimals=0,
+            unit_of_measurement="kW",
+        ),
+        cv.Optional(CONF_TOP152): sensor.sensor_schema(
+            PanasonicHeatpumpSensor,
+            accuracy_decimals=1,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            unit_of_measurement=UNIT_CELSIUS,
+        ),
+        cv.Optional(CONF_TOP153): sensor.sensor_schema(
+            PanasonicHeatpumpSensor,
+            accuracy_decimals=1,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            unit_of_measurement=UNIT_KELVIN,
+        ),
+        cv.Optional(CONF_TOP154): sensor.sensor_schema(
+            PanasonicHeatpumpSensor,
+            accuracy_decimals=0,
+            unit_of_measurement=UNIT_PERCENT,
+        ),
+        cv.Optional(CONF_TOP155): sensor.sensor_schema(
+            PanasonicHeatpumpSensor,
+            accuracy_decimals=0,
+            unit_of_measurement=UNIT_PERCENT,
+        ),
+        cv.Optional(CONF_TOP156): sensor.sensor_schema(
+            PanasonicHeatpumpSensor,
+            accuracy_decimals=0,
+            unit_of_measurement=UNIT_PERCENT,
+        ),
+        cv.Optional(CONF_TOP157): sensor.sensor_schema(
+            PanasonicHeatpumpSensor,
+            accuracy_decimals=0,
+            unit_of_measurement=UNIT_PERCENT,
+        ),
+        cv.Optional(CONF_TOP158): sensor.sensor_schema(
+            PanasonicHeatpumpSensor,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_DURATION,
+            state_class=STATE_CLASS_MEASUREMENT,
+            unit_of_measurement=UNIT_MINUTE,
+        ),
+        cv.Optional(CONF_TOP159): sensor.sensor_schema(
+            PanasonicHeatpumpSensor,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_DURATION,
+            state_class=STATE_CLASS_MEASUREMENT,
+            unit_of_measurement=UNIT_MINUTE,
+        ),
+        cv.Optional(CONF_TOP169): sensor.sensor_schema(
+            PanasonicHeatpumpSensor,
+            accuracy_decimals=1,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            unit_of_measurement=UNIT_CELSIUS,
         ),
         cv.Optional(CONF_XTOP0): sensor.sensor_schema(
             PanasonicHeatpumpSensor,

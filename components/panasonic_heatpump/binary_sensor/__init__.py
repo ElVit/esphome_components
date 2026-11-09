@@ -34,6 +34,18 @@ CONF_TOP124 = "top124"  # Z1 Pump State
 CONF_TOP129 = "top129"  # Bivalent Control
 CONF_TOP132 = "top132"  # Bivalent Advanced Heat
 CONF_TOP133 = "top133"  # Bivalent Advanced DHW
+CONF_TOP144 = "top144"  # Dry Concrete State
+CONF_TOP149 = "top149"  # SG Ready Control
+CONF_TOP150 = "top150"  # Demand Control
+CONF_TOP151 = "top151"  # DHW Defrost
+CONF_TOP160 = "top160"  # Quiet Mode Actual State
+CONF_TOP161 = "top161"  # Powerful Mode Actual State
+CONF_TOP163 = "top163"  # External Switch State
+CONF_TOP164 = "top164"  # Bivalent Boiler Contact State
+CONF_TOP165 = "top165"  # Z2 Active
+CONF_TOP166 = "top166"  # Z1 Active
+CONF_TOP167 = "top167"  # Backup Heater Enable
+CONF_TOP168 = "top168"  # Cooling Enable
 
 TYPES = [
     CONF_UART_CLIENT_TIMED_OUT,
@@ -60,6 +72,18 @@ TYPES = [
     CONF_TOP129,
     CONF_TOP132,
     CONF_TOP133,
+    CONF_TOP144,
+    CONF_TOP149,
+    CONF_TOP150,
+    CONF_TOP151,
+    CONF_TOP160,
+    CONF_TOP161,
+    CONF_TOP163,
+    CONF_TOP164,
+    CONF_TOP165,
+    CONF_TOP166,
+    CONF_TOP167,
+    CONF_TOP168,
 ]
 
 PanasonicHeatpumpBinarySensor = panasonic_heatpump_ns.class_(
@@ -151,6 +175,42 @@ CONFIG_SCHEMA = cv.Schema(
             PanasonicHeatpumpBinarySensor,
         ),
         cv.Optional(CONF_TOP133): binary_sensor.binary_sensor_schema(
+            PanasonicHeatpumpBinarySensor,
+        ),
+        cv.Optional(CONF_TOP144): binary_sensor.binary_sensor_schema(
+            PanasonicHeatpumpBinarySensor,
+        ),
+        cv.Optional(CONF_TOP149): binary_sensor.binary_sensor_schema(
+            PanasonicHeatpumpBinarySensor,
+        ),
+        cv.Optional(CONF_TOP150): binary_sensor.binary_sensor_schema(
+            PanasonicHeatpumpBinarySensor,
+        ),
+        cv.Optional(CONF_TOP151): binary_sensor.binary_sensor_schema(
+            PanasonicHeatpumpBinarySensor,
+        ),
+        cv.Optional(CONF_TOP160): binary_sensor.binary_sensor_schema(
+            PanasonicHeatpumpBinarySensor,
+        ),
+        cv.Optional(CONF_TOP161): binary_sensor.binary_sensor_schema(
+            PanasonicHeatpumpBinarySensor,
+        ),
+        cv.Optional(CONF_TOP163): binary_sensor.binary_sensor_schema(
+            PanasonicHeatpumpBinarySensor,
+        ),
+        cv.Optional(CONF_TOP164): binary_sensor.binary_sensor_schema(
+            PanasonicHeatpumpBinarySensor,
+        ),
+        cv.Optional(CONF_TOP165): binary_sensor.binary_sensor_schema(
+            PanasonicHeatpumpBinarySensor,
+        ),
+        cv.Optional(CONF_TOP166): binary_sensor.binary_sensor_schema(
+            PanasonicHeatpumpBinarySensor,
+        ),
+        cv.Optional(CONF_TOP167): binary_sensor.binary_sensor_schema(
+            PanasonicHeatpumpBinarySensor,
+        ),
+        cv.Optional(CONF_TOP168): binary_sensor.binary_sensor_schema(
             PanasonicHeatpumpBinarySensor,
         ),
     }

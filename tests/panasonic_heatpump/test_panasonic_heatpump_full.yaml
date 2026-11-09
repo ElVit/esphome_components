@@ -242,6 +242,28 @@ sensor:
       name: "Bivalent Advanced DHW Delay"
     top142:
       name: "Expansion Valve"
+    top146:
+      name: "Zone Configuration"
+    top147:
+      name: "Internal Heater Capacity"
+    top152:
+      name: "Dry Concrete Target Temp"
+    top153:
+      name: "Pool Delta"
+    top154:
+      name: "SG Ready 1 Heat Capacity"
+    top155:
+      name: "SG Ready 1 DHW Capacity"
+    top156:
+      name: "SG Ready 2 Heat Capacity"
+    top157:
+      name: "SG Ready 2 DHW Capacity"
+    top158:
+      name: "Room Operation Max Time"
+    top159:
+      name: "DHW Heatup Max Time"
+    top169:
+      name: "Heat Request Temp With Buffer"
     xtop0:
       name: "Heat Power Consumption Extra"
     xtop1:
@@ -304,6 +326,30 @@ binary_sensor:
       name: "Bivalent Advanced Heat"
     top133:
       name: "Bivalent Advanced DHW"
+    top144:
+      name: "Dry Concrete State"
+    top149:
+      name: "SG Ready Control"
+    top150:
+      name: "Demand Control"
+    top151:
+      name: "DHW Defrost"
+    top160:
+      name: "Quiet Mode Actual State"
+    top161:
+      name: "Powerful Mode Actual State"
+    top163:
+      name: "External Switch State"
+    top164:
+      name: "Bivalent Boiler Contact State"
+    top165:
+      name: "Z2 Active"
+    top166:
+      name: "Z1 Active"
+    top167:
+      name: "Backup Heater Enable"
+    top168:
+      name: "Cooling Enable"
 
 # Test all text sensors
 text_sensor:
@@ -356,6 +402,12 @@ text_sensor:
       name: "SmartDHW"
     top141:
       name: "Quiet Mode Priority"
+    top145:
+      name: "DHW Capacity Mode"
+    top148:
+      name: "DHW Heater Type"
+    top162:
+      name: "Heat Cool Switch State"
 
 # Test all number controls
 number:
