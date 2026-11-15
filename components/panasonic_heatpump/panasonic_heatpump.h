@@ -132,7 +132,7 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   // options variables
   bool log_uart_msg_{false};
   std::atomic<uint32_t> last_client_request_time_{0};
-  uint32_t uart_client_timeout_{10000};  // 10 sec
+  uint32_t uart_client_timeout_{10000};                      // 10 sec
   static const uint32_t DEFAULT_REQUEST_SEND_INTERVAL{250};  // 250 ms
   uint32_t request_send_interval_{DEFAULT_REQUEST_SEND_INTERVAL};
   uint32_t request_send_time_{5000};  // 5 sec --> default is 5 sec so first request is not sent too fast after startup

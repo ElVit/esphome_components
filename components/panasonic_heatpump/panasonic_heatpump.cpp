@@ -282,8 +282,8 @@ bool PanasonicHeatpumpComponent::verify_message_header(const std::vector<uint8_t
   // Maximum valid message: RESPONSE_MSG_SIZE = 203 bytes
   size_t total_expected = message[1] + 3;
   if (total_expected < 6 || total_expected > RESPONSE_MSG_SIZE) {
-    ESP_LOGW(TAG, "Invalid message length byte: 0x%02X (total_expected=%zu). Drop message.",
-             message[1], total_expected);
+    ESP_LOGW(TAG, "Invalid message length byte: 0x%02X (total_expected=%zu). Drop message.", message[1],
+             total_expected);
     return false;
   }
 
