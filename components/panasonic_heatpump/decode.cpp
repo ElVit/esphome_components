@@ -188,11 +188,7 @@ int PanasonicDecode::getLowNibbleMinus1(uint8_t input) {
 }
 
 int PanasonicDecode::getWordMinus1(const std::vector<uint8_t>& data, uint8_t index) {
-  return ((data[index + 1] << 8) + data[index]) - 1;
-}
-
-int PanasonicDecode::getUintt16(const std::vector<uint8_t>& data, uint8_t index) {
-  return (static_cast<uint16_t>((data[index + 1] << 8) | data[index])) - 1;
+  return static_cast<int>(static_cast<uint16_t>((data[index + 1] << 8) | data[index])) - 1;
 }
 
 // TOP4 //
@@ -276,13 +272,13 @@ std::string PanasonicDecode::getErrorInfo(uint8_t errorType, uint8_t errorNumber
 
   switch (error_type) {
   case 0xA1:  // H type error
-    sprintf(error_string, "H%02X", error_number);
+    snprintf(error_string, sizeof(error_string), "H%02X", error_number);
     break;
   case 0xB1:  // F type error
-    sprintf(error_string, "F%02X", error_number);
+    snprintf(error_string, sizeof(error_string), "F%02X", error_number);
     break;
   default:
-    sprintf(error_string, "No error");
+    snprintf(error_string, sizeof(error_string), "No error");
     break;
   }
 

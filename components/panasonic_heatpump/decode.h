@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 #include <cstring>
 #include <string>
 #include <vector>
@@ -37,7 +38,6 @@ class PanasonicDecode {
   static int getHighNibbleMinus1(uint8_t input);
   static int getLowNibbleMinus1(uint8_t input);
   static int getWordMinus1(const std::vector<uint8_t>& data, uint8_t index);
-  static int getUintt16(const std::vector<uint8_t>& data, uint8_t index);
 
   static int getOperationMode(uint8_t input);
   static int getModel(const std::vector<uint8_t>& data, uint8_t index);
