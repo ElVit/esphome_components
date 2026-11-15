@@ -93,6 +93,9 @@ class TestPanasonicHeatpumpConfig:
         assert hasattr(ph_init, "CONF_LOG_UART_MSG")
         assert ph_init.CONF_LOG_UART_MSG == "log_uart_msg"
 
+        assert hasattr(ph_init, "CONF_REQUEST_SEND_INTERVAL")
+        assert ph_init.CONF_REQUEST_SEND_INTERVAL == "request_send_interval"
+
     @patch("esphome.components.uart")
     @patch("esphome.codegen")
     def test_config_schema_structure(self, mock_cg, mock_uart):

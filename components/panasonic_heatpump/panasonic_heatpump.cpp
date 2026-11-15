@@ -66,12 +66,8 @@ void PanasonicHeatpumpComponent::update() {
 
   // If a uart client (CZ-TAW1) is configured, check if the last request from the client is too long ago.
   // If so, send polling request to heatpump again.
-  if (this->uart_client_ != nullptr && !this->uart_client_timeout_exceeded_) {
-    if (millis() - this->last_client_request_time_ > uart_client_timeout_)
-      this->uart_client_timeout_exceeded_ = true;
-    else
-      return;
-  }
+  if (this->uart_client_ != nullptr && !this->get_uart_client_timeout_exceeded())
+    return;
 
   ESP_LOGD(TAG, "Queue polling request");
   this->queue_request(build_message(PanasonicCommand::PollingMessage));
@@ -192,8 +188,7 @@ void PanasonicHeatpumpComponent::uart_client_task(void* pvParameters) {
         ESP_LOGW(TAG, "Request queue full or unavailable, dropping message");
         delete message;
       }
-      self->last_client_request_time_ = millis();
-      self->uart_client_timeout_exceeded_ = false;
+      self->last_client_request_time_.store(millis(), std::memory_order_relaxed);
     } else {
       vTaskDelay(pdMS_TO_TICKS(10));
     }
@@ -274,10 +269,21 @@ bool PanasonicHeatpumpComponent::verify_message_header(const std::vector<uint8_t
     return false;
   }
 
+  // Check header bytes 3 and 4
   if ((message[2] != 0x01 && message[2] != 0x10) ||                        // 3. byte shall be 0x01 or 0x10
       (message[3] != 0x01 && message[3] != 0x10 && message[3] != 0x21)) {  // 4. byte shall be 0x01, 0x10 or 0x21
     ESP_LOGW(TAG, "Invalid message header: 0x%s. Drop message.",
              PanasonicHelpers::byte_array_to_hex_string(message, ',').c_str());
+    return false;
+  }
+
+  // Validate message length byte to prevent underflow in receive_from_uart
+  // Minimum valid message: header + 1 data byte + checksum = 6 bytes
+  // Maximum valid message: RESPONSE_MSG_SIZE = 203 bytes
+  size_t total_expected = message[1] + 3;
+  if (total_expected < 6 || total_expected > RESPONSE_MSG_SIZE) {
+    ESP_LOGW(TAG, "Invalid message length byte: 0x%02X (total_expected=%zu). Drop message.",
+             message[1], total_expected);
     return false;
   }
 
@@ -347,7 +353,7 @@ bool PanasonicHeatpumpComponent::check_response_length(const std::vector<uint8_t
 }
 
 void PanasonicHeatpumpComponent::send_request() {
-  if (millis() - request_send_time_ < REQUEST_SEND_INTERVAL) {
+  if (millis() - request_send_time_ < this->request_send_interval_) {
     // wait until the interval is over
     return;
   }
@@ -366,6 +372,12 @@ void PanasonicHeatpumpComponent::send_request() {
 }
 
 void PanasonicHeatpumpComponent::set_command_high_nibble(const uint8_t value, const uint8_t index) {
+  // Guard: check if heatpump_default_message_ has been received and index is valid
+  if (this->heatpump_default_message_.empty() || this->heatpump_default_message_.size() <= index) {
+    ESP_LOGW(TAG, "Cannot set high nibble: heatpump_default_message_ not available or index %u out of range", index);
+    return;
+  }
+
   this->command_message_ = build_message(PanasonicCommand::CommandMessage);
 
   uint8_t lowNibble = this->heatpump_default_message_[index] & 0b1111;
@@ -381,6 +393,12 @@ void PanasonicHeatpumpComponent::set_command_high_nibble(const uint8_t value, co
 }
 
 void PanasonicHeatpumpComponent::set_command_low_nibble(const uint8_t value, const uint8_t index) {
+  // Guard: check if heatpump_default_message_ has been received and index is valid
+  if (this->heatpump_default_message_.empty() || this->heatpump_default_message_.size() <= index) {
+    ESP_LOGW(TAG, "Cannot set low nibble: heatpump_default_message_ not available or index %u out of range", index);
+    return;
+  }
+
   this->command_message_ = build_message(PanasonicCommand::CommandMessage);
 
   uint8_t highNibble = this->heatpump_default_message_[index] & 0b11110000;
@@ -396,6 +414,12 @@ void PanasonicHeatpumpComponent::set_command_low_nibble(const uint8_t value, con
 }
 
 void PanasonicHeatpumpComponent::set_command_byte(const uint8_t value, const uint8_t index) {
+  // Guard: check if heatpump_default_message_ has been received and index is valid
+  if (this->heatpump_default_message_.empty() || this->heatpump_default_message_.size() <= index) {
+    ESP_LOGW(TAG, "Cannot set byte: heatpump_default_message_ not available or index %u out of range", index);
+    return;
+  }
+
   this->command_message_ = build_message(PanasonicCommand::CommandMessage);
 
   // set command byte

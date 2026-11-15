@@ -78,6 +78,7 @@ panasonic_heatpump:
   log_uart_msg: true
   update_interval: 5s
   uart_client_timeout: 10s
+  request_send_interval: 1500ms
 
 sensor:
   - platform: panasonic_heatpump
@@ -143,6 +144,7 @@ Thanks to [oxyde42](https://github.com/oxyde42) there is also an exmaple yaml co
 * **uart_client_id** (*Optional*, [ID](https://esphome.io/guides/configuration-types/#id)): Manually specify the UART ID of an additonal UART client like the Panasonic CZ-TAW1. If this ID is not set then your ESP controller will send the polling request messages.
 * **log_uart_msg** (*Optional*, boolean): Shows the raw UART messages in the logs, if set to `true`. The messages will be written to the log level `INFO`. Defaults to false.
 * **uart_client_timeout** (*Optional*, [Time](https://esphome.io/guides/configuration-types/#time)): Maximum idle time for the `uart_client_id` connection. If no request is sent from the UART client for this duration, the component will send a POLLING request to the heatpump. This will (hopefully) prevent the heatpump from becoming unresponsive. This feature can also be disabled by setting this option to `100ms` or lower. Defaults to `10s`.
+* **request_send_interval** (*Optional*, [Time](https://esphome.io/guides/configuration-types/#time)): Minimum delay between UART requests. This can be increased for devices that need a larger gap between queued commands. Defaults to `250ms`.
 
 ### Sensors
 
