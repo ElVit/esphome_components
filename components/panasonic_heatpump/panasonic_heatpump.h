@@ -1,5 +1,7 @@
 #pragma once
 #include <atomic>
+#include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>
 #include <vector>
 #include <tuple>
 #include <string>
@@ -143,6 +145,7 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   TaskHandle_t uart_client_task_handle_{nullptr};
   QueueHandle_t response_queue_handle_{nullptr};
   QueueHandle_t request_queue_handle_{nullptr};
+  SemaphoreHandle_t uart_client_access_mutex_{nullptr};
   uart::UARTComponent* uart_client_{nullptr};
   std::vector<uint8_t> heatpump_default_message_;
   std::vector<uint8_t> heatpump_extra_message_;
