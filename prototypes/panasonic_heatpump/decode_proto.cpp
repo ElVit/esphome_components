@@ -199,13 +199,13 @@ std::string getErrorInfo(uint8_t errorType, uint8_t errorNumber)
   switch (error_type)
   {
   case 177: // B1=F type error
-    sprintf(error_string, "F%02X", error_number);
+    snprintf(error_string, sizeof(error_string), "F%02X", error_number);
     break;
   case 161: // A1=H type error
-    sprintf(error_string, "H%02X", error_number);
+    snprintf(error_string, sizeof(error_string), "H%02X", error_number);
     break;
   default:
-    sprintf(error_string, "No error");
+    snprintf(error_string, sizeof(error_string), "No error");
     break;
   }
 

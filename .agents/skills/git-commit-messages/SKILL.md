@@ -1,6 +1,6 @@
 ---
 name: git-commit-messages
-description: 'Use when preparing or creating Git commits and commit messages. Keep messages focused on the change and omit AI attribution and Co-authored-by trailers.'
+description: 'Use only when the user explicitly asks to commit or to prepare a commit message. Never commit implicitly and omit AI attribution and Co-authored-by trailers.'
 ---
 
 # Git Commit Messages
@@ -9,6 +9,8 @@ Use this skill when drafting or creating a Git commit in this repository.
 
 ## Rules
 
+- Only commit when the user explicitly asks for a commit in the current turn. Requests to implement, change, fix, refactor, review, or clean up code are not permission to commit, stage, amend, or push.
+- When asked to commit, commit only the intended files and leave unrelated working-tree changes untouched.
 - Before committing, identify and run the exact lint and formatting checks from the workflow that applies to the changed files. Do not rely on a vague check or a "likely equivalent" command.
 - For this repository, the C++ check is the workflow job `lint-code` in `.github/workflows/test_panasonic_heatpump.yml` and the required command is:
   `find components/panasonic_heatpump -name '*.cpp' -o -name '*.h' | xargs clang-format -style=file --dry-run --Werror`

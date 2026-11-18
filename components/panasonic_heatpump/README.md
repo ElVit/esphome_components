@@ -16,6 +16,8 @@
 > Since v0.0.8 this component uses threads to process the UART communication.  
 > But if you still want to use an ESP8266 controller or the arduino framework,  
 > please use the branch `heatpump/arduino`.  
+> On other targets the component now fails configuration validation with an
+> explanatory error instead of a compiler error.
 >
 > ```yaml
 > external_components:

@@ -13,12 +13,30 @@ CONF_UART_CLIENT_TIMEOUT = "uart_client_timeout"
 CONF_REQUEST_SEND_INTERVAL = "request_send_interval"
 CONF_LOG_UART_MSG = "log_uart_msg"
 
+ARDUINO_BRANCH_URL = "https://github.com/ElVit/esphome_components/tree/heatpump/arduino"
+
+
+def require_esp32_idf(config):
+    """Reject targets unsupported by the threaded UART implementation."""
+    try:
+        cv.only_on_esp32(config)
+        cv.only_with_framework("esp-idf")(config)
+    except cv.Invalid as err:
+        raise cv.Invalid(
+            f"{err}\n"
+            "The panasonic_heatpump component requires ESP32 with ESP-IDF. "
+            "For ESP8266 or the Arduino framework, use the 'heatpump/arduino' "
+            f"branch: {ARDUINO_BRANCH_URL}"
+        ) from err
+    return config
+
+
 panasonic_heatpump_ns = cg.esphome_ns.namespace("panasonic_heatpump")
 PanasonicHeatpumpComponent = panasonic_heatpump_ns.class_(
     "PanasonicHeatpumpComponent", cg.PollingComponent, uart.UARTDevice
 )
 
-CONFIG_SCHEMA = (
+CONFIG_SCHEMA = cv.All(
     cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(PanasonicHeatpumpComponent),
@@ -33,7 +51,8 @@ CONFIG_SCHEMA = (
         }
     )
     .extend(cv.polling_component_schema("3s"))
-    .extend(uart.UART_DEVICE_SCHEMA)
+    .extend(uart.UART_DEVICE_SCHEMA),
+    require_esp32_idf,
 )
 
 FINAL_VALIDATE_SCHEMA = uart.final_validate_device_schema(

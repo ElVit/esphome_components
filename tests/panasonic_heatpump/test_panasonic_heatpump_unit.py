@@ -446,5 +446,52 @@ class TestPanasonicHeatpumpCodeGeneration:
         assert callable(ph_init.to_code)
 
 
+class TestPanasonicHeatpumpPlatformGuard:
+    """Tests for the ESP32/ESP-IDF-only requirement."""
+
+    @staticmethod
+    def _import_component():
+        import sys
+        import os
+
+        components_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "components"
+        )
+        sys.path.insert(0, components_path)
+
+        import panasonic_heatpump as ph_init
+
+        return ph_init
+
+    def test_rejects_unsupported_target(self, monkeypatch):
+        """Unsupported targets fail with a hint to the Arduino branch."""
+        ph_init = self._import_component()
+        from esphome import config_validation as cv
+
+        def reject(config):
+            raise cv.Invalid("This feature is only available on ['esp32']")
+
+        monkeypatch.setattr(cv, "only_on_esp32", reject)
+        monkeypatch.setattr(
+            cv, "only_with_framework", lambda framework: (lambda config: config)
+        )
+
+        with pytest.raises(cv.Invalid, match="heatpump/arduino"):
+            ph_init.require_esp32_idf({})
+
+    def test_accepts_esp32_idf(self, monkeypatch):
+        """A valid ESP32/ESP-IDF target passes the guard unchanged."""
+        ph_init = self._import_component()
+        from esphome import config_validation as cv
+
+        monkeypatch.setattr(cv, "only_on_esp32", lambda config: config)
+        monkeypatch.setattr(
+            cv, "only_with_framework", lambda framework: (lambda config: config)
+        )
+
+        config = {"id": "my_heatpump"}
+        assert ph_init.require_esp32_idf(config) == config
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

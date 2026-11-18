@@ -5,6 +5,23 @@ namespace esphome {
 namespace panasonic_heatpump {
 static const char* const TAG = "panasonic_heatpump";
 
+namespace {
+class UARTClientAccessGuard {
+ public:
+  explicit UARTClientAccessGuard(SemaphoreHandle_t mutex) : mutex_(mutex) {
+    if (this->mutex_ != nullptr)
+      xSemaphoreTake(this->mutex_, portMAX_DELAY);
+  }
+  ~UARTClientAccessGuard() {
+    if (this->mutex_ != nullptr)
+      xSemaphoreGive(this->mutex_);
+  }
+
+ private:
+  SemaphoreHandle_t mutex_;
+};
+}  // namespace
+
 void PanasonicHeatpumpComponent::dump_config() {
   size_t version_len = strlen(PANASONIC_HEATPUMP_VERSION);
   size_t line_width = 38 + version_len;
@@ -25,6 +42,15 @@ void PanasonicHeatpumpComponent::dump_config() {
 
 void PanasonicHeatpumpComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up Panasonic Heatpump ...");
+
+  if (this->uart_client_ != nullptr) {
+    this->uart_client_access_mutex_ = xSemaphoreCreateMutex();
+    if (this->uart_client_access_mutex_ == nullptr) {
+      ESP_LOGE(TAG, "Failed to create UART client access mutex");
+      this->mark_failed();
+      return;
+    }
+  }
 
   this->response_queue_handle_ = xQueueCreate(8, sizeof(std::vector<uint8_t>*));
   if (this->response_queue_handle_ == nullptr) {
@@ -167,6 +193,7 @@ void PanasonicHeatpumpComponent::uart_task(void* pvParameters) {
       }
       // ... and pass on a copy to CZ-TAW1
       if (self->uart_client_ != nullptr) {
+        UARTClientAccessGuard lock(self->uart_client_access_mutex_);
         self->uart_client_->write_array(rx_buffer);
       }
     } else {
@@ -197,14 +224,29 @@ void PanasonicHeatpumpComponent::uart_client_task(void* pvParameters) {
 
 // Used for both uart interfaces
 bool PanasonicHeatpumpComponent::receive_from_uart(uart::UARTComponent* uartComp, std::vector<uint8_t>& buffer) {
+  auto get_access_mutex = [this, uartComp]() {
+    return uartComp == this->uart_client_ ? this->uart_client_access_mutex_ : nullptr;
+  };
+  auto available = [uartComp, &get_access_mutex]() {
+    UARTClientAccessGuard lock(get_access_mutex());
+    return uartComp->available();
+  };
+  auto read_byte = [uartComp, &get_access_mutex](uint8_t* value) {
+    UARTClientAccessGuard lock(get_access_mutex());
+    return uartComp->read_byte(value);
+  };
+  auto read_array = [uartComp, &get_access_mutex](uint8_t* data, size_t length) {
+    UARTClientAccessGuard lock(get_access_mutex());
+    return uartComp->read_array(data, length);
+  };
   uint8_t start_byte;
 
   // Wait for the start byte to be available
-  while (!uartComp->available())
+  while (!available())
     vTaskDelay(pdMS_TO_TICKS(5));
 
   // Read the first byte
-  if (!uartComp->read_byte(&start_byte))
+  if (!read_byte(&start_byte))
     return false;
 
   // Message shall start with 0x31, 0x71 or 0xF1, if not skip this byte
@@ -223,10 +265,10 @@ bool PanasonicHeatpumpComponent::receive_from_uart(uart::UARTComponent* uartComp
   buffer[0] = start_byte;
 
   // Wait for header
-  if (uartComp->available() < HEADER_SIZE - 1)
+  if (available() < HEADER_SIZE - 1)
     vTaskDelay(pdMS_TO_TICKS(5));
   // Write header to buffer
-  auto succeed = uartComp->read_array(&buffer[1], HEADER_SIZE - 1);
+  auto succeed = read_array(&buffer[1], HEADER_SIZE - 1);
 
   // Verify header (start byte, message type and length)
   if (!verify_message_header(buffer, succeed))
@@ -240,9 +282,9 @@ bool PanasonicHeatpumpComponent::receive_from_uart(uart::UARTComponent* uartComp
     size_t current_size = buffer.size();
     size_t to_read = std::min((size_t)8, remaining);
     buffer.resize(current_size + to_read);
-    if (uartComp->available() < to_read)
+    if (available() < to_read)
       vTaskDelay(pdMS_TO_TICKS(10));
-    if (!uartComp->read_array(&buffer[current_size], to_read)) {
+    if (!read_array(&buffer[current_size], to_read)) {
       ESP_LOGW(TAG, "Timeout while reading message body");
       return false;
     }
@@ -366,7 +408,10 @@ void PanasonicHeatpumpComponent::send_request() {
   PanasonicHelpers::write_uart_log(UART_LOG_TX, *message, ',', this->log_uart_msg_);
 
   // Send vector content over UART (robust API usage)
-  this->write_array(message->data(), message->size());
+  {
+    UARTClientAccessGuard lock(this->parent_ == this->uart_client_ ? this->uart_client_access_mutex_ : nullptr);
+    this->write_array(message->data(), message->size());
+  }
   delete message;
   request_send_time_ = millis();
 }
@@ -433,6 +478,12 @@ void PanasonicHeatpumpComponent::set_command_byte(const uint8_t value, const uin
 }
 
 void PanasonicHeatpumpComponent::set_command_curve(const uint8_t value, const uint8_t index) {
+  // Guard: check if heatpump_default_message_ has been received and index is valid
+  if (this->heatpump_default_message_.empty() || this->heatpump_default_message_.size() <= index) {
+    ESP_LOGW(TAG, "Cannot set curve: heatpump_default_message_ not available or index %u out of range", index);
+    return;
+  }
+
   this->command_message_ = build_message(PanasonicCommand::CommandMessage);
 
   // Set zone 1 curve bytes
