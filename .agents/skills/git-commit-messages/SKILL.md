@@ -9,7 +9,14 @@ Use this skill when drafting or creating a Git commit in this repository.
 
 ## Rules
 
-- Before committing, identify and run the lint and formatting checks in the workflow that applies to the changed files. If a check fails, fix the reported issues and rerun it; commit only after the applicable checks pass. If a required check cannot be run, disclose that before committing.
+- Before committing, identify and run the exact lint and formatting checks from the workflow that applies to the changed files. Do not rely on a vague check or a "likely equivalent" command.
+- For this repository, the C++ check is the workflow job `lint-code` in `.github/workflows/test_panasonic_heatpump.yml` and the required command is:
+  `find components/panasonic_heatpump -name '*.cpp' -o -name '*.h' | xargs clang-format -style=file --dry-run --Werror`
+- If the changed files are C++, run the exact clang-format command above before the commit and fix any reported formatting issues before proceeding.
+- If the changed files are Python, run the relevant workflow checks (for example `black --check` and `flake8`) before the commit.
+- If the changed logic is in the component and a focused unit test is relevant, run that targeted validation before committing.
+- If a required check cannot be run, disclose that before committing and do not claim the change is validated.
+- Commit only after the applicable check passes.
 - Keep the entire commit message short and concise. Prefer one brief subject line; add a short body only when essential.
 - Do not identify the assistant, an AI, or a model as an author or contributor.
 - Never add `Co-authored-by` or similar AI attribution trailers.

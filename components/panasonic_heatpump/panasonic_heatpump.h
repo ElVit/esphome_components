@@ -1,4 +1,5 @@
 #pragma once
+#include <atomic>
 #include <vector>
 #include <tuple>
 #include <string>
@@ -80,6 +81,9 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   void set_uart_client_timeout(uint32_t timeout_ms) {
     this->uart_client_timeout_ = timeout_ms;
   }
+  void set_request_send_interval(uint32_t interval_ms) {
+    this->request_send_interval_ = interval_ms;
+  }
   void set_log_uart_msg(bool active) {
     this->log_uart_msg_ = active;
   }
@@ -119,17 +123,19 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   void add_extra_sensor(PanasonicHeatpumpEntity* sensor) {
     extra_sensors_.push_back(sensor);
   }
-  bool get_uart_client_timeout_exceeded() {
-    return this->uart_client_timeout_exceeded_;
+  bool get_uart_client_timeout_exceeded() const {
+    return this->uart_client_ != nullptr && this->uart_client_timeout_ >= 100 &&
+           millis() - this->last_client_request_time_.load(std::memory_order_relaxed) > this->uart_client_timeout_;
   }
 
  protected:
   // options variables
   bool log_uart_msg_{false};
-  uint32_t last_client_request_time_{0};
-  uint32_t uart_client_timeout_{10000};  // 10 sec
+  std::atomic<uint32_t> last_client_request_time_{0};
+  uint32_t uart_client_timeout_{10000};                      // 10 sec
+  static const uint32_t DEFAULT_REQUEST_SEND_INTERVAL{250};  // 250 ms
+  uint32_t request_send_interval_{DEFAULT_REQUEST_SEND_INTERVAL};
   uint32_t request_send_time_{5000};  // 5 sec --> default is 5 sec so first request is not sent too fast after startup
-  static const uint32_t REQUEST_SEND_INTERVAL{250};  // 250 ms
   static const size_t HEADER_SIZE = 4;
 
   // uart message variables, process in main loop
@@ -141,7 +147,6 @@ class PanasonicHeatpumpComponent : public PollingComponent, public uart::UARTDev
   std::vector<uint8_t> heatpump_default_message_;
   std::vector<uint8_t> heatpump_extra_message_;
   std::vector<uint8_t> command_message_;
-  bool uart_client_timeout_exceeded_{false};
   LoopState loop_state_{LoopState::RESTART_LOOP};
 
   // entity vectors

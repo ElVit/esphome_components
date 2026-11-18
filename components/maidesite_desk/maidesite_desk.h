@@ -15,7 +15,9 @@
 #include <vector>
 #include <string>
 
+#ifndef UART_LOG_CHUNK_SIZE
 #define UART_LOG_CHUNK_SIZE 153
+#endif
 
 namespace esphome {
 namespace maidesite_desk {

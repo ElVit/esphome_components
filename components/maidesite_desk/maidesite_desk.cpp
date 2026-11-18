@@ -75,7 +75,7 @@ void MaidesiteDeskComponent::log_uart_hex(std::string prefix, std::vector<uint8_
   for (size_t i = 0; i < bytes.size(); i++) {
     if (i > 0)
       logStr += separator;
-    sprintf(buffer, "%02X", bytes[i]);
+    snprintf(buffer, sizeof(buffer), "%02X", bytes[i]);
     logStr += buffer;
   }
   for (size_t i = 0; i < logStr.length(); i += UART_LOG_CHUNK_SIZE) {

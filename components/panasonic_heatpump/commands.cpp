@@ -34,7 +34,7 @@ uint8_t PanasonicCommand::calcChecksum(std::vector<uint8_t>& data, int length) {
   for (int i = 0; i < length; i++) {
     checksum += data[i];
   }
-  checksum = (checksum ^ 0xFF) + 01;
+  checksum = (checksum ^ 0xFF) + 1;
   return checksum;
 }
 
