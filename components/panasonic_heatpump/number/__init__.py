@@ -51,6 +51,8 @@ CONF_SET36 = "set36"  # Set Bivalent Start Temp
 CONF_SET37 = "set37"  # Set Bivalent AP Start Temp
 CONF_SET38 = "set38"  # Set Bivalent AP Stop Temp
 CONF_SET46 = "set46"  # Set Heater On Outdoor Temp
+CONF_SET47 = "set47"  # Set Heat To Cool Temp
+CONF_SET48 = "set48"  # Set Cool To Heat Temp
 
 TYPES = [
     CONF_SET5,
@@ -87,6 +89,8 @@ TYPES = [
     CONF_SET37,
     CONF_SET38,
     CONF_SET46,
+    CONF_SET47,
+    CONF_SET48,
 ]
 
 
@@ -264,6 +268,14 @@ CONFIG_SCHEMA = cv.Schema(
             PanasonicHeatpumpNumber,
             unit_of_measurement=UNIT_CELSIUS,
         ).extend(number_options(-15.0, 20.0, 1.0)),
+        cv.Optional(CONF_SET47): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+        ).extend(number_options(11.0, 25.0, 1.0)),
+        cv.Optional(CONF_SET48): number.number_schema(
+            PanasonicHeatpumpNumber,
+            unit_of_measurement=UNIT_CELSIUS,
+        ).extend(number_options(5.0, 14.0, 1.0)),
     }
 ).extend(cv.COMPONENT_SCHEMA)
 

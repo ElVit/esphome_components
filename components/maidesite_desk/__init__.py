@@ -1,6 +1,5 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome import pins
 from esphome.components import uart
 from esphome.const import CONF_ID
 
@@ -25,6 +24,10 @@ CONFIG_SCHEMA = (
     )
     .extend(uart.UART_DEVICE_SCHEMA)
     .extend(cv.COMPONENT_SCHEMA)
+)
+
+FINAL_VALIDATE_SCHEMA = uart.final_validate_device_schema(
+    "maidesite_desk", baud_rate=9600
 )
 
 

@@ -10,6 +10,7 @@ MULTICONF = True
 CONF_PANASONIC_HEATPUMP_ID = "panasonic_heatpump"
 CONF_UART_CLIENT = "uart_client_id"
 CONF_UART_CLIENT_TIMEOUT = "uart_client_timeout"
+CONF_REQUEST_SEND_INTERVAL = "request_send_interval"
 CONF_LOG_UART_MSG = "log_uart_msg"
 
 panasonic_heatpump_ns = cg.esphome_ns.namespace("panasonic_heatpump")
@@ -25,11 +26,22 @@ CONFIG_SCHEMA = (
             cv.Optional(
                 CONF_UART_CLIENT_TIMEOUT, default="10000ms"
             ): cv.positive_time_period_milliseconds,
+            cv.Optional(
+                CONF_REQUEST_SEND_INTERVAL, default="250ms"
+            ): cv.positive_time_period_milliseconds,
             cv.Optional(CONF_LOG_UART_MSG, default=False): cv.boolean,
         }
     )
     .extend(cv.polling_component_schema("3s"))
     .extend(uart.UART_DEVICE_SCHEMA)
+)
+
+FINAL_VALIDATE_SCHEMA = uart.final_validate_device_schema(
+    "panasonic_heatpump",
+    baud_rate=9600,
+    data_bits=8,
+    parity="EVEN",
+    stop_bits=1,
 )
 
 
@@ -43,4 +55,5 @@ async def to_code(config):
         cg.add(var.set_uart_client(uart_client))
         cg.add(var.set_uart_client_timeout(config[CONF_UART_CLIENT_TIMEOUT]))
 
+    cg.add(var.set_request_send_interval(config[CONF_REQUEST_SEND_INTERVAL]))
     cg.add(var.set_log_uart_msg(config[CONF_LOG_UART_MSG]))

@@ -26,7 +26,6 @@ void PanasonicHeatpumpComponent::dump_config() {
 void PanasonicHeatpumpComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up Panasonic Heatpump ...");
   delay(10);  // NOLINT
-  this->check_uart_settings(9600, 1, uart::UART_CONFIG_PARITY_EVEN, 8);
 
   this->update();
 }
@@ -187,6 +186,13 @@ void PanasonicHeatpumpComponent::read_response() {
 }
 
 void PanasonicHeatpumpComponent::send_request(RequestType requestType) {
+  if (requestType == RequestType::NONE)
+    return;
+
+  // Respect the send interval to not flood the heatpump. The request stays queued in next_request_.
+  if (requestType != RequestType::INITIAL && millis() - this->request_send_time_ < this->request_send_interval_)
+    return;
+
   switch (requestType) {
   case RequestType::COMMAND:
     PanasonicHelpers::write_uart_log(UART_LOG_TX, this->command_message_, ',', this->log_uart_msg_);
@@ -214,9 +220,10 @@ void PanasonicHeatpumpComponent::send_request(RequestType requestType) {
     break;
   };
 
-  if (requestType != RequestType::NONE && requestType != RequestType::INITIAL) {
+  if (requestType != RequestType::INITIAL) {
     // Update last request time when request was sent
     this->last_request_time_ = millis();
+    this->request_send_time_ = millis();
   }
 
   this->next_request_ = RequestType::NONE;
@@ -345,6 +352,12 @@ ResponseType PanasonicHeatpumpComponent::check_response(const std::vector<uint8_
 }
 
 void PanasonicHeatpumpComponent::set_command_high_nibble(const uint8_t value, const uint8_t index) {
+  // Guard: check if heatpump_default_message_ has been received and index is valid
+  if (this->heatpump_default_message_.empty() || this->heatpump_default_message_.size() <= index) {
+    ESP_LOGW(TAG, "Cannot set high nibble: heatpump_default_message_ not available or index %u out of range", index);
+    return;
+  }
+
   if (this->next_request_ != RequestType::COMMAND) {
     // initialize the command
     this->command_message_.assign(std::begin(PanasonicCommand::CommandMessage),
@@ -363,6 +376,12 @@ void PanasonicHeatpumpComponent::set_command_high_nibble(const uint8_t value, co
 }
 
 void PanasonicHeatpumpComponent::set_command_low_nibble(const uint8_t value, const uint8_t index) {
+  // Guard: check if heatpump_default_message_ has been received and index is valid
+  if (this->heatpump_default_message_.empty() || this->heatpump_default_message_.size() <= index) {
+    ESP_LOGW(TAG, "Cannot set low nibble: heatpump_default_message_ not available or index %u out of range", index);
+    return;
+  }
+
   if (this->next_request_ != RequestType::COMMAND) {
     // initialize the command
     this->command_message_.assign(std::begin(PanasonicCommand::CommandMessage),
@@ -381,6 +400,12 @@ void PanasonicHeatpumpComponent::set_command_low_nibble(const uint8_t value, con
 }
 
 void PanasonicHeatpumpComponent::set_command_byte(const uint8_t value, const uint8_t index) {
+  // Guard: check if heatpump_default_message_ has been received and index is valid
+  if (this->heatpump_default_message_.empty() || this->heatpump_default_message_.size() <= index) {
+    ESP_LOGW(TAG, "Cannot set byte: heatpump_default_message_ not available or index %u out of range", index);
+    return;
+  }
+
   if (this->next_request_ != RequestType::COMMAND) {
     // initialize the command
     this->command_message_.assign(std::begin(PanasonicCommand::CommandMessage),

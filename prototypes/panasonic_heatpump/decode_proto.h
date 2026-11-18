@@ -28,7 +28,6 @@ int getIntMinus1Times50(uint8_t input);
 int getFirstByte(uint8_t input);
 int getSecondByte(uint8_t input);
 int getWord(uint8_t hi, uint8_t low);
-int getUintt16(uint8_t input1, uint8_t input2);
 
 int getPower(uint8_t input);
 int getOpMode(uint8_t input);

@@ -15,7 +15,7 @@
 > The support for ESP8266 and the arduino framework is deprecated for this component.  
 > Since v0.0.8 this component uses threads to process the UART communication.  
 > But if you still want to use an ESP8266 controller or the arduino framework,  
-> please use the branch "heatpump/arduino".  
+> please use the branch `heatpump/arduino`.  
 >
 > ```yaml
 > external_components:
@@ -78,6 +78,7 @@ panasonic_heatpump:
   log_uart_msg: true
   update_interval: 5s
   uart_client_timeout: 10s
+  request_send_interval: 1500ms
 
 sensor:
   - platform: panasonic_heatpump
@@ -143,6 +144,7 @@ Thanks to [oxyde42](https://github.com/oxyde42) there is also an exmaple yaml co
 * **uart_client_id** (*Optional*, [ID](https://esphome.io/guides/configuration-types/#id)): Manually specify the UART ID of an additonal UART client like the Panasonic CZ-TAW1. If this ID is not set then your ESP controller will send the polling request messages.
 * **log_uart_msg** (*Optional*, boolean): Shows the raw UART messages in the logs, if set to `true`. The messages will be written to the log level `INFO`. Defaults to false.
 * **uart_client_timeout** (*Optional*, [Time](https://esphome.io/guides/configuration-types/#time)): Maximum idle time for the `uart_client_id` connection. If no request is sent from the UART client for this duration, the component will send a POLLING request to the heatpump. This will (hopefully) prevent the heatpump from becoming unresponsive. This feature can also be disabled by setting this option to `100ms` or lower. Defaults to `10s`.
+* **request_send_interval** (*Optional*, [Time](https://esphome.io/guides/configuration-types/#time)): Minimum delay between UART requests. This can be increased for devices that need a larger gap between queued commands. Defaults to `250ms`.
 
 ### Sensors
 
@@ -344,6 +346,28 @@ sensor:
       name: "Bivalent Advanced DHW Delay"
     top142:
       name: "Expansion Valve"
+    top146:
+      name: "Zone Configuration"
+    top147:
+      name: "Internal Heater Capacity"
+    top152:
+      name: "Dry Concrete Target Temp"
+    top153:
+      name: "Pool Delta"
+    top154:
+      name: "SG Ready 1 Heat Capacity"
+    top155:
+      name: "SG Ready 1 DHW Capacity"
+    top156:
+      name: "SG Ready 2 Heat Capacity"
+    top157:
+      name: "SG Ready 2 DHW Capacity"
+    top158:
+      name: "Room Operation Max Time"
+    top159:
+      name: "DHW Heatup Max Time"
+    top169:
+      name: "Heat Request Temp With Buffer"
 
     xtop0:
       name: "Heat Power Consumption Extra"
@@ -415,6 +439,30 @@ binary_sensor:
       name: "Bivalent Advanced Heat"
     top133:
       name: "Bivalent Advanced DHW"
+    top144:
+      name: "Dry Concrete State"
+    top149:
+      name: "SG Ready Control"
+    top150:
+      name: "Demand Control"
+    top151:
+      name: "DHW Defrost"
+    top160:
+      name: "Quiet Mode Actual State"
+    top161:
+      name: "Powerful Mode Actual State"
+    top163:
+      name: "External Switch State"
+    top164:
+      name: "Bivalent Boiler Contact State"
+    top165:
+      name: "Z2 Active"
+    top166:
+      name: "Z1 Active"
+    top167:
+      name: "Backup Heater Enable"
+    top168:
+      name: "Cooling Enable"
 ```
 
 ### Text Sensors
@@ -475,6 +523,12 @@ text_sensor:
       name: "Quiet Mode Priority"
     top143:
       name: "DHW Sensor Selection"
+    top145:
+      name: "DHW Capacity Mode"
+    top148:
+      name: "DHW Heater Type"
+    top162:
+      name: "Heat Cool Switch State"
 ```
 
 ### Numbers
@@ -555,6 +609,10 @@ number:
       name: "Set Bivalent AP Stop Temp"
     set46:
       name: "Set Heater On Outdoor Temp"
+    set47:
+      name: "Set Heat To Cool Temp"
+    set48:
+      name: "Set Cool To Heat Temp"
 ```
 
 ### Switches

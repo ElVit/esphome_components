@@ -89,12 +89,6 @@ int getWord(uint8_t low, uint8_t hi)
   return ((hi << 8) + low) - 1;
 }
 
-int getUintt16(uint8_t input1, uint8_t input2)
-{
-  uint16_t value = static_cast<uint16_t>((input2 << 8) | input1);
-  return (value - 1);
-}
-
 // TOP15, TOP16, TOP38, TOP39, TOP40, TOP41 //
 int getPower(uint8_t input)
 {

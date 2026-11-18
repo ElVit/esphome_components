@@ -1,0 +1,32 @@
+---
+# Test configuration for maidesite_desk component - minimal configuration
+# Tests basic component functionality with minimal required settings
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+esphome:
+  name: test-maidesite-desk-mini
+  friendly_name: "Test Maidesite Desk Minimal"
+
+logger:
+  level: DEBUG
+
+external_components:
+  - source:
+      type: local
+      path: ../../components
+    components: [maidesite_desk]
+
+uart:
+  - id: uart_desk
+    tx_pin: GPIO3
+    rx_pin: GPIO4
+    baud_rate: 9600
+
+# Test minimal configuration
+maidesite_desk:
+  id: my_desk
+  uart_id: uart_desk

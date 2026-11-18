@@ -54,6 +54,9 @@ CONF_TOP139 = "top139"  # HeatingControl
 CONF_TOP140 = "top140"  # SmartDHW
 CONF_TOP141 = "top141"  # Quiet Mode Priority
 CONF_TOP143 = "top143"  # DHW Sensor Selection
+CONF_TOP145 = "top145"  # DHW Capacity Mode
+CONF_TOP148 = "top148"  # DHW Heater Type
+CONF_TOP162 = "top162"  # Heat Cool Switch State
 
 TYPES = [
     CONF_TOP4,
@@ -81,6 +84,9 @@ TYPES = [
     CONF_TOP140,
     CONF_TOP141,
     CONF_TOP143,
+    CONF_TOP145,
+    CONF_TOP148,
+    CONF_TOP162,
 ]
 
 PanasonicHeatpumpTextSensor = panasonic_heatpump_ns.class_(
@@ -191,6 +197,18 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_TOP143): text_sensor.text_sensor_schema(
             PanasonicHeatpumpTextSensor,
             icon=ICON_DHW,
+        ),
+        cv.Optional(CONF_TOP145): text_sensor.text_sensor_schema(
+            PanasonicHeatpumpTextSensor,
+            icon=ICON_DHW,
+        ),
+        cv.Optional(CONF_TOP148): text_sensor.text_sensor_schema(
+            PanasonicHeatpumpTextSensor,
+            icon=ICON_DHW,
+        ),
+        cv.Optional(CONF_TOP162): text_sensor.text_sensor_schema(
+            PanasonicHeatpumpTextSensor,
+            icon=ICON_HEATING_MODE,
         ),
     }
 ).extend(cv.COMPONENT_SCHEMA)

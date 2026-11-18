@@ -21,117 +21,177 @@ void PanasonicHeatpumpBinarySensor::publish_new_state(const std::vector<uint8_t>
       return;
     break;
   case BinarySensorIds::CONF_TOP0:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit7and8(data[4]));
+    new_state = PanasonicDecode::getBit7and8(data[4]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP2:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit1and2(data[4]));
+    new_state = PanasonicDecode::getBit1and2(data[4]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP3:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit1and2(data[7]));
+    new_state = PanasonicDecode::getBit1and2(data[7]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP13:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit1and2(data[5]));
+    new_state = PanasonicDecode::getBit1and2(data[5]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP26:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[111]));
+    new_state = PanasonicDecode::getBit5and6(data[111]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP60:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit7and8(data[112]));
+    new_state = PanasonicDecode::getBit7and8(data[112]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP61:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[112]));
+    new_state = PanasonicDecode::getBit5and6(data[112]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP68:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[5]));
+    new_state = PanasonicDecode::getBit5and6(data[5]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP69:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[117]));
+    new_state = PanasonicDecode::getBit5and6(data[117]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP99:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[24]));
+    new_state = PanasonicDecode::getBit5and6(data[24]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP100:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit7and8(data[24]));
+    new_state = PanasonicDecode::getBit7and8(data[24]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP108:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit3and4(data[20]));
+    new_state = PanasonicDecode::getBit3and4(data[20]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP109:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[20]));
+    new_state = PanasonicDecode::getBit5and6(data[20]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP110:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit7and8(data[20]));
+    new_state = PanasonicDecode::getBit7and8(data[20]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP119:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit7and8(data[23]));
+    new_state = PanasonicDecode::getBit7and8(data[23]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP120:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit5and6(data[23]));
+    new_state = PanasonicDecode::getBit5and6(data[23]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP121:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit3and4(data[23]));
+    new_state = PanasonicDecode::getBit3and4(data[23]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP122:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit1and2(data[23]));
+    new_state = PanasonicDecode::getBit1and2(data[23]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP123:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit1and2(data[116]));
+    new_state = PanasonicDecode::getBit1and2(data[116]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP124:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit3and4(data[116]));
+    new_state = PanasonicDecode::getBit3and4(data[116]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP129:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit7and8(data[26]));
+    new_state = PanasonicDecode::getBit7and8(data[26]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP132:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit3and4(data[26]));
+    new_state = PanasonicDecode::getBit3and4(data[26]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;
   case BinarySensorIds::CONF_TOP133:
-    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getBit1and2(data[26]));
+    new_state = PanasonicDecode::getBit1and2(data[26]) == 1;
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case BinarySensorIds::CONF_TOP144:
+    new_state = PanasonicDecode::getBit7and8(data[5]) == 1;
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case BinarySensorIds::CONF_TOP149:
+    new_state = PanasonicDecode::getBit5and6(data[27]) == 1;
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case BinarySensorIds::CONF_TOP150:
+    new_state = PanasonicDecode::getBit7and8(data[27]) == 1;
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case BinarySensorIds::CONF_TOP151:
+    new_state = PanasonicDecode::getBit7and8(data[30]) == 1;
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case BinarySensorIds::CONF_TOP160:
+    new_state = PanasonicDecode::getBit1and2(data[110]) == 1;
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case BinarySensorIds::CONF_TOP161:
+    new_state = PanasonicDecode::getBit3and4(data[110]) == 1;
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case BinarySensorIds::CONF_TOP163:
+    new_state = PanasonicDecode::getBit7and8(data[110]) == 1;
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case BinarySensorIds::CONF_TOP164:
+    new_state = PanasonicDecode::getBit1and2(data[112]) == 1;
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case BinarySensorIds::CONF_TOP165:
+    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getZone2Active(data[117]));
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case BinarySensorIds::CONF_TOP166:
+    new_state = PanasonicDecode::getBinaryState(PanasonicDecode::getZone1Active(data[117]));
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case BinarySensorIds::CONF_TOP167:
+    new_state = PanasonicDecode::getBit3and4(data[120]) == 1;
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case BinarySensorIds::CONF_TOP168:
+    new_state = PanasonicDecode::getBit5and6(data[120]) == 1;
     if (this->has_state() && this->state == new_state)
       return;
     break;

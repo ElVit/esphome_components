@@ -37,24 +37,32 @@ sensor:
   - platform: panasonic_heatpump
     top1:
       name: "Pump Flow"
+    top146:
+      name: "Zone Configuration"
 
 # Test binary sensors - first item only
 binary_sensor:
   - platform: panasonic_heatpump
     top0:
       name: "Heatpump State"
+    top144:
+      name: "Dry Concrete State"
 
 # Test text sensors - first item only
 text_sensor:
   - platform: panasonic_heatpump
     top4:
       name: "Operating Mode State"
+    top145:
+      name: "DHW Capacity Mode"
 
 # Test number controls - first item only
 number:
   - platform: panasonic_heatpump
     set5:
       name: "Set Z1 Heat Request Temperature"
+    set47:
+      name: "Set Heat To Cool Temp"
 
 # Test select controls - first item only
 select:

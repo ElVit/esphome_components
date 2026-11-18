@@ -1,0 +1,47 @@
+---
+# Test configuration for maidesite_desk component on ESP32-C3
+# ESP32-C3 is a compact chip with limited GPIO pins
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: esp32c3
+  framework:
+    type: esp-idf
+
+esphome:
+  name: test-maidesite-desk-esp32c3
+  friendly_name: "Test Maidesite Desk ESP32-C3"
+
+logger:
+  level: DEBUG
+
+external_components:
+  - source:
+      type: local
+      path: ../../components
+    components: [maidesite_desk]
+
+uart:
+  - id: uart_desk
+    tx_pin: GPIO3
+    rx_pin: GPIO4
+    baud_rate: 9600
+
+# Test basic configuration
+maidesite_desk:
+  id: my_desk
+  uart_id: uart_desk
+
+sensor:
+  - platform: maidesite_desk
+    height_abs:
+      name: "Height Absolute"
+
+button:
+  - platform: maidesite_desk
+    stop:
+      name: "Stop Movement"
+    step_up:
+      name: "Step Up"
+    step_down:
+      name: "Step Down"

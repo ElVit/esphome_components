@@ -31,6 +31,18 @@ enum BinarySensorIds : uint8_t {
   CONF_TOP129,
   CONF_TOP132,
   CONF_TOP133,
+  CONF_TOP144,
+  CONF_TOP149,
+  CONF_TOP150,
+  CONF_TOP151,
+  CONF_TOP160,
+  CONF_TOP161,
+  CONF_TOP163,
+  CONF_TOP164,
+  CONF_TOP165,
+  CONF_TOP166,
+  CONF_TOP167,
+  CONF_TOP168,
 };
 
 class PanasonicHeatpumpBinarySensor : public binary_sensor::BinarySensor,

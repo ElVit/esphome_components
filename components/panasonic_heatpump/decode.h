@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 #include <cstring>
 #include <string>
 #include <vector>
@@ -7,7 +8,7 @@
 #define RESPONSE_MSG_SIZE 203
 #endif
 #ifndef NUMBER_OF_MODELS
-#define NUMBER_OF_MODELS 67
+#define NUMBER_OF_MODELS 73
 #endif
 
 namespace esphome {
@@ -25,21 +26,26 @@ class PanasonicDecode {
   static int getBit6and7and8(uint8_t input);
   static int getByteMinus1(uint8_t input);
   static int getByteMinus128(uint8_t input);
+  static int getBit5and6Times3(uint8_t input);
   static float getByteMinus1Div2(uint8_t input);
   static float getByteMinus1Div5(uint8_t input);
   static float getByteMinus1Div50(uint8_t input);
   static int getByteMinus1Times10(uint8_t input);
+  static int getByteMinus1Times30(uint8_t input);
   static int getByteMinus1Times50(uint8_t input);
   static int getByteMinus1Times200(uint8_t input);
+  static float getKgfCm2ToBar(float input);
   static int getHighNibbleMinus1(uint8_t input);
   static int getLowNibbleMinus1(uint8_t input);
   static int getWordMinus1(const std::vector<uint8_t>& data, uint8_t index);
-  static int getUintt16(const std::vector<uint8_t>& data, uint8_t index);
 
   static int getOperationMode(uint8_t input);
   static int getModel(const std::vector<uint8_t>& data, uint8_t index);
   static float getPumpFlow(const std::vector<uint8_t>& data, uint8_t index);
   static float getFractional(uint8_t input, uint8_t shift);
+  static float getFractionalTemperature(uint8_t input, uint8_t fractional, uint8_t shift);
+  static int getZone2Active(uint8_t input);
+  static int getZone1Active(uint8_t input);
   static std::string getErrorInfo(uint8_t errorType, uint8_t errorNumber);
 
   static bool getBinaryState(uint8_t input);
@@ -71,8 +77,11 @@ class PanasonicDecode {
   static const constexpr char* const SmartDHW[] = {"2", "Variable", "Standard"};
   static const constexpr char* const QuietModePriority[] = {"2", "Sound", "Capacity"};
   static const constexpr char* const DHWSensorSelection[] = {"2", "Top", "Center"};
+  static const constexpr char* const DHWCapacityMode[] = {"2", "Standard", "Variable"};
+  static const constexpr char* const DHWHeaterType[] = {"2", "Internal", "External"};
+  static const constexpr char* const HeatCoolSwitch[] = {"2", "Heat", "Cool"};
   static const constexpr char* const ModelNames[] = {
-      "67",                                  // string representation of number of known models (last model number + 1)
+      "73",                                  // string representation of number of known models (last model number + 1)
       "WH-MDC05H3E5",                        // 0
       "WH-MDC07H3E5",                        // 1
       "IDU:WH-SXC09H3E5, ODU:WH-UX09HE5",    // 2
@@ -140,6 +149,12 @@ class PanasonicDecode {
       "IDU:WH-ADC0509L3E5, ODU:WH-WDG09LE5",     // 64
       "IDU:WH-ADC0309J3E5, ODU:WH-UD09JE5-1",    // 65
       "IDU:WH-SDC12H6E5, ODU:WH-UD12HE5",        // 66
+      "IDU:WH-ADC0309J3E5C, ODU:WH-UD05JE5",     // 67
+      "IDU:WH-ADC0316M9E83, ODU:WH-WXG09ME8",    // 68
+      "IDU:WH-SDC09K3E8, ODU:WH-UDZ09KE8",       // 69
+      "IDU:WH-SQC16H9E8, ODU:WH-UQ16HE8",        // 70
+      "IDU:WH-SDC0509L6E5, ODU:WH-WDG09LE5",     // 71
+      "IDU:WH-SDC0316M9E8, ODU:WH-WXG09ME8",     // 72
   };
 };
 

@@ -94,9 +94,9 @@ void PanasonicHeatpumpClimate::publish_new_state(const std::vector<uint8_t>& dat
     return;
 
   uint8_t new_mode;
-  float new_target_temp_heat;
-  float new_target_temp_cool;
-  float new_current_temp;
+  float new_target_temp_heat = this->target_temperature_high;
+  float new_target_temp_cool = this->target_temperature_low;
+  float new_current_temp = this->current_temperature;
 
   new_mode = this->getClimateMode(data[6]);  // set9
   switch (this->id_) {

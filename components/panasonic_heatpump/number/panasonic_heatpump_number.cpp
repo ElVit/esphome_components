@@ -114,6 +114,12 @@ void PanasonicHeatpumpNumber::control(float value) {
   case NumberIds::CONF_SET46:
     this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 85);
     break;
+  case NumberIds::CONF_SET47:
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 95);
+    break;
+  case NumberIds::CONF_SET48:
+    this->parent_->set_command_byte(PanasonicCommand::setPlus128(value_int), 96);
+    break;
   default:
     return;
   };
@@ -299,6 +305,16 @@ void PanasonicHeatpumpNumber::publish_new_state(const std::vector<uint8_t>& data
     break;
   case NumberIds::CONF_SET46:
     new_state = PanasonicDecode::getByteMinus128(data[85]);
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case NumberIds::CONF_SET47:
+    new_state = PanasonicDecode::getByteMinus128(data[95]);
+    if (this->has_state() && this->state == new_state)
+      return;
+    break;
+  case NumberIds::CONF_SET48:
+    new_state = PanasonicDecode::getByteMinus128(data[96]);
     if (this->has_state() && this->state == new_state)
       return;
     break;
